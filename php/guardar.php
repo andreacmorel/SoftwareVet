@@ -1,21 +1,33 @@
 <?php
 require '../config/conexion.php';
 
-if (!isset($_POST['token']) || !isset($_POST['password'])) {
+if (!isset($_POST['token']) || !isset($_POST['password']) || !isset($_POST['password2'])) {
     die("Faltan datos");
 }
 
 $token = $_POST['token'];
-$nuevaClave = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$password = $_POST['password'];
+$password2 = $_POST['password2'];
+
+if ($password !== $password2) {
+    header("Location: reset.php?token=".$token."&mensaje=error");
+    exit;
+}
+
+$nuevaClave = password_hash($password, PASSWORD_DEFAULT);
 
 $update = "UPDATE usuario 
            SET clave='$nuevaClave', reset_token=NULL 
            WHERE reset_token='$token'";
 
 if (mysqli_query($conexion, $update)) {
-    echo "Contraseña actualizada correctamente<br>"; 
-    echo "<a href='index.php'>Volver al login</a>";
+
+    header("Location: index.php?mensaje=ok");
+    exit;
+
 } else {
-    echo "Error: " . mysqli_error($conexion);
+
+    header("Location: reset.php?token=".$token."&mensaje=db_error");
+    exit;
 }
 ?>

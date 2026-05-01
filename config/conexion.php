@@ -2,10 +2,10 @@
 
 $host = "localhost";
 $user = "root";
-$pass = "alfajor";
-$db = "VETsys";
+$pass = "";
+$db = "Vetsys";
 
-$db = "VETsys";
+$db = "Vetsys";
 
 $conexion = mysqli_connect($host, $user, $pass, $db);
 

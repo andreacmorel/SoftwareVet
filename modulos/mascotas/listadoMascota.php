@@ -28,11 +28,11 @@ require_once '../../php/menu.php';
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Listado de Mascotas</h1>
     <div class="d-flex justify-content-between mb-3">
-        <a href="altaMascotas.php" class="btn btn-success">
-            <i class="fas fa-plus"></i> Agregar Mascota
+        <a href="altaMascota.php" class="btn btn-success" title="Agregar mascota">
+            <i class="fas fa-plus"></i> Agregar
         </a>
 
-        <button class="btn btn-secondary btn-round" onclick="window.location.href='reporte_excel.php'">
+        <button class="btn btn-secondary btn-round" onclick="window.location.href='reporte_excel.php'" title="Imprimir excel">
             <i class="fas fa-file-excel"></i>
         </button>
 
@@ -41,10 +41,10 @@ require_once '../../php/menu.php';
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped" width="100%">
+                <table class="table table-bordered table-striped grid-table" width="100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                           <!-- <th>ID</th>-->
                             <th>Nombre</th>
                             <th>Especie</th>
                             <th>Raza</th>
@@ -72,25 +72,31 @@ require_once '../../php/menu.php';
 
                         while ($row = $sql->fetch_object()) { ?>
                             <tr>
-                                <td><?= $row->id_mascota ?></td>
+                               <!-- <td><?= $row->id_mascota ?></td>-->
                                 <td><?= $row->nombre_mascota ?></td>
                                 <td><?= $row->nombre_especie ?></td>
                                 <td><?= $row->raza ?></td>
                                 <td><?= $row->cliente ?></td>
 
                                 <td class="text-center">
+                                     <div class="d-flex justify-content-center gap-2">
+
+                                <a href="fichaMascota.php?id=<?= $row->id_mascota ?> "
+                                       class="btn btn-info btn-circle mx-2" title="Ver ficha">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
 
                                     <a href="modificarMascota.php?id=<?= $row->id_mascota ?>"
-                                       class="btn btn-warning btn-circle">
+                                       class="btn btn-warning btn-circle mx-2" title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
                                     <a href="eliminarMascota.php?id=<?= $row->id_mascota ?>"
-                                       class="btn btn-danger btn-circle"
+                                       class="btn btn-danger btn-circle mx-2" title="Eliminar"
                                        onclick="return confirm('¿Seguro que desea eliminar esta mascota?');">
                                         <i class="fas fa-trash"></i>
                                     </a>
-
+                                </div>
                                 </td>
                             </tr>
                         <?php } ?>

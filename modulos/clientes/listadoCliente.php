@@ -28,20 +28,18 @@ require_once '../../php/menu.php';
 
     <h1 class="h3 mb-4 text-gray-800">Listado de Clientes</h1>
 
-    <!-- BOTONES ARRIBA -->
     <div class="d-flex justify-content-between mb-3">
 
-        <a href="altaMascotas.php" class="btn btn-success">
-            <i class="fas fa-plus"></i> Agregar Cliente
+        <a href="altaCliente.php" class="btn btn-success" title="Agregar cliente">
+            <i class="fas fa-plus"></i> Agregar
         </a>
 
-        <button class="btn btn-secondary btn-round" onclick="window.location.href='reporte_excel.php'">
+        <button class="btn btn-secondary btn-round" onclick="window.location.href='reporte_excel.php'" title="Imprimir excel">
             <i class="fas fa-file-excel"></i>
         </button>
 
     </div>
 
-    <!-- TARJETA -->
     <div class="card shadow mb-4">
         <div class="card-body">
 
@@ -49,11 +47,15 @@ require_once '../../php/menu.php';
                 <table class="table table-bordered table-striped" width="100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <!--<th>ID</th>-->
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Telefono</th>
                             <th>Email</th>
+                            <th>Calle</th>
+                            <th>Numero</th>
+                            <th>Barrio</th>
+                            <th>Manzana</th>
                             <th style="width:150px;">Acciones</th>
                         </tr>
                     </thead>
@@ -62,38 +64,48 @@ require_once '../../php/menu.php';
 
                         <?php
                         $sql = $conexion->query("
-                           SELECT 
+                          SELECT 
                            c.id_cliente,
                            p.nombre_persona,
                            p.apellido_persona,
                            p.telefono,
-                           p.email
+                           p.email,
+                           d.calle,
+                           d.numero_calle,
+                           d.barrio,
+                           d.manzana
                            FROM cliente c
                            INNER JOIN persona p ON c.id_persona = p.id_persona
+                           LEFT JOIN domicilio d ON d.id_cliente = c.id_cliente
                            ORDER BY c.id_cliente DESC;
                         ");
 
                         while ($row = $sql->fetch_object()) { ?>
                             <tr>
-                                <td><?= htmlspecialchars($row->id_cliente) ?></td>
-                                    <td><?= htmlspecialchars($row->nombre_persona) ?></td>
-                                    <td><?= htmlspecialchars($row->apellido_persona) ?></td>
-                                    <td><?= htmlspecialchars($row->telefono) ?></td>
-                                    <td><?= htmlspecialchars($row->email) ?></td>
+                              <!--  <td><?= $row->id_cliente ?></td>-->
+                                    <td><?=$row->nombre_persona ?></td>
+                                    <td><?=$row->apellido_persona ?></td>
+                                    <td><?= $row->telefono ?></td>
+                                    <td><?= $row->email?></td>
+                                    <td><?= $row->calle?></td>
+                                    <td><?= $row->numero_calle?></td>
+                                    <td><?= $row->barrio?></td>
+                                    <td><?= $row->manzana?></td>
 
                                 <td class="text-center">
+                                    <div class="d-flex justify-content-center" style="gap:15px;">
 
                                     <a href="modificarCliente.php?id=<?= $row->id_cliente ?>"
-                                       class="btn btn-warning btn-circle">
+                                       class="btn btn-warning btn-circle" title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
                                     <a href="eliminarCliente.php?id=<?= $row->id_cliente?>"
-                                       class="btn btn-danger btn-circle"
+                                       class="btn btn-danger btn-circle" title="Eliminar"
                                        onclick="return confirm('¿Seguro que desea eliminar este cliente?');">
                                         <i class="fas fa-trash"></i>
                                     </a>
-
+                                    </div>
                                 </td>
                             </tr>
                         <?php } ?>

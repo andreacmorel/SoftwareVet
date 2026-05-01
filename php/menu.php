@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VETSYS - Inicio</title>
+    <title>VETSYS</title>
+    <link rel="icon" href="/SoftwareVet/img/logoMenu.ico" type="image/x-icon">
     <link href="/SoftwareVet/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
     <link href="/SoftwareVet/css/sb-admin-2.min.css" rel="stylesheet">
@@ -19,9 +20,7 @@
 
 <div id="wrapper">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="SoftwareVet/inicio.php">
-                <div class="sidebar-brand-icon">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/SoftwareVet/php/inicio.php">                <div class="sidebar-brand-icon">
                     <i class="fas fa-paw"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">VETSYS</div>
@@ -30,7 +29,7 @@
             <hr class="sidebar-divider">
 
             <li class="nav-item active">
-                <a class="nav-link" href="SoftwareVet/inicio.php">
+                <a class="nav-link" href="/SoftwareVet/php/inicio.php">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
@@ -71,6 +70,13 @@
                 <a class="nav-link" href="listadoTratamientos.php">
                     <i class="fas fa-stethoscope"></i>
                     <span>Historia Clinica</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/SoftwareVet/modulos/especie/listadoEspecies.php">
+                    <i class="fas fa-dog"></i>
+                    <span>Especies</span>
                 </a>
             </li>
 

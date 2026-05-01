@@ -30,11 +30,11 @@ require_once '../../php/menu.php';
         <h1 class="h3 mb-4 text-gray-800">Listado de Turnos</h1>
 
         <div class="d-flex justify-content-between mb-3">
-        <a href="alta.php" class="btn btn-success">
+        <a href="alta.php" class="btn btn-success" title="Agregar turno">
             <i class="fas fa-plus"></i> Agregar
         </a>
 
-        <button class="btn btn-secondary btn-round" onclick="window.location.href='reporte_excel.php'">
+        <button class="btn btn-secondary btn-round" onclick="window.location.href='reporte_excel.php'" title="Imprimir excel">
     <i class="fas fa-file-excel"></i> 
     </div>
 
