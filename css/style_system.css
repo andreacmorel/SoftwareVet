@@ -1,0 +1,90 @@
+
+        .titulo-pagina {
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .titulo-pagina i {
+            color: #52266E;
+        }
+
+        .subtitulo-pagina {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 25px;
+        }
+
+        .card-form {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.06);
+            overflow: hidden;
+        }
+
+        .card-header-form {
+            background: #fbf7ff;
+            border-bottom: 1px solid #eee1f6;
+            padding: 18px 22px;
+        }
+
+        .card-header-form h5 {
+            color: #52266E;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        label {
+            color: #52266E;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d8c2e8;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: #52266E;
+            box-shadow: 0 0 0 3px rgba(82,38,110,.12);
+        }
+
+        .btn-purple {
+            background: #52266E;
+            color: white;
+            border-radius: 8px;
+            font-weight: 700;
+            padding: 8px 22px;
+        }
+
+        .btn-purple:hover {
+            background: #3f1d55;
+            color: white;
+        }
+
+        .btn-cancelar {
+            background: #e5e7eb;
+            color: #374151;
+            border-radius: 8px;
+            font-weight: 700;
+            padding: 8px 22px;
+        }
+
+        .btn-cancelar:hover {
+            background: #d1d5db;
+            color: #111827;
+        }
+
+        .section-title {
+            color: #52266E;
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 18px;
+        }

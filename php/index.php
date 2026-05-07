@@ -35,7 +35,7 @@
         <hr/>
     </div>
 
-    <form class="form" action="IniciarSesion.php" method="POST">
+    <form class="form" action="login.php" method="POST">
 
         <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'ok') { ?>
             <div class="alert alert-success">
@@ -61,7 +61,7 @@
             <input type="submit" value="Ingresar" class="submit">
 
             <p style="margin-top:10px;">
-                <a href="olvide.php">¿Olvidaste tu contraseña?</a>
+                <a href="reset_password.php">¿Olvidaste tu contraseña?</a>
             </p>
         </div>
 
