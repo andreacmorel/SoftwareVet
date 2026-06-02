@@ -1,7 +1,15 @@
 <?php 
 require_once __DIR__ . '/menu.php';
+//require_once 'validateRoute.php';
 ?>
 
+<?php if (isset($_GET['error']) && $_GET['error'] == 'sin_permiso') { ?>
+
+    <div class="alert alert-danger">
+        No tiene permisos para acceder a este módulo.
+    </div>
+
+<?php } ?>
 <style>
     :root {
         --vet-primary: #52266E;

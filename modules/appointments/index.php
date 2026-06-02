@@ -1,5 +1,8 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+require_once '../../php/menu.php';
+
 
 $filtro_profesional = (int)($_GET['profesional'] ?? 0);
 $filtro_estado      = $_GET['estado'] ?? '';
@@ -77,147 +80,217 @@ $resProfiltro = $conexion->query("
     ORDER BY per.apellido_persona
 ");
 
-require_once '../../php/menu.php';
+    if(isset($_GET['success'])) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Turno registrado</h5>
+                <p>El turno fue registrado correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if(isset($_GET['updated'])) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Turno actualizado</h5>
+                <p>Los datos del turno fueron actualizados correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if(isset($_GET['status'])) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Estado actualizado</h5>
+                <p>El estado del turno fue actualizado correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if(isset($_GET['deleted'])) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Turno eliminado</h5>
+                <p>El turno fue eliminado correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
+        <div class="vet-alert-error">
+            <div class="vet-alert-error-icon">
+                <i class="fas fa-exclamation"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Acción no permitida</h5>
+                <p>No se puede modificar un turno cancelado o completado.</p>
+            </div>
+        </div>
+    <?php }
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="utf-8">
-    <title>Listado de Turnos</title>
+<meta charset="utf-8">
+<title>Listado de Turnos</title>
 
-    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+<link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 
-    <style>
-        .page-title {
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 2px;
-        }
+<style>
+.page-title {
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 2px;
+}
 
-        .page-title i {
-            color: #52266E;
-        }
+.page-title i {
+    color: #52266E;
+}
 
-        .page-subtitle {
-            color: #9ca3af;
-            font-size: 14px;
-        }
+.page-subtitle {
+    color: #9ca3af;
+    font-size: 14px;
+}
 
-        .btn-purple {
-            background: #52266E;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-        }
+.btn-purple {
+    background: #52266E;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+}
 
-        .btn-purple:hover {
-            background: #3f1d55;
-            color: white;
-        }
+.btn-purple:hover {
+    background: #3f1d55;
+    color: white;
+}
 
-        .filter-card {
-            background: white;
-            border-radius: 15px;
-            padding: 18px 20px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-            margin-top: 25px;
-            margin-bottom: 25px;
-        }
+.filter-card {
+    background: white;
+    border-radius: 15px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
 
-        .filter-card label {
-            color: #52266E;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
+.filter-card label {
+    color: #52266E;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
 
-        .filter-card .form-control {
-            border-radius: 8px;
-            border: 1px solid #d8c2e8;
-            font-size: 14px;
-        }
+.filter-card .form-control {
+    border-radius: 8px;
+    border: 1px solid #d8c2e8;
+    font-size: 14px;
+}
 
-        .table-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-            overflow: hidden;
-        }
+.table-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+    overflow: hidden;
+}
 
-        .table {
-            margin-bottom: 0;
-        }
+.table {
+    margin-bottom: 0;
+}
 
-        thead th {
-            background: #fbf7ff !important;
-            color: #52266E !important;
-            font-size: 12px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #eee1f6 !important;
-            font-weight: 800;
-        }
+thead th {
+    background: #fbf7ff !important;
+    color: #52266E !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #eee1f6 !important;
+    font-weight: 800;
+}
 
-        tbody td {
-            vertical-align: middle !important;
-            font-size: 14px;
-            color: #374151;
-        }
+tbody td {
+    vertical-align: middle !important;
+    font-size: 14px;
+    color: #374151;
+}
 
-        tbody tr:hover {
-            background: #fcf8ff;
-        }
+tbody tr:hover {
+    background: #fcf8ff;
+}
 
-        .turno-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: #f0e6f6;
-            color: #52266E;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
+.turno-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #f0e6f6;
+    color: #52266E;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
 
-        .turno-date {
-            font-weight: 800;
-            color: #111827;
-        }
+.turno-date {
+    font-weight: 800;
+    color: #111827;
+}
 
-        .turno-hour {
-            color: #9ca3af;
-            font-size: 12px;
-        }
+.turno-hour {
+    color: #9ca3af;
+    font-size: 12px;
+}
 
-        .dato-muted {
-            color: #6b7280;
-        }
+.dato-muted {
+    color: #6b7280;
+}
 
-        .btn-action {
-            width: 31px;
-            height: 31px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            margin: 0 2px;
-        }
+.btn-action {
+    width: 31px;
+    height: 31px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    margin: 0 2px;
+    text-decoration: none;
+}
 
-        .btn-edit {
-            background: #fef3c7;
-            color: #92400e;
-        }
+.btn-action:hover {
+    text-decoration: none;
+    transform: scale(1.08);
+}
 
-        .btn-delete {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
+.btn-edit {
+    background: #fef3c7;
+    color: #92400e;
+}
 
-        .estado-select {
+.btn-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.estado-select {
     width: 140px;
     border: none;
     border-radius: 50px;
@@ -261,7 +334,85 @@ require_once '../../php/menu.php';
     background: #ffe4e6;
     color: #be123c;
 }
-    </style>
+
+.vet-alert-success,
+.vet-alert-error {
+    width:100%;
+    border-radius:16px;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:25px;
+    animation:fadeIn .35s ease;
+}
+
+.vet-alert-success {
+    background:linear-gradient(135deg,#f6fffa,#eefcf4);
+    border:1px solid #d7f3e3;
+    box-shadow:0 6px 18px rgba(25,135,84,.08);
+}
+
+.vet-alert-error {
+    background:linear-gradient(135deg,#fff5f5,#fef2f2);
+    border:1px solid #fecaca;
+    box-shadow:0 6px 18px rgba(220,38,38,.08);
+}
+
+.vet-alert-icon,
+.vet-alert-error-icon {
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:50%;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+
+.vet-alert-icon {
+    background:#198754;
+    box-shadow:0 4px 10px rgba(25,135,84,.25);
+}
+
+.vet-alert-error-icon {
+    background:#dc2626;
+    box-shadow:0 4px 10px rgba(220,38,38,.25);
+}
+
+.vet-alert-content h5 {
+    margin:0;
+    font-size:15px;
+    font-weight:800;
+}
+
+.vet-alert-success .vet-alert-content h5 {
+    color:#166534;
+}
+
+.vet-alert-error .vet-alert-content h5 {
+    color:#991b1b;
+}
+
+.vet-alert-content p {
+    margin:3px 0 0;
+    color:#4b5563;
+    font-size:14px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity:0;
+        transform:translateY(-8px);
+    }
+    to {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
 </head>
 
 <body>
@@ -340,6 +491,10 @@ require_once '../../php/menu.php';
                 <button type="submit" class="btn btn-purple">
                     <i class="fas fa-filter"></i>
                 </button>
+
+                <a href="index.php" class="btn btn-secondary ml-2">
+                    <i class="fas fa-times"></i>
+                </a>
             </div>
 
         </div>
@@ -395,56 +550,48 @@ require_once '../../php/menu.php';
                                 </td>
 
                                 <td class="dato-muted">
-                                    <?= !empty($t->motivo) ? ($t->motivo) : '—' ?>
+                                    <?= !empty($t->motivo) ? htmlspecialchars($t->motivo) : '—' ?>
                                 </td>
 
                                 <td>
-                                       <?php if ($t->estado === 'completado' || $t->estado === 'cancelado') { ?>
-                                        <span class="estado-select estado-<?= ($t->estado) ?>">
-                                        <?= $t->estado === 'completado' ? ' Completado' : 'Cancelado' ?>
+                                    <?php if ($t->estado === 'completado' || $t->estado === 'cancelado') { ?>
+
+                                        <span class="estado-select estado-<?= htmlspecialchars($t->estado) ?>">
+                                            <?= $t->estado === 'completado' ? 'Completado' : 'Cancelado' ?>
                                         </span>
 
-                                <?php } else { ?>
-                                    <form action="cambiarEstado.php" method="POST" style="margin:0;">
-                                        <input type="hidden" name="id_turno" value="<?= $t->id_turno ?>">
+                                    <?php } else { ?>
 
-                                        <select 
-                                            name="estado"
-                                            class="form-control form-control-sm estado-select estado-<?= ($t->estado) ?>"
-                                            onchange="this.form.submit()"
-                                        >
-                                            <option value="pendiente" <?= $t->estado === 'pendiente' ? 'selected' : '' ?>>
-                                                Pendiente
-                                            </option>
+                                        <form action="change_status.php" method="POST" style="margin:0;">
+                                            <input type="hidden" name="id_turno" value="<?= $t->id_turno ?>">
 
-                                            <option value="confirmado" <?= $t->estado === 'confirmado' ? 'selected' : '' ?>>
-                                                Confirmado
-                                            </option>
+                                            <select 
+                                                name="estado"
+                                                class="form-control form-control-sm estado-select estado-<?= htmlspecialchars($t->estado) ?>"
+                                                onchange="this.form.submit()"
+                                            >
+                                                <option value="pendiente" <?= $t->estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                                                <option value="confirmado" <?= $t->estado === 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
+                                                <option value="en_atencion" <?= $t->estado === 'en_atencion' ? 'selected' : '' ?>>En atención</option>
+                                                <option value="completado" <?= $t->estado === 'completado' ? 'selected' : '' ?>>Completado</option>
+                                                <option value="cancelado" <?= $t->estado === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
+                                            </select>
+                                        </form>
 
-                                            <option value="en_atencion" <?= $t->estado === 'en_atencion' ? 'selected' : '' ?>>
-                                                En atención
-                                            </option>
-
-                                            <option value="completado" <?= $t->estado === 'completado' ? 'selected' : '' ?>>
-                                                Completado
-                                            </option>
-
-                                            <option value="cancelado" <?= $t->estado === 'cancelado' ? 'selected' : '' ?>>
-                                                Cancelado
-                                            </option>
-                                        </select>
-                                    </form>
-                                       <?php } ?>
+                                    <?php } ?>
                                 </td>
 
                                 <td class="text-center">
-                                    <a 
-                                        href="edit.php?id=<?= $t->id_turno ?>"
-                                        class="btn-action btn-edit" 
-                                        title="Modificar"
-                                    >
-                                        <i class="fas fa-pen"></i>
-                                    </a>
+
+                                    <?php if ($t->estado !== 'cancelado' && $t->estado !== 'completado') { ?>
+                                        <a 
+                                            href="edit.php?id=<?= $t->id_turno ?>"
+                                            class="btn-action btn-edit" 
+                                            title="Modificar / Reprogramar"
+                                        >
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+                                    <?php } ?>
 
                                     <button 
                                         type="button"
@@ -456,6 +603,7 @@ require_once '../../php/menu.php';
                                     >
                                         <i class="fas fa-trash"></i>
                                     </button>
+
                                 </td>
                             </tr>
                         <?php } ?>
@@ -521,14 +669,31 @@ require_once '../../php/menu.php';
 <script src="../../js/sb-admin-2.min.js"></script>
 
 <script>
-    $('#modalEliminarTurno').on('show.bs.modal', function (event) {
-        var boton = $(event.relatedTarget);
-        var id = boton.data('id');
-        var nombre = boton.data('nombre');
+$('#modalEliminarTurno').on('show.bs.modal', function (event) {
+    var boton = $(event.relatedTarget);
+    var id = boton.data('id');
+    var nombre = boton.data('nombre');
 
-        $('#nombreTurnoEliminar').text(nombre);
-        $('#btnConfirmarEliminarTurno').attr('href', 'delete.php?id=' + id);
-    });
+    $('#nombreTurnoEliminar').text(nombre);
+    $('#btnConfirmarEliminarTurno').attr('href', 'delete.php?id=' + id);
+});
+
+setTimeout(() => {
+
+    const alerta = document.querySelector('.vet-alert-success, .vet-alert-error');
+
+    if(alerta){
+
+        alerta.style.transition = '.4s';
+        alerta.style.opacity = '0';
+        alerta.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 400);
+    }
+
+}, 3500);
 </script>
 
 </body>

@@ -1,60 +1,112 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $nombre = $_POST['nombre_persona'];
-    $apellido = $_POST['apellido_persona'];
-    $telefono = $_POST['telefono'];
-    $email = $_POST['email'];
+    $nombre = trim($_POST['nombre_persona']);
+    $apellido = trim($_POST['apellido_persona']);
+    $telefono = trim($_POST['telefono']);
+    $email = trim($_POST['email']);
+    $calle = trim($_POST['calle']);
+    $numero_calle = trim($_POST['numero_calle']);
+    $barrio = trim($_POST['barrio']);
+    $manzana = trim($_POST['manzana']);
 
-    $calle = $_POST['calle'];
-    $numero_calle = $_POST['numero_calle'];
-    $barrio = $_POST['barrio'];
-    $manzana = $_POST['manzana'];
-
-    $sqlPersona = "
-        INSERT INTO persona (nombre_persona, apellido_persona, telefono, email)
-        VALUES ('$nombre', '$apellido', '$telefono', '$email')
-    ";
-
-    $resPersona = mysqli_query($conexion, $sqlPersona);
-
-    if (!$resPersona) {
-        die("Error al guardar persona: " . mysqli_error($conexion));
+    if (empty($nombre)) {
+        $erroresCampos['nombre_persona'] = "El nombre es obligatorio.";
+    } elseif (strlen($nombre) < 3) {
+        $erroresCampos['nombre_persona'] = "Debe tener al menos 3 caracteres.";
     }
 
-    $id_persona = mysqli_insert_id($conexion);
-
-    $sqlCliente = "
-        INSERT INTO cliente (id_persona)
-        VALUES ('$id_persona')
-    ";
-
-    $resCliente = mysqli_query($conexion, $sqlCliente);
-
-    if (!$resCliente) {
-        die("Error al guardar cliente: " . mysqli_error($conexion));
+    if (empty($apellido)) {
+        $erroresCampos['apellido_persona'] = "El apellido es obligatorio.";
+    } elseif (strlen($apellido) < 3) {
+        $erroresCampos['apellido_persona'] = "Debe tener al menos 3 caracteres.";
     }
 
-    $id_cliente = mysqli_insert_id($conexion);
+    if (empty($telefono)) {
+        $erroresCampos['telefono'] = "El teléfono es obligatorio.";
+    } elseif (!preg_match('/^[0-9]+$/', $telefono)) {
+        $erroresCampos['telefono'] = "Ingrese solo números.";
+    }
 
-    if (!empty($calle) || !empty($numero_calle) || !empty($barrio) || !empty($manzana)) {
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erroresCampos['email'] = "Ingrese un correo válido.";
+    }
 
-        $sqlDomicilio = "
-            INSERT INTO domicilio (calle, numero_calle, barrio, manzana, id_cliente)
-            VALUES ('$calle', '$numero_calle', '$barrio', '$manzana', '$id_cliente')
+    if (!empty($numero_calle) && !preg_match('/^[0-9]+$/', $numero_calle)) {
+        $erroresCampos['numero_calle'] = "Ingrese solo números.";
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre);
+        $apellidoSeguro = $conexion->real_escape_string($apellido);
+        $telefonoSeguro = $conexion->real_escape_string($telefono);
+
+        $sqlExiste = " SELECT id_persona FROM persona
+            WHERE nombre_persona = '$nombreSeguro'
+            AND   apellido_persona = '$apellidoSeguro'
+            AND   telefono = '$telefonoSeguro'
         ";
 
-        $resDomicilio = mysqli_query($conexion, $sqlDomicilio);
+        $resExiste = mysqli_query($conexion, $sqlExiste);
 
-        if (!$resDomicilio) {
-            die("Error al guardar domicilio: " . mysqli_error($conexion));
+        if ($resExiste && mysqli_num_rows($resExiste) > 0) {
+            $erroresCampos['telefono'] = "Este cliente ya está registrado.";
         }
     }
 
-    header("Location: index.php");
-    exit;
+    if (empty($erroresCampos)) {
+
+        $nombre = $conexion->real_escape_string($nombre);
+        $apellido = $conexion->real_escape_string($apellido);
+        $telefono  = $conexion->real_escape_string($telefono);
+        $email = $conexion->real_escape_string($email);
+        $calle = $conexion->real_escape_string($calle);
+        $numero_calle = $conexion->real_escape_string($numero_calle);
+        $barrio = $conexion->real_escape_string($barrio);
+        $manzana = $conexion->real_escape_string($manzana);
+
+        $sqlPersona = " INSERT INTO persona (nombre_persona, apellido_persona, telefono, email)
+            VALUES ('$nombre', '$apellido', '$telefono', '$email')";
+
+        $resPersona = mysqli_query($conexion, $sqlPersona);
+
+        if ($resPersona) {
+
+            $id_persona = mysqli_insert_id($conexion);
+
+            $sqlCliente = "INSERT INTO cliente (id_persona) VALUES ('$id_persona')";
+
+            $resCliente = mysqli_query($conexion, $sqlCliente);
+
+            if ($resCliente) {
+
+                $id_cliente = mysqli_insert_id($conexion);
+
+                if (!empty($calle) || !empty($numero_calle) || !empty($barrio) || !empty($manzana)) {
+
+                    $sqlDomicilio = " INSERT INTO domicilio (calle, numero_calle, barrio, manzana, id_cliente)
+                        VALUES ('$calle', '$numero_calle', '$barrio', '$manzana', '$id_cliente')";
+
+                    mysqli_query($conexion, $sqlDomicilio);
+                }
+
+                header("Location: index.php?success=1");
+                exit;
+
+            } else {
+                $erroresCampos['general'] = "Error al guardar cliente.";
+            }
+
+        } else {
+            $erroresCampos['general'] = "Error al guardar persona.";
+        }
+    }
 }
 
 require_once '../../php/menu.php';
@@ -118,6 +170,17 @@ require_once '../../php/menu.php';
         box-shadow: 0 0 0 3px rgba(82,38,110,.12);
     }
 
+    .form-control.is-invalid {
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
+    }
+
+    .invalid-feedback {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
     .section-title {
         color: #52266E;
         font-weight: 800;
@@ -176,7 +239,15 @@ require_once '../../php/menu.php';
         </div>
 
         <div class="card-body">
-            <form method="POST">
+
+            <?php if (isset($erroresCampos['general'])) { ?>
+                <div class="alert alert-danger">
+                    <?php echo htmlspecialchars($erroresCampos['general']); ?>
+                </div>
+            <?php } ?>
+
+            <form method="POST" id="frmCliente" novalidate>
+
                 <h5 class="section-title">
                     <i class="fas fa-user mr-2"></i>
                     Datos personales
@@ -184,25 +255,57 @@ require_once '../../php/menu.php';
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre_persona" class="form-control" required>
+                        <label>Nombre <span style="color:#dc2626;">*</span></label>
+                        <input type="text" name="nombre_persona" id="inputNombre"
+                            class="form-control <?php echo isset($erroresCampos['nombre_persona']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($_POST['nombre_persona'] ?? ''); ?>">
+
+                        <?php if (isset($erroresCampos['nombre_persona'])) { ?>
+                            <div class="invalid-feedback"><?php echo htmlspecialchars($erroresCampos['nombre_persona']); ?></div>
+                        <?php } else { ?>
+                            <div class="invalid-feedback" id="err-nombre_persona"></div>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label>Apellido</label>
-                        <input type="text" name="apellido_persona" class="form-control" required>
+                        <label>Apellido <span style="color:#dc2626;">*</span></label>
+                        <input type="text" name="apellido_persona" id="inputApellido"
+                            class="form-control <?php echo isset($erroresCampos['apellido_persona']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($_POST['apellido_persona'] ?? ''); ?>">
+
+                        <?php if (isset($erroresCampos['apellido_persona'])) { ?>
+                            <div class="invalid-feedback"><?php echo htmlspecialchars($erroresCampos['apellido_persona']); ?></div>
+                        <?php } else { ?>
+                            <div class="invalid-feedback" id="err-apellido_persona"></div>
+                        <?php } ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label>Teléfono</label>
-                        <input type="text" name="telefono" class="form-control">
+                        <label>Teléfono <span style="color:#dc2626;">*</span></label>
+                        <input type="text" name="telefono" id="inputTelefono"
+                            class="form-control <?php echo isset($erroresCampos['telefono']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($_POST['telefono'] ?? ''); ?>">
+
+                        <?php if (isset($erroresCampos['telefono'])) { ?>
+                            <div class="invalid-feedback"><?php echo htmlspecialchars($erroresCampos['telefono']); ?></div>
+                        <?php } else { ?>
+                            <div class="invalid-feedback" id="err-telefono"></div>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label>Correo</label>
-                        <input type="email" name="email" class="form-control">
+                        <label>Correo <span style="color:#9ca3af;font-weight:400;text-transform:none;">(opcional)</span></label>
+                        <input type="email" name="email" id="inputEmail"
+                            class="form-control <?php echo isset($erroresCampos['email']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+
+                        <?php if (isset($erroresCampos['email'])) { ?>
+                            <div class="invalid-feedback"><?php echo htmlspecialchars($erroresCampos['email']); ?></div>
+                        <?php } else { ?>
+                            <div class="invalid-feedback" id="err-email"></div>
+                        <?php } ?>
                     </div>
                 </div>
 
@@ -210,30 +313,41 @@ require_once '../../php/menu.php';
 
                 <h5 class="section-title">
                     <i class="fas fa-map-marker-alt mr-2"></i>
-                    Domicilio
+                    Domicilio <span style="color:#9ca3af;font-size:12px;font-weight:400;text-transform:none;">(opcional)</span>
                 </h5>
 
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Calle</label>
-                        <input type="text" name="calle" class="form-control">
+                        <input type="text" name="calle" id="inputCalle " class="form-control"
+                            value="<?php echo htmlspecialchars($_POST['calle'] ?? ''); ?>">
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>Número</label>
-                        <input type="text" name="numero_calle" class="form-control">
+                        <input type="text" name="numero_calle" id="inputNumeroCalle"
+                            class="form-control <?php echo isset($erroresCampos['numero_calle']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($_POST['numero_calle'] ?? ''); ?>">
+
+                        <?php if (isset($erroresCampos['numero_calle'])) { ?>
+                            <div class="invalid-feedback"><?php echo htmlspecialchars($erroresCampos['numero_calle']); ?></div>
+                        <?php } else { ?>
+                            <div class="invalid-feedback" id="err-numero_calle"></div>
+                        <?php } ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Barrio</label>
-                        <input type="text" name="barrio" class="form-control">
+                        <input type="text" name="barrio" class="form-control"
+                            value="<?php echo htmlspecialchars($_POST['barrio'] ?? ''); ?>">
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>Manzana</label>
-                        <input type="text" name="manzana" class="form-control">
+                        <input type="text" name="manzana" class="form-control"
+                            value="<?php echo htmlspecialchars($_POST['manzana'] ?? ''); ?>">
                     </div>
                 </div>
 
@@ -261,6 +375,78 @@ require_once '../../php/menu.php';
 <script src="/SoftwareVet/vendor/jquery/jquery.min.js"></script>
 <script src="/SoftwareVet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/SoftwareVet/js/sb-admin-2.min.js"></script>
+
+<script>
+document.getElementById('frmCliente').addEventListener('submit', function (e) {
+    var valid = true;
+
+    function setError(inputId, errId, msg) {
+        var el = document.getElementById(inputId);
+        var errEl = document.getElementById(errId);
+        el.classList.add('is-invalid');
+        if (errEl) errEl.textContent = msg;
+        valid = false;
+    }
+
+    function clearError(inputId) {
+        var el = document.getElementById(inputId);
+        el.classList.remove('is-invalid');
+    }
+
+    var soloNuevos = !document.querySelector('.is-invalid');
+
+    if (soloNuevos) {
+
+        var nombre = document.getElementById('inputNombre').value.trim();
+        if (nombre === '') {
+            setError('inputNombre', 'err-nombre_persona', 'El nombre es obligatorio.');
+        } else if (nombre.length < 3) {
+            setError('inputNombre', 'err-nombre_persona', 'Debe tener al menos 3 caracteres.');
+        } else { clearError('inputNombre'); }
+
+        var apellido = document.getElementById('inputApellido').value.trim();
+        if (apellido === '') {
+            setError('inputApellido', 'err-apellido_persona', 'El apellido es obligatorio.');
+        } else if (apellido.length < 3) {
+            setError('inputApellido', 'err-apellido_persona', 'Debe tener al menos 3 caracteres.');
+        } else { clearError('inputApellido'); }
+
+        var telefono = document.getElementById('inputTelefono').value.trim();
+        if (telefono === '') {
+            setError('inputTelefono', 'err-telefono', 'El teléfono es obligatorio.');
+        } else if (!/^[0-9]+$/.test(telefono)) {
+            setError('inputTelefono', 'err-telefono', 'Ingrese solo números.');
+        } else { clearError('inputTelefono'); }
+
+        var email = document.getElementById('inputEmail').value.trim();
+        if (email !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError('inputEmail', 'err-email', 'Ingrese un correo válido.');
+        } else { clearError('inputEmail'); }
+
+        var numeroCalle = document.getElementById('inputNumeroCalle').value.trim();
+        if (numeroCalle !== '' && !/^[0-9]+$/.test(numeroCalle)) {
+            setError('inputNumeroCalle', 'err-numero_calle', 'Ingrese solo números.');
+        } else { clearError('inputNumeroCalle'); }
+    }
+
+    if (!valid) {
+        e.preventDefault();
+        var firstInvalid = document.querySelector('.is-invalid');
+        if (firstInvalid) {
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstInvalid.focus();
+        }
+    }
+});
+
+['inputNombre','inputApellido','inputTelefono','inputEmail','inputNumeroCalle'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input',  function () { el.classList.remove('is-invalid'); });
+        el.addEventListener('change', function () { el.classList.remove('is-invalid'); });
+    }
+});
+</script>
 
 </body>
 </html>

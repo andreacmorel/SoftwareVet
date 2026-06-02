@@ -1,8 +1,9 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 require_once '../../php/menu.php';
 
-$id = $_GET['id'];
+$id = (int) $_GET['id'];
 
 $sql = "SELECT 
             m.*,
@@ -20,6 +21,27 @@ $sql = "SELECT
 
 $result = mysqli_query($conexion, $sql);
 $mascota = mysqli_fetch_assoc($result);
+
+if (!$mascota) {
+    die("Mascota no encontrada");
+}
+
+$fechaNacimiento = (!empty($mascota['fecha_nacimiento']) && $mascota['fecha_nacimiento'] != '0000-00-00')
+    ? date('d/m/Y', strtotime($mascota['fecha_nacimiento']))
+    : 'No registrada';
+
+$color = !empty($mascota['color']) ? htmlspecialchars($mascota['color']) : 'Sin especificar';
+
+$edad = (!empty($mascota['edad']) && $mascota['edad'] > 0)
+    ? htmlspecialchars($mascota['edad']) . ' años'
+    : 'No registrada';
+
+$peso = (!empty($mascota['peso']) && $mascota['peso'] > 0)
+    ? htmlspecialchars($mascota['peso']) . ' kg'
+    : 'No registrado';
+
+$telefono = !empty($mascota['telefono']) ? htmlspecialchars($mascota['telefono']) : 'Sin teléfono';
+$email = !empty($mascota['email']) ? htmlspecialchars($mascota['email']) : 'Sin email';
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +73,7 @@ $mascota = mysqli_fetch_assoc($result);
 
         .card-ficha {
             border: none;
-            border-radius: 15px;
+            border-radius: 16px;
             box-shadow: 0 4px 18px rgba(0,0,0,.06);
             overflow: hidden;
         }
@@ -59,7 +81,7 @@ $mascota = mysqli_fetch_assoc($result);
         .card-header-ficha {
             background: #fbf7ff;
             border-bottom: 1px solid #eee1f6;
-            padding: 16px 22px;
+            padding: 18px 22px;
         }
 
         .card-header-ficha h6 {
@@ -69,7 +91,7 @@ $mascota = mysqli_fetch_assoc($result);
         }
 
         .dato-item {
-            padding: 10px 0;
+            padding: 14px 0;
             border-bottom: 1px solid #f1f1f1;
         }
 
@@ -79,15 +101,49 @@ $mascota = mysqli_fetch_assoc($result);
 
         .dato-label {
             color: #52266E;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
+            letter-spacing: .3px;
         }
 
         .dato-valor {
             color: #374151;
             font-size: 15px;
+            font-weight: 700;
+        }
+
+        .badge-vet {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .badge-macho {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-hembra {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .badge-peso {
+            background: #ecfdf5;
+            color: #15803d;
+        }
+
+        .badge-especie {
+            background: #ead7f7;
+            color: #52266E;
+        }
+
+        .text-muted-vet {
+            color: #9ca3af;
             font-weight: 600;
         }
 
@@ -146,44 +202,75 @@ $mascota = mysqli_fetch_assoc($result);
                 <div class="col-md-6">
                     <div class="dato-item">
                         <div class="dato-label">Nombre</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['nombre_mascota']) ?></div>
+                        <div class="dato-valor">
+                            <?= htmlspecialchars($mascota['nombre_mascota']) ?>
+                        </div>
                     </div>
 
                     <div class="dato-item">
                         <div class="dato-label">Fecha de nacimiento</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['fecha_nacimiento']) ?></div>
+                        <div class="dato-valor">
+                            <?= $fechaNacimiento ?>
+                        </div>
                     </div>
 
                     <div class="dato-item">
                         <div class="dato-label">Sexo</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['sexo']) ?></div>
+                        <div class="dato-valor">
+                            <?php if ($mascota['sexo'] == 'M') { ?>
+                                <span class="badge-vet badge-macho">
+                                    <i class="fas fa-mars mr-1"></i> Macho
+                                </span>
+                            <?php } elseif ($mascota['sexo'] == 'H') { ?>
+                                <span class="badge-vet badge-hembra">
+                                    <i class="fas fa-venus mr-1"></i> Hembra
+                                </span>
+                            <?php } else { ?>
+                                <span class="text-muted-vet">No registrado</span>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <div class="dato-item">
                         <div class="dato-label">Peso</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['peso']) ?> kg</div>
+                        <div class="dato-valor">
+                            <span class="badge-vet badge-peso">
+                                <i class="fas fa-weight mr-1"></i>
+                                <?= $peso ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="dato-item">
                         <div class="dato-label">Color</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['color']) ?></div>
+                        <div class="dato-valor">
+                            <?= $color ?>
+                        </div>
                     </div>
 
                     <div class="dato-item">
                         <div class="dato-label">Edad</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['edad']) ?></div>
+                        <div class="dato-valor">
+                            <?= $edad ?>
+                        </div>
                     </div>
 
                     <div class="dato-item">
                         <div class="dato-label">Especie</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['nombre_especie']) ?></div>
+                        <div class="dato-valor">
+                            <span class="badge-vet badge-especie">
+                                <?= htmlspecialchars($mascota['nombre_especie']) ?>
+                            </span>
+                        </div>
                     </div>
 
                     <div class="dato-item">
                         <div class="dato-label">Raza</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['raza']) ?></div>
+                        <div class="dato-valor">
+                            <?= !empty($mascota['raza']) ? htmlspecialchars($mascota['raza']) : 'Sin especificar' ?>
+                        </div>
                     </div>
                 </div>
 
@@ -212,14 +299,18 @@ $mascota = mysqli_fetch_assoc($result);
 
                     <div class="dato-item">
                         <div class="dato-label">Teléfono</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['telefono']) ?></div>
+                        <div class="dato-valor">
+                            <?= $telefono ?>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="dato-item">
                         <div class="dato-label">Email</div>
-                        <div class="dato-valor"><?= htmlspecialchars($mascota['email']) ?></div>
+                        <div class="dato-valor">
+                            <?= $email ?>
+                        </div>
                     </div>
                 </div>
 
@@ -233,7 +324,7 @@ $mascota = mysqli_fetch_assoc($result);
             Volver
         </a>
 
-        <a href="print_pet_record.php?id=<?= $id ?>" target="_blank" class="btn btn-purple" title="Imprimir ficha">
+        <a href="print_pet_record.php?id=<?= $id ?>" target="_blank" class="btn btn-purple">
             <i class="fas fa-print mr-1"></i>
             Imprimir
         </a>

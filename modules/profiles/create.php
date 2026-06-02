@@ -1,16 +1,56 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 if (!empty($_POST['btnGuardar'])) {
-    $nombre_perfil = $conexion->real_escape_string($_POST['nombre_perfil']);
 
-    $conexion->query("
-        INSERT INTO perfil (nombre_perfil, estado)
-        VALUES ('$nombre_perfil', 1)
-    ");
+    $nombre_perfil = trim($_POST['nombre_perfil'] ?? '');
 
-    header("Location: index.php");
-    exit;
+    if (empty($nombre_perfil)) {
+
+        $erroresCampos['nombre_perfil'] = "El nombre del perfil es obligatorio.";
+
+    } elseif (strlen($nombre_perfil) < 3) {
+
+        $erroresCampos['nombre_perfil'] = "Debe tener al menos 3 caracteres.";
+
+    } elseif (strlen($nombre_perfil) > 50) {
+
+        $erroresCampos['nombre_perfil'] = "No puede superar los 50 caracteres.";
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre_perfil);
+
+        $existe = $conexion->query("
+            SELECT id_perfil
+            FROM perfil
+            WHERE nombre_perfil = '$nombreSeguro'
+            AND estado = 1
+            LIMIT 1
+        ");
+
+        if ($existe && $existe->num_rows > 0) {
+
+            $erroresCampos['nombre_perfil'] = "Ya existe un perfil con ese nombre.";
+        }
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre_perfil);
+
+        $conexion->query("
+            INSERT INTO perfil (nombre_perfil, estado)
+            VALUES ('$nombreSeguro', 1)
+        ");
+
+        header("Location: index.php?success=1");
+        exit;
+    }
 }
 
 require_once '../../php/menu.php';
@@ -58,6 +98,17 @@ label {
     box-shadow:0 0 0 3px rgba(82,38,110,.12);
 }
 
+.form-control.is-invalid {
+    border-color:#dc2626 !important;
+    box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+}
+
+.invalid-feedback {
+    display:block;
+    font-size:13px;
+    font-weight:600;
+}
+
 .btn-purple {
     background:#52266E;
     color:white;
@@ -81,6 +132,7 @@ label {
 
 .btn-cancel:hover {
     background:#d1d5db;
+    color:#111827;
 }
 
 .section-title {
@@ -109,15 +161,32 @@ label {
 
 <div class="form-card">
 
-<form method="POST">
+<form method="POST" novalidate>
 
     <h5 class="section-title">
         <i class="fas fa-id-badge mr-2"></i> Datos del Perfil
     </h5>
 
     <div class="form-group mb-4">
-        <label>Nombre del perfil</label>
-        <input type="text" name="nombre_perfil" class="form-control" required>
+
+        <label>
+            Nombre del perfil
+            <span style="color:#dc2626;">*</span>
+        </label>
+
+        <input 
+            type="text"
+            name="nombre_perfil"
+            class="form-control <?php echo isset($erroresCampos['nombre_perfil']) ? 'is-invalid' : ''; ?>"
+            value="<?php echo htmlspecialchars($_POST['nombre_perfil'] ?? ''); ?>"
+        >
+
+        <?php if(isset($erroresCampos['nombre_perfil'])) { ?>
+            <div class="invalid-feedback">
+                <?php echo htmlspecialchars($erroresCampos['nombre_perfil']); ?>
+            </div>
+        <?php } ?>
+
     </div>
 
     <div class="d-flex justify-content-between">

@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 require_once '../../php/menu.php';
 
 $buscar = trim($_GET['buscar'] ?? '');
@@ -13,7 +14,56 @@ if (!empty($buscar)) {
         e.raza LIKE '%$buscarSeguro%'
     ";
 }
-?>
+if(isset($_GET['success'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Registro exitoso</h5>
+            <p>La especie fue registrada correctamente.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
+
+<?php if(isset($_GET['updated'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+            <i class="fas fa-pen"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Cambios guardados</h5>
+            <p>La especie fue modificada correctamente.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
+
+<?php if(isset($_GET['deleted'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+             <i class="fas fa-pen"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Registro eliminado</h5>
+            <p>La especie fue eliminada correctamente.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -127,6 +177,57 @@ tbody tr:hover {
 .btn-delete {
     background:#fee2e2;
     color:#b91c1c;
+}
+.vet-alert-success{
+    width:100%;
+    background:linear-gradient(135deg,#f6fffa,#eefcf4);
+    border:1px solid #d7f3e3;
+    border-radius:16px;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    box-shadow:0 6px 18px rgba(25,135,84,.08);
+    margin-bottom:25px;
+    animation:fadeIn .35s ease;
+}
+
+.vet-alert-icon{
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:50%;
+    background:#198754;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    box-shadow:0 4px 10px rgba(25,135,84,.25);
+}
+
+.vet-alert-content h5{
+    margin:0;
+    font-size:15px;
+    font-weight:800;
+    color:#166534;
+}
+
+.vet-alert-content p{
+    margin:3px 0 0;
+    color:#4b5563;
+    font-size:14px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 </style>
@@ -289,6 +390,25 @@ $('#modalEliminar').on('show.bs.modal', function (event) {
     $('#btnEliminar').attr('href', 'delete.php?id=' + boton.data('id'));
 });
 </script>
+<script>
 
+setTimeout(() => {
+
+    const alerta = document.querySelector('.vet-alert-success');
+
+    if(alerta){
+
+        alerta.style.transition = '.4s';
+        alerta.style.opacity = '0';
+        alerta.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 400);
+    }
+
+}, 3500);
+
+</script>
 </body>
 </html>

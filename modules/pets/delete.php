@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de mascota no válido.");
@@ -14,6 +15,6 @@ if (!$resultadoDelete) {
     die("Error al eliminar mascota: " . mysqli_error($conexion));
 }
 
-header("Location: index.php");
+header("Location: index.php?delete=1");
 exit;
 ?>

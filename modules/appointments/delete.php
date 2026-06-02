@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 $id = $_GET['id'];
 

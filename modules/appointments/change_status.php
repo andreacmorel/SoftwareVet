@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 $estados_validos = ['pendiente', 'confirmado', 'en_atencion', 'completado', 'cancelado'];
 
@@ -21,6 +22,6 @@ if ($id_turno > 0 && in_array($estado, $estados_validos)) {
     $stmt->close();
 }
 
-header("Location: index.php");
+header("Location: index.php?status=1");
 exit;
 ?>

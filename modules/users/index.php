@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 require_once '../../php/menu.php';
 
 $buscar = trim($_GET['buscar'] ?? '');
@@ -24,7 +25,31 @@ $usuarios = $conexion->query("
     ORDER BY u.id_usuario DESC
 ");
 ?>
+<?php if(isset($_GET['activated'])) { ?>
+<div class="vet-alert-success">
+    <div class="vet-alert-icon">
+        <i class="fas fa-user-check"></i>
+    </div>
 
+    <div class="vet-alert-content">
+        <h5>Usuario activado</h5>
+        <p>El usuario fue activado correctamente.</p>
+    </div>
+</div>
+<?php } ?>
+
+<?php if(isset($_GET['deactivated'])) { ?>
+<div class="vet-alert-success">
+    <div class="vet-alert-icon">
+        <i class="fas fa-user-lock"></i>
+    </div>
+
+    <div class="vet-alert-content">
+        <h5>Usuario desactivado</h5>
+        <p>El usuario fue desactivado correctamente.</p>
+    </div>
+</div>
+<?php } ?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -150,12 +175,50 @@ tbody tr:hover { background:#fcf8ff; }
 }
 
 .badge-estado.inactivo {
-    background:#e5e7eb;
-    color:#374151;
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.inactivo-row {
+    opacity:.55;
+    background:#fafafa;
+}
+
+.acciones-th,
+.acciones-td {
+    width:120px !important;
+    min-width:120px !important;
+    max-width:120px !important;
+    text-align:center !important;
+    vertical-align:middle !important;
+}
+
+.acciones-wrap {
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+}
+
+.btn-action {
+    width:32px;
+    height:32px;
+    min-width:32px;
+    border-radius:8px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    margin:0;
+    text-decoration:none;
+    line-height:1;
+    transition:.2s;
 }
 
 .btn-action:hover {
     transform:scale(1.08);
+    text-decoration:none;
 }
 
 .btn-edit {
@@ -163,53 +226,81 @@ tbody tr:hover { background:#fcf8ff; }
     color:#92400e;
 }
 
-.btn-delete {
+.btn-edit:hover {
+    background:#fde68a;
+    color:#78350f;
+}
+
+.btn-desactivar {
     background:#fee2e2;
     color:#b91c1c;
 }
 
-.btn-toggle {
-    background:#e0e7ff;
-    color:#3730a3;
+.btn-desactivar:hover {
+    background:#fecaca;
+    color:#991b1b;
 }
 
-.btn-toggle:hover {
-    background:#c7d2fe;
+.btn-activar {
+    background:#dcfce7;
+    color:#166534;
 }
 
-.inactivo-row {
-    opacity: 0.6;
-}
-.acciones-th,
-.acciones-td {
-    width: 150px !important;
-    min-width: 150px !important;
-    max-width: 150px !important;
-    text-align: center !important;
-    vertical-align: middle !important;
+.btn-activar:hover {
+    background:#bbf7d0;
+    color:#14532d;
 }
 
-.acciones-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+.vet-alert-success{
+    width:100%;
+    background:linear-gradient(135deg,#f6fffa,#eefcf4);
+    border:1px solid #d7f3e3;
+    border-radius:16px;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    box-shadow:0 6px 18px rgba(25,135,84,.08);
+    margin-bottom:25px;
+    animation:fadeIn .35s ease;
 }
 
-.btn-action {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    margin: 0;
-    text-decoration: none;
-    line-height: 1;
-    transition: .2s;
+.vet-alert-icon{
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:50%;
+    background:#198754;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    box-shadow:0 4px 10px rgba(25,135,84,.25);
+}
+
+.vet-alert-content h5{
+    margin:0;
+    font-size:15px;
+    font-weight:800;
+    color:#166534;
+}
+
+.vet-alert-content p{
+    margin:3px 0 0;
+    color:#4b5563;
+    font-size:14px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 </style>
@@ -231,6 +322,45 @@ tbody tr:hover { background:#fcf8ff; }
         <i class="fas fa-plus"></i> Nuevo Usuario
     </a>
 </div>
+
+<?php if(isset($_GET['success'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Registro exitoso</h5>
+            <p>El usuario fue registrado correctamente.</p>
+        </div>
+    </div>
+<?php } ?>
+
+<?php if(isset($_GET['updated'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Cambios guardados</h5>
+            <p>El usuario fue modificado correctamente.</p>
+        </div>
+    </div>
+<?php } ?>
+
+<?php if(isset($_GET['status'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-sync-alt"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Estado actualizado</h5>
+            <p>El estado del usuario fue actualizado correctamente.</p>
+        </div>
+    </div>
+<?php } ?>
 
 <form method="GET" class="filter-card">
     <div class="row align-items-end">
@@ -274,6 +404,7 @@ tbody tr:hover { background:#fcf8ff; }
 
 <?php if ($usuarios && $usuarios->num_rows > 0) { ?>
 <?php while ($user = $usuarios->fetch_object()) { ?>
+
 <tr class="<?= $user->estado == 0 ? 'inactivo-row' : '' ?>">
 
 <td>
@@ -313,12 +444,18 @@ tbody tr:hover { background:#fcf8ff; }
 
 <td class="acciones-td">
     <div class="acciones-wrap">
-        <a href="change_status.php?id=<?= $user->id_usuario ?>" 
-           class="btn-action btn-toggle"
-           title="Cambiar estado"
-           onclick="return confirm('¿Seguro que desea cambiar el estado de este usuario?')">
-            <i class="<?= $user->estado == 1 ? 'fas fa-toggle-on' : 'fas fa-toggle-off' ?>"></i>
-        </a>
+
+       <button
+    class="btn-action <?= $user->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
+    data-toggle="modal"
+    data-target="#modalEstadoUsuario"
+    data-id="<?= $user->id_usuario ?>"
+    data-usuario="<?= htmlspecialchars($user->usuario) ?>"
+    data-estado="<?= $user->estado ?>">
+
+    <i class="<?= $user->estado == 1 ? 'fas fa-user-lock' : 'fas fa-user-check' ?>"></i>
+
+</button>
 
         <a href="edit.php?id=<?= $user->id_usuario ?>" 
            class="btn-action btn-edit"
@@ -326,16 +463,11 @@ tbody tr:hover { background:#fcf8ff; }
             <i class="fas fa-pen"></i>
         </a>
 
-        <a href="delete.php?id=<?= $user->id_usuario ?>"
-           class="btn-action btn-delete"
-           title="Eliminar"
-           onclick="return confirm('¿Seguro que desea eliminar este usuario?')">
-            <i class="fas fa-trash"></i>
-        </a>
     </div>
 </td>
 
 </tr>
+
 <?php } ?>
 <?php } else { ?>
 
@@ -356,10 +488,214 @@ tbody tr:hover { background:#fcf8ff; }
 </div>
 
 </div>
+<div class="modal fade" id="modalEstadoUsuario" tabindex="-1">
 
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content" style="border:none;border-radius:16px;overflow:hidden;">
+
+            <div style="background:#52266E;color:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+
+                <h5 style="margin:0;font-weight:700;">
+                    <i class="fas fa-user-lock mr-2"></i>
+                    Cambiar estado
+                </h5>
+
+                <button type="button"
+                        class="close text-white"
+                        data-dismiss="modal"
+                        style="opacity:1;">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="text-center p-4">
+
+                <i id="iconoEstadoUsuario"
+                   class="fas fa-user-lock fa-3x mb-3"
+                   style="color:#d8c2e8;">
+                </i>
+
+                <p class="mb-1" id="textoEstadoUsuario"></p>
+
+                <h5 id="nombreEstadoUsuario"
+                    style="color:#52266E;font-weight:800;">
+                </h5>
+
+               <div id="boxEstadoUsuario"
+     style="
+        border-radius:10px;
+        padding:11px 14px;
+        display:flex;
+        align-items:flex-start;
+        gap:10px;
+        text-align:left;
+        margin-top:18px;
+        width:100%;
+">
+
+    <i id="iconoInfoEstado"
+       class="fas fa-info-circle"
+       style="font-size:14px;margin-top:2px;flex-shrink:0;">
+    </i>
+
+    <p id="mensajeInfoEstado"
+       style="
+            font-size:12.5px;
+            line-height:1.55;
+            margin:0;
+       ">
+    </p>
+
+</div>
+
+            </div>
+
+            <div class="d-flex justify-content-end p-3"
+                 style="gap:10px;border-top:1px solid #eee;">
+
+                <button type="button"
+                        class="btn btn-light"
+                        data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+
+                <a href="#"
+                   id="btnConfirmarEstadoUsuario"
+                   class="btn btn-danger">
+
+                    <i id="iconoBotonEstado"
+                       class="fas fa-user-lock">
+                    </i>
+
+                    <span id="textoBotonEstado">
+                        Desactivar
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<script>
+
+$('#modalEstadoUsuario').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget);
+
+    var id = button.data('id');
+    var usuario = button.data('usuario');
+    var estado = button.data('estado');
+
+    $('#nombreEstadoUsuario').text(usuario);
+
+    if (estado == 1) {
+
+        $('#textoEstadoUsuario').text(
+            '¿Estás seguro de desactivar al usuario?'
+        );
+
+        $('#mensajeInfoEstado').text(
+            'El usuario no podrá acceder al sistema mientras permanezca inactivo.'
+        );
+
+        $('#boxEstadoUsuario').css({
+            background:'#FDEDEC',
+            border:'1px solid #F1948A'
+        });
+
+        $('#mensajeInfoEstado').css({
+            color:'#C0392B'
+        });
+
+        $('#iconoInfoEstado').css({
+            color:'#C0392B'
+        });
+
+        $('#btnConfirmarEstadoUsuario')
+            .attr('href', 'change_status.php?id=' + id)
+            .removeClass('btn-success')
+            .addClass('btn-danger');
+
+        $('#textoBotonEstado').text('Desactivar');
+
+        $('#iconoEstadoUsuario')
+            .removeClass('fa-user-check')
+            .addClass('fa-user-lock');
+
+        $('#iconoBotonEstado')
+            .removeClass('fa-user-check')
+            .addClass('fa-user-lock');
+
+    } else {
+
+        $('#textoEstadoUsuario').text(
+            '¿Estás seguro de activar al usuario?'
+        );
+
+        $('#mensajeInfoEstado').text(
+            'El usuario recuperará el acceso al sistema y podrá iniciar sesión nuevamente.'
+        );
+
+        $('#boxEstadoUsuario').css({
+            background:'#ECFDF5',
+            border:'1px solid #86EFAC'
+        });
+
+        $('#mensajeInfoEstado').css({
+            color:'#166534'
+        });
+
+        $('#iconoInfoEstado').css({
+            color:'#166534'
+        });
+
+        $('#btnConfirmarEstadoUsuario')
+            .attr('href', 'change_status.php?id=' + id)
+            .removeClass('btn-danger')
+            .addClass('btn-success');
+
+        $('#textoBotonEstado').text('Activar');
+
+        $('#iconoEstadoUsuario')
+            .removeClass('fa-user-lock')
+            .addClass('fa-user-check');
+
+        $('#iconoBotonEstado')
+            .removeClass('fa-user-lock')
+            .addClass('fa-user-check');
+    }
+
+});
+
+</script>
+<script>
+setTimeout(() => {
+
+    const alerta = document.querySelector('.vet-alert-success');
+
+    if(alerta){
+
+        alerta.style.transition = '.4s';
+        alerta.style.opacity = '0';
+        alerta.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 400);
+    }
+
+}, 3500);
+</script>
 
 </body>
 </html>

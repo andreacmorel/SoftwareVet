@@ -1,27 +1,82 @@
 <?php
 require_once '../../settings/conexion.php';
-require_once '../../php/menu.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
+
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    die("ID de perfil no válido.");
+}
 
 $id = (int)$_GET['id'];
 
-$perfil = $conexion->query("
+$perfilEditar = $conexion->query("
     SELECT id_perfil, nombre_perfil
     FROM perfil
     WHERE id_perfil = $id
 ")->fetch_object();
 
-if (!empty($_POST['btnModificar'])) {
-    $nombre_perfil = $conexion->real_escape_string($_POST['nombre_perfil']);
-
-    $conexion->query("
-        UPDATE perfil
-        SET nombre_perfil = '$nombre_perfil'
-        WHERE id_perfil = $id
-    ");
-
-    header("Location: index.php");
-    exit;
+if (!$perfilEditar) {
+    die("Perfil no encontrado.");
 }
+
+if (!empty($_POST['btnModificar'])) {
+
+    $nombre_perfil = trim($_POST['nombre_perfil'] ?? '');
+
+    if (empty($nombre_perfil)) {
+
+        $erroresCampos['nombre_perfil'] = "El nombre del perfil es obligatorio.";
+
+    } elseif (strlen($nombre_perfil) < 3) {
+
+        $erroresCampos['nombre_perfil'] = "Debe tener al menos 3 caracteres.";
+
+    } elseif (strlen($nombre_perfil) > 50) {
+
+        $erroresCampos['nombre_perfil'] = "No puede superar los 50 caracteres.";
+
+    } elseif (!preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/', $nombre_perfil)) {
+
+        $erroresCampos['nombre_perfil'] = "Solo se permiten letras y espacios.";
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre_perfil);
+
+        $existe = $conexion->query("
+            SELECT id_perfil
+            FROM perfil
+            WHERE nombre_perfil = '$nombreSeguro'
+            AND id_perfil != $id
+            LIMIT 1
+        ");
+
+        if ($existe && $existe->num_rows > 0) {
+
+            $erroresCampos['nombre_perfil'] = "Ya existe otro perfil con ese nombre.";
+        }
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre_perfil);
+
+        $conexion->query("
+            UPDATE perfil
+            SET nombre_perfil = '$nombreSeguro'
+            WHERE id_perfil = $id
+        ");
+
+        header("Location: index.php?updated=1");
+        exit;
+    }
+
+    $perfilEditar->nombre_perfil = $nombre_perfil;
+}
+
+require_once '../../php/menu.php';
 ?>
 
 <!DOCTYPE html>
@@ -35,10 +90,20 @@ if (!empty($_POST['btnModificar'])) {
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 
 <style>
+.page-title {
+    font-weight:800;
+    color:#1f2937;
+    margin-bottom:2px;
+}
 
-.page-title { font-weight:800; color:#1f2937; margin-bottom:2px; }
-.page-title i { color:#52266E; }
-.page-subtitle { color:#9ca3af; font-size:14px; }
+.page-title i {
+    color:#52266E;
+}
+
+.page-subtitle {
+    color:#9ca3af;
+    font-size:14px;
+}
 
 .form-card {
     background:white;
@@ -66,6 +131,17 @@ label {
     box-shadow:0 0 0 3px rgba(82,38,110,.12);
 }
 
+.form-control.is-invalid {
+    border-color:#dc2626 !important;
+    box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+}
+
+.invalid-feedback {
+    display:block;
+    font-size:13px;
+    font-weight:600;
+}
+
 .btn-purple {
     background:#52266E;
     color:white;
@@ -89,6 +165,7 @@ label {
 
 .btn-cancel:hover {
     background:#d1d5db;
+    color:#111827;
 }
 
 .section-title {
@@ -96,49 +173,19 @@ label {
     font-weight:800;
     margin-bottom:15px;
 }
-
-.breadcrumb-item a {
-    text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumb-item.active {
-    font-weight: 600;
-    color: #6b7280;
-}
-
 </style>
 </head>
 
 <body>
 
 <div class="container-fluid">
-   <!-- <nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb" style="background:transparent; padding:0; margin-bottom:10px;">
-        <li class="breadcrumb-item">
-            <a href="../../php/inicio.php" style="color:#52266E; font-weight:600;">
-                <i class="fas fa-home"></i> Inicio
-            </a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="listadoPerfil.php" style="color:#52266E; font-weight:600;">
-                Perfiles
-            </a>
-        </li>
-        <li class="breadcrumb-item active text-muted">
-            Modificar
-        </li>
-    </ol>
-</nav>-->
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h3 page-title">
             <i class="fas fa-user-edit mr-2"></i> Modificar Perfil
         </h1>
+
         <div class="page-subtitle">
             Editá el nombre del perfil seleccionado
         </div>
@@ -147,31 +194,46 @@ label {
 
 <div class="form-card">
 
-<form method="POST">
+<form method="POST" novalidate>
 
     <h5 class="section-title">
         <i class="fas fa-id-badge mr-2"></i> Datos del Perfil
     </h5>
 
     <div class="form-group mb-4">
-        <label>Nombre del perfil</label>
+
+        <label>
+            Nombre del perfil
+            <span style="color:#dc2626;">*</span>
+        </label>
+
         <input 
             type="text" 
             name="nombre_perfil" 
-            class="form-control"
-            value="<?= htmlspecialchars($perfil->nombre_perfil) ?>" 
-            required
+            class="form-control <?php echo isset($erroresCampos['nombre_perfil']) ? 'is-invalid' : ''; ?>"
+            value="<?= htmlspecialchars($perfilEditar->nombre_perfil) ?>"
         >
+
+        <?php if (isset($erroresCampos['nombre_perfil'])) { ?>
+
+            <div class="invalid-feedback">
+                <?php echo htmlspecialchars($erroresCampos['nombre_perfil']); ?>
+            </div>
+
+        <?php } ?>
+
     </div>
 
     <div class="d-flex justify-content-between">
 
         <a href="index.php" class="btn btn-cancel">
-            <i class="fas fa-times mr-1"></i> Cancelar
+            <i class="fas fa-times mr-1"></i>
+            Cancelar
         </a>
 
         <button type="submit" name="btnModificar" value="1" class="btn btn-purple">
-            <i class="fas fa-save mr-1"></i> Guardar cambios
+            <i class="fas fa-save mr-1"></i>
+            Guardar cambios
         </button>
 
     </div>

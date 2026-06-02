@@ -1,38 +1,14 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de especie no válido.");
 }
 
 $id = (int)$_GET['id'];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $nombre_especie = trim($_POST['nombre_especie'] ?? '');
-    $raza = trim($_POST['raza'] ?? '');
-
-    if ($nombre_especie === '' || $raza === '') {
-        die("Todos los campos son obligatorios.");
-    }
-
-    $stmt = $conexion->prepare("
-        UPDATE especie 
-        SET nombre_especie = ?, raza = ?
-        WHERE id_especie = ?
-    ");
-
-    $stmt->bind_param("ssi", $nombre_especie, $raza, $id);
-
-    if (!$stmt->execute()) {
-        die("Error al modificar especie: " . $conexion->error);
-    }
-
-    $stmt->close();
-
-    header("Location: index.php");
-    exit;
-}
 
 $stmt = $conexion->prepare("
     SELECT id_especie, nombre_especie, raza
@@ -50,6 +26,69 @@ if ($res->num_rows == 0) {
 
 $row = $res->fetch_assoc();
 $stmt->close();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $nombre_especie = trim($_POST['nombre_especie'] ?? '');
+    $raza = trim($_POST['raza'] ?? '');
+
+    if (empty($nombre_especie)) {
+        $erroresCampos['nombre_especie'] = "El nombre de la especie es obligatorio.";
+    } elseif (strlen($nombre_especie) < 3) {
+        $erroresCampos['nombre_especie'] = "Debe tener al menos 3 caracteres.";
+    }
+
+    if (empty($raza)) {
+        $erroresCampos['raza'] = "La raza es obligatoria.";
+    } elseif (strlen($raza) < 3) {
+        $erroresCampos['raza'] = "Debe tener al menos 3 caracteres.";
+    }
+
+    if (empty($erroresCampos)) {
+
+        $stmtExiste = $conexion->prepare("
+            SELECT id_especie
+            FROM especie
+            WHERE nombre_especie = ?
+            AND raza = ?
+            AND id_especie != ?
+        ");
+
+        $stmtExiste->bind_param("ssi", $nombre_especie, $raza, $id);
+        $stmtExiste->execute();
+
+        $resExiste = $stmtExiste->get_result();
+
+        if ($resExiste->num_rows > 0) {
+            $erroresCampos['raza'] = "Esta especie y raza ya están registradas.";
+        }
+
+        $stmtExiste->close();
+    }
+
+    if (empty($erroresCampos)) {
+
+        $stmt = $conexion->prepare("
+            UPDATE especie 
+            SET nombre_especie = ?, raza = ?
+            WHERE id_especie = ?
+        ");
+
+        $stmt->bind_param("ssi", $nombre_especie, $raza, $id);
+
+        if ($stmt->execute()) {
+            header("Location: index.php?updated=1");
+            exit;
+        } else {
+            $erroresCampos['general'] = "Error al modificar especie.";
+        }
+
+        $stmt->close();
+    }
+
+    $row['nombre_especie'] = $nombre_especie;
+    $row['raza'] = $raza;
+}
 
 require_once '../../php/menu.php';
 ?>
@@ -122,6 +161,17 @@ require_once '../../php/menu.php';
             box-shadow:0 0 0 3px rgba(82,38,110,.12);
         }
 
+        .form-control.is-invalid {
+            border-color:#dc2626 !important;
+            box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+        }
+
+        .invalid-feedback {
+            display:block;
+            font-size:13px;
+            font-weight:600;
+        }
+
         .section-title {
             color:#52266E;
             font-weight:800;
@@ -181,7 +231,13 @@ require_once '../../php/menu.php';
 
         <div class="card-body">
 
-            <form method="POST">
+            <?php if (isset($erroresCampos['general'])) { ?>
+                <div class="alert alert-danger">
+                    <?php echo htmlspecialchars($erroresCampos['general']); ?>
+                </div>
+            <?php } ?>
+
+            <form method="POST" novalidate>
 
                 <h5 class="section-title">
                     <i class="fas fa-paw mr-2"></i>
@@ -190,25 +246,37 @@ require_once '../../php/menu.php';
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label>Nombre de especie</label>
+                        <label>Nombre de especie <span style="color:#dc2626;">*</span></label>
+
                         <input 
                             type="text" 
                             name="nombre_especie" 
-                            class="form-control"
-                            value="<?= htmlspecialchars($row['nombre_especie']) ?>" 
-                            required
+                            class="form-control <?php echo isset($erroresCampos['nombre_especie']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($row['nombre_especie'] ?? ''); ?>"
                         >
+
+                        <?php if(isset($erroresCampos['nombre_especie'])) { ?>
+                            <div class="invalid-feedback">
+                                <?php echo htmlspecialchars($erroresCampos['nombre_especie']); ?>
+                            </div>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label>Raza</label>
+                        <label>Raza <span style="color:#dc2626;">*</span></label>
+
                         <input 
                             type="text" 
                             name="raza" 
-                            class="form-control"
-                            value="<?= htmlspecialchars($row['raza']) ?>" 
-                            required
+                            class="form-control <?php echo isset($erroresCampos['raza']) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo htmlspecialchars($row['raza'] ?? ''); ?>"
                         >
+
+                        <?php if(isset($erroresCampos['raza'])) { ?>
+                            <div class="invalid-feedback">
+                                <?php echo htmlspecialchars($erroresCampos['raza']); ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
 

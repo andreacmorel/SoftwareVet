@@ -1,6 +1,8 @@
 <?php
 require_once '../../settings/conexion.php';
-require_once '../../php/menu.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 $id_perfil = (int)($_GET['id'] ?? 0);
 
@@ -11,19 +13,24 @@ $perfil = $conexion->query("
 ")->fetch_object();
 
 if (!$perfil) {
-    echo "<script>alert('Perfil no encontrado'); window.location.href='listadoPerfil.php';</script>";
-    exit;
+    die("Perfil no encontrado.");
 }
 
 if (!empty($_POST['btnGuardar'])) {
 
-    $conexion->query("
-        DELETE FROM perfil_modulo
-        WHERE id_perfil = $id_perfil
-    ");
+    if (empty($_POST['modulos'])) {
 
-    if (!empty($_POST['modulos'])) {
+        $erroresCampos['modulos'] = "Debe seleccionar al menos un módulo.";
+
+    } else {
+
+        $conexion->query("
+            DELETE FROM perfil_modulo
+            WHERE id_perfil = $id_perfil
+        ");
+
         foreach ($_POST['modulos'] as $id_modulo) {
+
             $id_modulo = (int)$id_modulo;
 
             $conexion->query("
@@ -31,13 +38,10 @@ if (!empty($_POST['btnGuardar'])) {
                 VALUES ($id_perfil, $id_modulo)
             ");
         }
-    }
 
-    echo "<script>
-        alert('Módulos asignados correctamente');
-        window.location.href='index.php';
-    </script>";
-    exit;
+        header("Location: index.php?updated=1");
+        exit;
+    }
 }
 
 $modulos = $conexion->query("
@@ -58,6 +62,8 @@ $resAsignados = $conexion->query("
 while ($row = $resAsignados->fetch_object()) {
     $asignados[] = $row->id_modulo;
 }
+require_once '../../php/menu.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -143,12 +149,6 @@ while ($row = $resAsignados->fetch_object()) {
             font-size: 14px;
         }
 
-        .modulo-ruta {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 3px;
-        }
-
         .form-card {
             background: white;
             border-radius: 15px;
@@ -171,7 +171,6 @@ while ($row = $resAsignados->fetch_object()) {
             font-weight: 700;
             padding: 10px 24px;
             border: none;
-            transition: background .2s;
         }
 
         .btn-guardar:hover {
@@ -200,6 +199,18 @@ while ($row = $resAsignados->fetch_object()) {
             padding-top: 20px;
             border-top: 1px solid #f3f4f6;
         }
+
+        .alert-danger-vet {
+            background: #fdecec;
+            border: 1px solid #f5c6cb;
+            color: #c0392b;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
@@ -212,13 +223,16 @@ while ($row = $resAsignados->fetch_object()) {
             <h1 class="h3 page-title">
                 <i class="fas fa-lock mr-2"></i> Asignar Módulos
             </h1>
-            <div class="page-subtitle">Seleccioná los módulos que tendrá acceso este perfil</div>
+            <div class="page-subtitle">
+                Seleccioná los módulos que tendrá acceso este perfil
+            </div>
         </div>
     </div>
 
     <div class="form-card">
 
         <div class="section-label">Perfil seleccionado</div>
+
         <div class="mb-4">
             <span class="perfil-badge">
                 <i class="fas fa-user-shield mr-1"></i>
@@ -228,39 +242,50 @@ while ($row = $resAsignados->fetch_object()) {
 
         <div class="section-label">Módulos disponibles</div>
 
-        <form method="POST">
+        <?php if(isset($erroresCampos['modulos'])) { ?>
+            <div class="alert-danger-vet">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <?php echo htmlspecialchars($erroresCampos['modulos']); ?>
+            </div>
+        <?php } ?>
+
+        <form method="POST" novalidate>
 
             <div class="modulos-grid">
+
                 <?php while ($modulo = $modulos->fetch_object()) {
-                    $checked = in_array($modulo->id_modulo, $asignados);
+                    $checked = in_array($modulo->id_modulo, $_POST['modulos'] ?? $asignados);
                 ?>
+
                     <label class="modulo-item <?= $checked ? 'checked' : '' ?>" for="modulo<?= $modulo->id_modulo ?>">
-                        <input type="checkbox"
-                               name="modulos[]"
-                               value="<?= $modulo->id_modulo ?>"
-                               id="modulo<?= $modulo->id_modulo ?>"
-                               <?= $checked ? 'checked' : '' ?>>
+                        <input 
+                            type="checkbox"
+                            name="modulos[]"
+                            value="<?= $modulo->id_modulo ?>"
+                            id="modulo<?= $modulo->id_modulo ?>"
+                            <?= $checked ? 'checked' : '' ?>
+                        >
 
                         <div>
                             <div class="modulo-nombre">
                                 <?= htmlspecialchars($modulo->nombre_modulo) ?>
                             </div>
-                         <!--   <div class="modulo-ruta">
-                                <i class="fas fa-link mr-1"></i>
-                                <?= htmlspecialchars($modulo->ruta) ?>
-                            </div>-->
                         </div>
                     </label>
+
                 <?php } ?>
+
             </div>
 
             <div class="actions-bar">
-                 <a href="index.php" class="btn btn-cancelar">
-                    <i class="fas fa-times mr-1"></i> Cancelar
+                <a href="index.php" class="btn btn-cancelar">
+                    <i class="fas fa-times mr-1"></i>
+                    Cancelar
                 </a>
                 
                 <button type="submit" name="btnGuardar" value="1" class="btn btn-guardar">
-                    <i class="fas fa-save mr-1"></i> Guardar asignación
+                    <i class="fas fa-save mr-1"></i>
+                    Guardar asignación
                 </button>
             </div>
 

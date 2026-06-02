@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de historia clinica no válido.");

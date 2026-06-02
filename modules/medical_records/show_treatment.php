@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 $id_historia = (int)($_GET['id'] ?? 0);
 

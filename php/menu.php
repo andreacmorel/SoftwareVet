@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../settings/conexion.php';
+//require_once 'validateRoute.php';
 
 $uri = $_SERVER['REQUEST_URI'];
 function isActive(string $path): string {
@@ -32,9 +33,9 @@ if (isset($_SESSION['id_perfil'])) {
             WHERE id_perfil = $id_perfil
         ");
 
-        if ($resPerfil && $perfil = $resPerfil->fetch_object()) {
-            $nombrePerfil = $perfil->nombre_perfil;
-        }
+        if ($resPerfil && $perfilMenu = $resPerfil->fetch_object()) {
+        $nombrePerfil = $perfilMenu->nombre_perfil;
+}
     }
 }
 

@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de cliente no válido.");
@@ -36,6 +37,6 @@ if (!mysqli_query($conexion, "DELETE FROM persona WHERE id_persona = '$id_person
     die("Error al eliminar persona: " . mysqli_error($conexion));
 }
 
-header("Location: index.php?eliminado=1");
+header("Location: index.php?deleted=1");
 exit;
 ?>

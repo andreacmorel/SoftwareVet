@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 $buscar = $_GET['buscar'] ?? '';
 $fecha_desde = $_GET['fecha_desde'] ?? '';
@@ -13,14 +14,16 @@ if (!empty($buscar)) {
     $where .= " AND (
         m.nombre_mascota LIKE ? OR
         h.descripcion LIKE ? OR
-        h.observacion LIKE ?
+        h.observacion LIKE ? OR
+        h.id_historia_clinica LIKE ?
     )";
 
     $busqueda = "%$buscar%";
     $params[] = $busqueda;
     $params[] = $busqueda;
     $params[] = $busqueda;
-    $types .= "sss";
+    $params[] = $busqueda;
+    $types .= "ssss";
 }
 
 if (!empty($fecha_desde)) {
@@ -172,6 +175,12 @@ require_once '../../php/menu.php';
             color: #6b7280;
         }
 
+        .hc-code {
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
         .btn-action {
             width: 31px;
             height: 31px;
@@ -181,6 +190,12 @@ require_once '../../php/menu.php';
             justify-content: center;
             border: none;
             margin: 0 2px;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            text-decoration: none;
+            transform: scale(1.08);
         }
 
         .btn-edit {
@@ -193,20 +208,70 @@ require_once '../../php/menu.php';
             color: #b91c1c;
         }
 
+        .btn-print {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .btn-treatment {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
         td.text-center {
             vertical-align: middle !important;
         }
 
-        .btn-tratamiento {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: #dcfce7;
-            color: #15803d;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
+        .vet-alert-success{
+            width:100%;
+            background:linear-gradient(135deg,#f6fffa,#eefcf4);
+            border:1px solid #d7f3e3;
+            border-radius:16px;
+            padding:18px 22px;
+            display:flex;
+            align-items:center;
+            gap:16px;
+            box-shadow:0 6px 18px rgba(25,135,84,.08);
+            margin-bottom:25px;
+            animation:fadeIn .35s ease;
+        }
+
+        .vet-alert-icon{
+            width:48px;
+            height:48px;
+            min-width:48px;
+            border-radius:50%;
+            background:#198754;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:18px;
+            box-shadow:0 4px 10px rgba(25,135,84,.25);
+        }
+
+        .vet-alert-content h5{
+            margin:0;
+            font-size:15px;
+            font-weight:800;
+            color:#166534;
+        }
+
+        .vet-alert-content p{
+            margin:3px 0 0;
+            color:#4b5563;
+            font-size:14px;
+        }
+
+        @keyframes fadeIn{
+            from{
+                opacity:0;
+                transform:translateY(-8px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
         }
     </style>
 </head>
@@ -228,32 +293,83 @@ require_once '../../php/menu.php';
         </a>
     </div>
 
+    <?php if(isset($_GET['success']) || (isset($_GET['ok']) && $_GET['ok'] == 'alta')) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Registro exitoso</h5>
+                <p>La historia clínica fue registrada correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if(isset($_GET['updated'])) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-pen"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Cambios guardados</h5>
+                <p>La historia clínica fue modificada correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if(isset($_GET['deleted'])) { ?>
+        <div class="vet-alert-success">
+            <div class="vet-alert-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+
+            <div class="vet-alert-content">
+                <h5>Registro eliminado</h5>
+                <p>La historia clínica fue eliminada correctamente.</p>
+            </div>
+        </div>
+    <?php } ?>
+
     <form method="GET" class="filter-card">
         <div class="row align-items-end">
 
             <div class="col-md-4">
                 <label>Buscar</label>
-                <input  type="text" name="buscar" class="form-control"placeholder="Mascota, descripción u observación..."value="<?= htmlspecialchars($buscar) ?>">
+                <input 
+                    type="text" 
+                    name="buscar" 
+                    class="form-control"
+                    placeholder="Mascota, descripción, observación o código HC..."
+                    value="<?= htmlspecialchars($buscar) ?>"
+                >
             </div>
 
             <div class="col-md-2">
                 <label>Desde</label>
-                <input type="date" name="fecha_desde" class="form-control"value="<?= htmlspecialchars($fecha_desde) ?>">
+                <input 
+                    type="date" 
+                    name="fecha_desde" 
+                    class="form-control"
+                    value="<?= htmlspecialchars($fecha_desde) ?>"
+                >
             </div>
 
             <div class="col-md-2">
                 <label>Hasta</label>
-                <input type="date" name="fecha_hasta" class="form-control"value="<?= htmlspecialchars($fecha_hasta) ?>">
+                <input 
+                    type="date" 
+                    name="fecha_hasta" 
+                    class="form-control"
+                    value="<?= htmlspecialchars($fecha_hasta) ?>"
+                >
             </div>
 
             <div class="col-md-4 d-flex">
                 <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-filter"></i> 
+                    <i class="fas fa-filter"></i>
                 </button>
-
-               <!-- <a href="index.php" class="btn btn-secondary ml-2">
-                    <i class="fas fa-times"></i>-->
-                </a>
             </div>
 
         </div>
@@ -269,7 +385,7 @@ require_once '../../php/menu.php';
                         <th>Fecha</th>
                         <th>Observación</th>
                         <th class="text-center" style="width:150px;">Tratamiento</th>
-                        <th class="text-center" style="width:130px;">Acciones</th>
+                        <th class="text-center" style="width:150px;">Acciones</th>
                     </tr>
                 </thead>
 
@@ -283,9 +399,14 @@ require_once '../../php/menu.php';
                                             <i class="fas fa-paw"></i>
                                         </span>
 
-                                        <span class="mascota-name">
-                                            <?= htmlspecialchars($h->nombre_mascota) ?>
-                                        </span>
+                                        <div>
+                                            <div class="mascota-name">
+                                                <?= htmlspecialchars($h->nombre_mascota) ?>
+                                            </div>
+                                            <div class="hc-code">
+                                                HC-<?= str_pad($h->id_historia_clinica, 5, '0', STR_PAD_LEFT) ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
 
@@ -303,14 +424,19 @@ require_once '../../php/menu.php';
 
                                 <td class="text-center align-middle">
                                     <a href="show_treatment.php?id=<?= $h->id_historia_clinica ?>"
-                                       class="btn-action"
-                                       style="background:#dcfce7; color:#15803d;"
+                                       class="btn-action btn-treatment"
                                        title="Ver tratamientos">
                                         <i class="fas fa-pills"></i>
                                     </a>
                                 </td>
 
                                 <td class="text-center align-middle">
+
+                                   <a href="print.php?id=<?= $h->id_historia_clinica ?>&pdf=1"
+                                    class="btn-action btn-print"
+                                    title="Descargar PDF">
+                                    <i class="fas fa-file-pdf"></i>
+                                    </a>
 
                                     <a 
                                         href="edit.php?id=<?= $h->id_historia_clinica ?>"
@@ -335,7 +461,7 @@ require_once '../../php/menu.php';
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
+                            <td colspan="6" class="text-center text-muted py-4">
                                 <i class="fas fa-search mr-1"></i>
                                 No se encontraron registros de historia clínica.
                             </td>
@@ -404,6 +530,20 @@ $('#modalEliminarHistoria').on('show.bs.modal', function (event) {
     $('#nombreHistoriaEliminar').text(nombre);
     $('#btnConfirmarEliminarHistoria').attr('href', 'delete.php?id=' + id);
 });
+
+setTimeout(() => {
+    const alerta = document.querySelector('.vet-alert-success');
+
+    if(alerta){
+        alerta.style.transition = '.4s';
+        alerta.style.opacity = '0';
+        alerta.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 400);
+    }
+}, 3500);
 </script>
 
 </body>

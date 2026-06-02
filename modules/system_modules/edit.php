@@ -1,5 +1,8 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 $id = (int)($_GET['id'] ?? 0);
 
@@ -19,21 +22,71 @@ if (!$modulo) {
     exit;
 }
 
-$error = '';
-
 if (!empty($_POST['btnModificar'])) {
+
     $nombre_modulo = trim($_POST['nombre_modulo'] ?? '');
     $ruta = trim($_POST['ruta'] ?? '');
     $icono = trim($_POST['icono'] ?? '');
 
-    if ($nombre_modulo === '' || $ruta === '') {
-        $error = "El nombre del módulo y la ruta son obligatorios.";
-    } else {
+    if (empty($nombre_modulo)) {
+        $erroresCampos['nombre_modulo'] = "El nombre del módulo es obligatorio.";
+    } elseif (strlen($nombre_modulo) < 3) {
+        $erroresCampos['nombre_modulo'] = "Debe tener al menos 3 caracteres.";
+    } elseif (strlen($nombre_modulo) > 50) {
+        $erroresCampos['nombre_modulo'] = "No puede superar los 50 caracteres.";
+    } elseif (!preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s]+$/', $nombre_modulo)) {
+        $erroresCampos['nombre_modulo'] = "Solo se permiten letras, números y espacios.";
+    }
+
+    if (empty($ruta)) {
+        $erroresCampos['ruta'] = "La ruta es obligatoria.";
+    } elseif (strlen($ruta) > 255) {
+        $erroresCampos['ruta'] = "La ruta no puede superar los 255 caracteres.";
+    }
+
+    if (!empty($icono) && strlen($icono) > 100) {
+        $erroresCampos['icono'] = "El icono no puede superar los 100 caracteres.";
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre_modulo);
+        $rutaSeguro = $conexion->real_escape_string($ruta);
+
+        $validarNombre = $conexion->query("
+            SELECT id_modulo
+            FROM modulo
+            WHERE nombre_modulo = '$nombreSeguro'
+            AND id_modulo != $id
+            AND estado = 1
+            LIMIT 1
+        ");
+
+        if ($validarNombre && $validarNombre->num_rows > 0) {
+            $erroresCampos['nombre_modulo'] = "Ya existe un módulo activo con ese nombre.";
+        }
+
+        $validarRuta = $conexion->query("
+            SELECT id_modulo
+            FROM modulo
+            WHERE ruta = '$rutaSeguro'
+            AND id_modulo != $id
+            AND estado = 1
+            LIMIT 1
+        ");
+
+        if ($validarRuta && $validarRuta->num_rows > 0) {
+            $erroresCampos['ruta'] = "Ya existe un módulo activo con esa ruta.";
+        }
+    }
+
+    if (empty($erroresCampos)) {
+
         $nombreSeguro = $conexion->real_escape_string($nombre_modulo);
         $rutaSeguro = $conexion->real_escape_string($ruta);
         $iconoSeguro = $conexion->real_escape_string($icono);
 
-        $conexion->query("
+        $update = $conexion->query("
             UPDATE modulo
             SET nombre_modulo = '$nombreSeguro',
                 ruta = '$rutaSeguro',
@@ -41,9 +94,17 @@ if (!empty($_POST['btnModificar'])) {
             WHERE id_modulo = $id
         ");
 
-        header("Location: index.php");
-        exit;
+        if ($update) {
+            header("Location: index.php?updated=1");
+            exit;
+        } else {
+            $erroresCampos['general'] = "Error al modificar módulo.";
+        }
     }
+
+    $modulo->nombre_modulo = $nombre_modulo;
+    $modulo->ruta = $ruta;
+    $modulo->icono = $icono;
 }
 
 require_once '../../php/menu.php';
@@ -89,6 +150,17 @@ label {
     box-shadow:0 0 0 3px rgba(82,38,110,.12);
 }
 
+.form-control.is-invalid {
+    border-color:#dc2626 !important;
+    box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+}
+
+.invalid-feedback {
+    display:block;
+    font-size:13px;
+    font-weight:600;
+}
+
 .btn-purple {
     background:#52266E;
     color:white;
@@ -110,19 +182,15 @@ label {
     padding:8px 20px;
 }
 
+.btn-cancel:hover {
+    background:#d1d5db;
+    color:#111827;
+}
+
 .section-title {
     color:#52266E;
     font-weight:800;
     margin-bottom:15px;
-}
-
-.alert-pro {
-    background:#fee2e2;
-    color:#991b1b;
-    border-radius:10px;
-    padding:12px 15px;
-    font-weight:600;
-    margin-bottom:20px;
 }
 </style>
 </head>
@@ -140,35 +208,69 @@ label {
 
     <div class="form-card">
 
-        <?php if (!empty($error)) { ?>
-            <div class="alert-pro">
+        <?php if (isset($erroresCampos['general'])) { ?>
+            <div class="alert alert-danger">
                 <i class="fas fa-exclamation-circle mr-1"></i>
-                <?= htmlspecialchars($error) ?>
+                <?= htmlspecialchars($erroresCampos['general']) ?>
             </div>
         <?php } ?>
 
-        <form method="POST">
+        <form method="POST" novalidate>
 
             <h5 class="section-title">
                 <i class="fas fa-cubes mr-2"></i> Datos del módulo
             </h5>
 
             <div class="form-group">
-                <label>Nombre del módulo</label>
-                <input type="text" name="nombre_modulo" class="form-control"
-                       value="<?= htmlspecialchars($modulo->nombre_modulo) ?>" required>
+                <label>Nombre del módulo <span style="color:#dc2626;">*</span></label>
+
+                <input 
+                    type="text" 
+                    name="nombre_modulo" 
+                    class="form-control <?= isset($erroresCampos['nombre_modulo']) ? 'is-invalid' : '' ?>"
+                    value="<?= htmlspecialchars($modulo->nombre_modulo ?? '') ?>"
+                >
+
+                <?php if(isset($erroresCampos['nombre_modulo'])) { ?>
+                    <div class="invalid-feedback">
+                        <?= htmlspecialchars($erroresCampos['nombre_modulo']) ?>
+                    </div>
+                <?php } ?>
             </div>
 
             <div class="form-group">
-                <label>Ruta</label>
-                <input type="text" name="ruta" class="form-control"
-                       value="<?= htmlspecialchars($modulo->ruta) ?>" required>
+                <label>Ruta <span style="color:#dc2626;">*</span></label>
+
+                <input 
+                    type="text" 
+                    name="ruta" 
+                    class="form-control <?= isset($erroresCampos['ruta']) ? 'is-invalid' : '' ?>"
+                    value="<?= htmlspecialchars($modulo->ruta ?? '') ?>"
+                >
+
+                <?php if(isset($erroresCampos['ruta'])) { ?>
+                    <div class="invalid-feedback">
+                        <?= htmlspecialchars($erroresCampos['ruta']) ?>
+                    </div>
+                <?php } ?>
             </div>
 
             <div class="form-group">
                 <label>Icono</label>
-                <input type="text" name="icono" class="form-control"
-                       value="<?= htmlspecialchars($modulo->icono ?? '') ?>">
+
+                <input 
+                    type="text" 
+                    name="icono" 
+                    class="form-control <?= isset($erroresCampos['icono']) ? 'is-invalid' : '' ?>"
+                    placeholder="Ej: fas fa-paw"
+                    value="<?= htmlspecialchars($modulo->icono ?? '') ?>"
+                >
+
+                <?php if(isset($erroresCampos['icono'])) { ?>
+                    <div class="invalid-feedback">
+                        <?= htmlspecialchars($erroresCampos['icono']) ?>
+                    </div>
+                <?php } ?>
             </div>
 
             <hr>

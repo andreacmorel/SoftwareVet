@@ -1,5 +1,6 @@
 <?php
 require_once '../settings/conexion.php';
+require_once 'validateRoute.php';
 
 if (!isset($_POST['token']) || !isset($_POST['password']) || !isset($_POST['password2'])) {
     die("Faltan datos");

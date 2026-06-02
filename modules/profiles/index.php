@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 require_once '../../php/menu.php';
 
 $buscar = trim($_GET['buscar'] ?? '');
@@ -11,6 +12,7 @@ if (!empty($buscar)) {
     $whereBuscar = " AND nombre_perfil LIKE '%$buscarSeguro%'";
 }
 
+
 $sql = $conexion->query("
     SELECT id_perfil, nombre_perfil
     FROM perfil
@@ -18,7 +20,75 @@ $sql = $conexion->query("
     $whereBuscar
     ORDER BY id_perfil DESC
 ");
+
+if(isset($_GET['success'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Registro exitoso</h5>
+            <p>El perfil fue registrado correctamente.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
+
+<?php if(isset($_GET['updated'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Cambios guardados</h5>
+            <p>El perfil fue modificado correctamente.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
+
+<?php if(isset($_GET['deleted'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Registro eliminado</h5>
+            <p>El perfil fue eliminado correctamente.</p>
+        </div>
+
+    </div>
+
+<?php }
+
 ?>
+<?php if(isset($_GET['error']) && $_GET['error'] == 'admin') { ?>
+
+    <div class="vet-alert-danger">
+
+        <div class="vet-alert-danger-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+
+        <div class="vet-alert-danger-content">
+            <h5>Acción bloqueada</h5>
+            <p>No se puede eliminar el perfil Administrador del sistema.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -143,6 +213,97 @@ $sql = $conexion->query("
             background:#fee2e2;
             color:#b91c1c;
         }
+        .vet-alert-success{
+    width:100%;
+    background:linear-gradient(135deg,#f6fffa,#eefcf4);
+    border:1px solid #d7f3e3;
+    border-radius:16px;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    box-shadow:0 6px 18px rgba(25,135,84,.08);
+    margin-bottom:25px;
+    animation:fadeIn .35s ease;
+}
+
+.vet-alert-icon{
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:50%;
+    background:#198754;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    box-shadow:0 4px 10px rgba(25,135,84,.25);
+}
+
+.vet-alert-content h5{
+    margin:0;
+    font-size:15px;
+    font-weight:800;
+    color:#166534;
+}
+
+.vet-alert-content p{
+    margin:3px 0 0;
+    color:#4b5563;
+    font-size:14px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+.vet-alert-danger{
+    width:100%;
+    background:linear-gradient(135deg,#fff5f5,#fff0f0);
+    border:1px solid #ffd6d6;
+    border-radius:16px;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    box-shadow:0 6px 18px rgba(220,38,38,.06);
+    margin-bottom:25px;
+    animation:fadeIn .35s ease;
+}
+
+.vet-alert-danger-icon{
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:50%;
+    background:#dc2626;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    box-shadow:0 4px 10px rgba(220,38,38,.2);
+}
+
+.vet-alert-danger-content h5{
+    margin:0;
+    font-size:15px;
+    font-weight:800;
+    color:#991b1b;
+}
+
+.vet-alert-danger-content p{
+    margin:3px 0 0;
+    color:#4b5563;
+    font-size:14px;
+}
     </style>
 </head>
 
@@ -231,12 +392,13 @@ $sql = $conexion->query("
                                         <i class="fas fa-pen"></i>
                                     </a>
 
-                                    <a href="delete.php?id=<?= $row->id_perfil ?>"
-                                       class="btn-action btn-delete"
-                                       title="Eliminar"
-                                       onclick="return confirm('¿Seguro que desea dar de baja este perfil?');">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    <button class="btn-action btn-delete"
+                                         data-toggle="modal"
+                                         data-target="#modalEliminarPerfil"
+                                         data-id="<?= $row->id_perfil ?>"
+                                         data-nombre="<?= htmlspecialchars($row->nombre_perfil) ?>">
+                                         <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -255,10 +417,116 @@ $sql = $conexion->query("
     </div>
 
 </div>
+<div class="modal fade" id="modalEliminarPerfil" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+
+            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
+                
+                <h5 style="margin:0; font-weight:700;">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    Confirmar eliminación
+                </h5>
+
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="text-center p-4">
+
+                <i class="fas fa-user-tag fa-3x mb-3" style="color:#d8c2e8;"></i>
+
+                <p class="mb-1">¿Estás seguro de eliminar el perfil</p>
+
+                <h5 id="nombrePerfilEliminar" style="color:#52266E; font-weight:800;"></h5>
+
+                <p class="mt-3" style="font-size:14px; color:#6b7280;">
+                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
+                    Esta acción es <b>irreversible</b>.
+                </p>
+
+            </div>
+
+            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
+
+                <button type="button" class="btn btn-light" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+
+                <a href="#" id="btnConfirmarEliminarPerfil" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Sí, eliminar
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<script>
 
+setTimeout(() => {
+
+    const alerta = document.querySelector('.vet-alert-success');
+
+    if(alerta){
+
+        alerta.style.transition = '.4s';
+        alerta.style.opacity = '0';
+        alerta.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 400);
+    }
+
+}, 3500);
+
+</script>
+<script>
+
+$('#modalEliminarPerfil').on('show.bs.modal', function (event) {
+
+    var boton = $(event.relatedTarget);
+
+    var id = boton.data('id');
+    var nombre = boton.data('nombre');
+
+    $('#nombrePerfilEliminar').text(nombre);
+
+    $('#btnConfirmarEliminarPerfil')
+        .attr('href', 'delete.php?id=' + id);
+});
+
+</script>
+<script>
+
+setTimeout(() => {
+
+    const alerta = document.querySelector(
+        '.vet-alert-success, .vet-alert-danger'
+    );
+
+    if(alerta){
+
+        alerta.style.transition = '.4s';
+        alerta.style.opacity = '0';
+        alerta.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 400);
+    }
+
+}, 3500);
+
+</script>
 </body>
 </html>

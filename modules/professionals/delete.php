@@ -1,5 +1,6 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de profesional no válido.");
@@ -52,6 +53,6 @@ if (!$resPersona) {
     die("Error al eliminar persona: " . mysqli_error($conexion));
 }
 
-header("Location: index.php?eliminado=1");
+header("Location: index.php?deleted=1");
 exit;
 ?>

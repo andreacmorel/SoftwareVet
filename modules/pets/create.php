@@ -1,5 +1,8 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 $sqlClientes = "
 SELECT c.id_cliente, p.nombre_persona, p.apellido_persona
@@ -8,131 +11,199 @@ INNER JOIN persona p ON c.id_persona = p.id_persona
 ";
 $resClientes = mysqli_query($conexion, $sqlClientes);
 
-if (!$resClientes) {
-    die("Error en clientes: " . mysqli_error($conexion));
-}
-
-$sqlEspecies = "SELECT id_especie, nombre_especie, raza FROM especie";
+$sqlEspecies = "
+SELECT id_especie, nombre_especie, raza 
+FROM especie
+";
 $resEspecies = mysqli_query($conexion, $sqlEspecies);
-
-if (!$resEspecies) {
-    die("Error en especies: " . mysqli_error($conexion));
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $nombre = $_POST['nombre_mascota'];
-    $fecha_nacimiento = $_POST['fecha_nacimiento'];
-    $sexo = $_POST['sexo'];
-    $peso = $_POST['peso'];
-    $color = $_POST['color'];
-    $edad = $_POST['edad'];
-    $id_especie = $_POST['id_especie'];
-    $id_cliente = $_POST['id_cliente'];
+    $nombre = trim($_POST['nombre_mascota'] ?? '');
+    $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
+    $sexo = trim($_POST['sexo'] ?? '');
+    $peso = trim($_POST['peso'] ?? '');
+    $color = trim($_POST['color'] ?? '');
+    $edad = trim($_POST['edad'] ?? '');
+    $id_especie = (int)($_POST['id_especie'] ?? 0);
+    $id_cliente = (int)($_POST['id_cliente'] ?? 0);
 
-    $sqlInsert = "
-        INSERT INTO mascota 
-        (nombre_mascota, fecha_nacimiento, sexo, peso, color, edad, id_especie, id_cliente)
-        VALUES 
-        ('$nombre', '$fecha_nacimiento', '$sexo', '$peso', '$color', '$edad', '$id_especie', '$id_cliente')
-    ";
-
-    $resultado = mysqli_query($conexion, $sqlInsert);
-
-    if (!$resultado) {
-        die("Error al guardar mascota: " . mysqli_error($conexion));
+    if (empty($nombre)) {
+        $erroresCampos['nombre_mascota'] = "El nombre es obligatorio.";
+    } elseif (strlen($nombre) < 2) {
+        $erroresCampos['nombre_mascota'] = "Debe tener al menos 2 caracteres.";
     }
 
-    header("Location: index.php");
-    exit;
+    if (empty($sexo)) {
+        $erroresCampos['sexo'] = "Seleccione el sexo.";
+    }
+
+    if (empty($peso)) {
+        $erroresCampos['peso'] = "El peso es obligatorio.";
+    } elseif ($peso <= 0) {
+        $erroresCampos['peso'] = "El peso debe ser mayor a 0.";
+    }
+
+    if (!empty($edad) && $edad < 0) {
+        $erroresCampos['edad'] = "La edad no puede ser negativa.";
+    }
+
+    if (!empty($fecha_nacimiento) && $fecha_nacimiento > date('Y-m-d')) {
+        $erroresCampos['fecha_nacimiento'] = "La fecha no puede ser futura.";
+    }
+
+    if (empty($id_especie)) {
+        $erroresCampos['id_especie'] = "Seleccione una especie.";
+    }
+
+    if (empty($id_cliente)) {
+        $erroresCampos['id_cliente'] = "Seleccione un cliente.";
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre);
+
+        $sqlExiste = "
+            SELECT id_mascota
+            FROM mascota
+            WHERE nombre_mascota = '$nombreSeguro'
+            AND id_cliente = $id_cliente
+        ";
+
+        $resExiste = mysqli_query($conexion, $sqlExiste);
+
+        if ($resExiste && mysqli_num_rows($resExiste) > 0) {
+            $erroresCampos['nombre_mascota'] = "La mascota ya existe para este cliente.";
+        }
+    }
+
+    if (empty($erroresCampos)) {
+
+        $nombreSeguro = $conexion->real_escape_string($nombre);
+        $sexoSeguro = $conexion->real_escape_string($sexo);
+        $colorSeguro = $conexion->real_escape_string($color);
+
+        $fechaSQL = empty($fecha_nacimiento) ? "NULL" : "'" . $conexion->real_escape_string($fecha_nacimiento) . "'";
+        $edadSQL = empty($edad) ? "NULL" : "'" . $conexion->real_escape_string($edad) . "'";
+
+        $sqlInsert = "
+            INSERT INTO mascota (
+                nombre_mascota,
+                fecha_nacimiento,
+                sexo,
+                peso,
+                color,
+                edad,
+                id_especie,
+                id_cliente
+            )
+            VALUES (
+                '$nombreSeguro',
+                $fechaSQL,
+                '$sexoSeguro',
+                '$peso',
+                '$colorSeguro',
+                $edadSQL,
+                $id_especie,
+                $id_cliente
+            )
+        ";
+
+        $resultado = mysqli_query($conexion, $sqlInsert);
+
+        if ($resultado) {
+            header("Location: index.php?success=1");
+            exit;
+        } else {
+            $erroresCampos['general'] = "Error al guardar mascota.";
+        }
+    }
 }
 
 require_once '../../php/menu.php';
 ?>
 
 <style>
-    .titulo-pagina {
-        font-weight: 800;
-        color: #1f2937;
-    }
+.titulo-pagina { font-weight: 800; color: #1f2937; }
+.titulo-pagina i { color: #52266E; }
 
-    .titulo-pagina i {
-        color: #52266E;
-    }
+.subtitulo-pagina {
+    color: #9ca3af;
+    font-size: 14px;
+    margin-top: -8px;
+    margin-bottom: 25px;
+}
 
-    .subtitulo-pagina {
-        color: #9ca3af;
-        font-size: 14px;
-        margin-top: -8px;
-        margin-bottom: 25px;
-    }
+.card-form {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    overflow: hidden;
+}
 
-    .card-form {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 4px 18px rgba(0,0,0,.06);
-        overflow: hidden;
-    }
+.card-header-form {
+    background: #fbf7ff;
+    border-bottom: 1px solid #eee1f6;
+    padding: 18px 22px;
+}
 
-    .card-header-form {
-        background: #fbf7ff;
-        border-bottom: 1px solid #eee1f6;
-        padding: 18px 22px;
-    }
+.card-header-form h5 {
+    color: #52266E;
+    font-weight: 800;
+    margin: 0;
+}
 
-    .card-header-form h5 {
-        color: #52266E;
-        font-weight: 800;
-        margin: 0;
-    }
+.card-body { padding: 25px; }
 
-    .card-body {
-        padding: 25px;
-    }
+label {
+    color: #52266E;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
 
-    label {
-        color: #52266E;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-    }
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #d8c2e8;
+    font-size: 14px;
+}
 
-    .form-control {
-        border-radius: 8px;
-        border: 1px solid #d8c2e8;
-        font-size: 14px;
-    }
+.form-control:focus {
+    border-color: #52266E;
+    box-shadow: 0 0 0 3px rgba(82,38,110,.12);
+}
 
-    .form-control:focus {
-        border-color: #52266E;
-        box-shadow: 0 0 0 3px rgba(82,38,110,.12);
-    }
+.form-control.is-invalid {
+    border-color:#dc2626 !important;
+    box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+}
 
-    .btn-purple {
-        background: #52266E;
-        color: white;
-        border-radius: 8px;
-        font-weight: 700;
-        padding: 8px 22px;
-    }
+.invalid-feedback{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+}
 
-    .btn-purple:hover {
-        background: #3f1d55;
-        color: white;
-    }
+.btn-purple {
+    background: #52266E;
+    color: white;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 8px 22px;
+}
 
-    .btn-cancelar {
-        background: #e5e7eb;
-        color: #374151;
-        border-radius: 8px;
-        font-weight: 700;
-        padding: 8px 22px;
-    }
+.btn-purple:hover { background: #3f1d55; color: white; }
 
-    .btn-cancelar:hover {
-        background: #d1d5db;
-        color: #111827;
-    }
+.btn-cancelar {
+    background: #e5e7eb;
+    color: #374151;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 8px 22px;
+}
+
+.btn-cancelar:hover { background: #d1d5db; color: #111827; }
 </style>
 
 <div class="container-fluid">
@@ -157,76 +228,127 @@ require_once '../../php/menu.php';
 
         <div class="card-body">
 
-            <form method="POST">
+            <?php if (isset($erroresCampos['general'])) { ?>
+                <div class="alert alert-danger">
+                    <?= htmlspecialchars($erroresCampos['general']) ?>
+                </div>
+            <?php } ?>
+
+            <form method="POST" novalidate>
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre_mascota" class="form-control" required>
+                        <label>Nombre <span style="color:#dc2626;">*</span></label>
+
+                        <input type="text" name="nombre_mascota"
+                            class="form-control <?= isset($erroresCampos['nombre_mascota']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($_POST['nombre_mascota'] ?? '') ?>">
+
+                        <?php if(isset($erroresCampos['nombre_mascota'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['nombre_mascota']) ?></div>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>Fecha nacimiento</label>
-                        <input type="date" name="fecha_nacimiento" class="form-control">
+
+                        <input type="date" name="fecha_nacimiento"
+                            class="form-control <?= isset($erroresCampos['fecha_nacimiento']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($_POST['fecha_nacimiento'] ?? '') ?>">
+
+                        <?php if(isset($erroresCampos['fecha_nacimiento'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['fecha_nacimiento']) ?></div>
+                        <?php } ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label>Sexo</label>
-                        <select name="sexo" class="form-control" required>
+                        <label>Sexo <span style="color:#dc2626;">*</span></label>
+
+                        <select name="sexo"
+                            class="form-control <?= isset($erroresCampos['sexo']) ? 'is-invalid' : '' ?>">
                             <option value="">Seleccione</option>
-                            <option value="M">Macho</option>
-                            <option value="H">Hembra</option>
+                            <option value="M" <?= (($_POST['sexo'] ?? '') == 'M') ? 'selected' : '' ?>>Macho</option>
+                            <option value="H" <?= (($_POST['sexo'] ?? '') == 'H') ? 'selected' : '' ?>>Hembra</option>
                         </select>
+
+                        <?php if(isset($erroresCampos['sexo'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['sexo']) ?></div>
+                        <?php } ?>
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label>Peso (kg)</label>
-                        <input type="number" step="0.01" min="0" name="peso" class="form-control">
+                        <label>Peso (kg) <span style="color:#dc2626;">*</span></label>
+
+                        <input type="number" step="0.01" min="0.1" name="peso"
+                            class="form-control <?= isset($erroresCampos['peso']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($_POST['peso'] ?? '') ?>">
+
+                        <?php if(isset($erroresCampos['peso'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['peso']) ?></div>
+                        <?php } ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Color</label>
-                        <input type="text" name="color" class="form-control">
+                        <input type="text" name="color" class="form-control"
+                            value="<?= htmlspecialchars($_POST['color'] ?? '') ?>">
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>Edad</label>
-                        <input type="number" min="0" name="edad" class="form-control">
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <label>Especie / Raza</label>
-                        <select name="id_especie" class="form-control" required>
-                            <option value="">Seleccione una especie y raza</option>
+                        <input type="number" min="0" name="edad"
+                            class="form-control <?= isset($erroresCampos['edad']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($_POST['edad'] ?? '') ?>">
 
-                            <?php while($e = mysqli_fetch_assoc($resEspecies)) { ?>
-                                <option value="<?php echo $e['id_especie']; ?>">
-                                    <?php echo $e['nombre_especie'] . " - " . $e['raza']; ?>
-                                </option>
-                            <?php } ?>
-
-                        </select>
+                        <?php if(isset($erroresCampos['edad'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['edad']) ?></div>
+                        <?php } ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Cliente</label>
-                    <select name="id_cliente" class="form-control" required>
+                    <label>Especie / Raza <span style="color:#dc2626;">*</span></label>
+
+                    <select name="id_especie"
+                        class="form-control <?= isset($erroresCampos['id_especie']) ? 'is-invalid' : '' ?>">
+                        <option value="">Seleccione una especie</option>
+
+                        <?php while($e = mysqli_fetch_assoc($resEspecies)) { ?>
+                            <option value="<?= $e['id_especie'] ?>"
+                                <?= (($_POST['id_especie'] ?? '') == $e['id_especie']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($e['nombre_especie']." - ".$e['raza']) ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+
+                    <?php if(isset($erroresCampos['id_especie'])) { ?>
+                        <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['id_especie']) ?></div>
+                    <?php } ?>
+                </div>
+
+                <div class="form-group">
+                    <label>Cliente <span style="color:#dc2626;">*</span></label>
+
+                    <select name="id_cliente"
+                        class="form-control <?= isset($erroresCampos['id_cliente']) ? 'is-invalid' : '' ?>">
                         <option value="">Seleccione un cliente</option>
 
                         <?php while($c = mysqli_fetch_assoc($resClientes)) { ?>
-                            <option value="<?php echo $c['id_cliente']; ?>">
-                                <?php echo $c['apellido_persona'] . ", " . $c['nombre_persona']; ?>
+                            <option value="<?= $c['id_cliente'] ?>"
+                                <?= (($_POST['id_cliente'] ?? '') == $c['id_cliente']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($c['apellido_persona'].", ".$c['nombre_persona']) ?>
                             </option>
                         <?php } ?>
-
                     </select>
+
+                    <?php if(isset($erroresCampos['id_cliente'])) { ?>
+                        <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['id_cliente']) ?></div>
+                    <?php } ?>
                 </div>
 
                 <hr>
@@ -244,7 +366,6 @@ require_once '../../php/menu.php';
                 </div>
 
             </form>
-
         </div>
     </div>
 </div>

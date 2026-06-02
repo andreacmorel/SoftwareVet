@@ -1,5 +1,8 @@
 <?php
 require_once '../../settings/conexion.php';
+require_once '../../php/validateRoute.php';
+
+$erroresCampos = [];
 
 $rMas = $conexion->query("
     SELECT m.id_mascota, m.nombre_mascota, p.apellido_persona, p.nombre_persona
@@ -14,49 +17,96 @@ while ($rm = $rMas->fetch_assoc()) {
     $mascotas[] = $rm;
 }
 
-$errors = [];
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $idMascota   = (int)($_POST['id_mascota'] ?? 0);
     $fecha       = trim($_POST['fecha'] ?? '');
     $descripcion = trim($_POST['descripcion'] ?? '');
     $observacion = trim($_POST['observacion'] ?? '');
 
     if ($idMascota <= 0) {
-        $errors[] = 'Debe seleccionar una mascota.';
+        $erroresCampos['id_mascota'] = "Debe seleccionar una mascota.";
     }
 
     if ($fecha === '') {
-        $errors[] = 'La fecha es obligatoria.';
+        $erroresCampos['fecha'] = "La fecha es obligatoria.";
+    } elseif ($fecha > date('Y-m-d')) {
+        $erroresCampos['fecha'] = "La fecha no puede ser futura.";
     }
 
-    if (empty($errors)) {
+    if ($descripcion === '') {
+        $erroresCampos['descripcion'] = "La descripción es obligatoria.";
+    } elseif (strlen($descripcion) < 5) {
+        $erroresCampos['descripcion'] = "Debe tener al menos 5 caracteres.";
+    } elseif (strlen($descripcion) > 500) {
+        $erroresCampos['descripcion'] = "No puede superar los 500 caracteres.";
+    }
+
+    if (strlen($observacion) > 500) {
+        $erroresCampos['observacion'] = "No puede superar los 500 caracteres.";
+    }
+
+    $tDuraciones = $_POST['trat_duracion'] ?? [];
+    $tDosis      = $_POST['trat_dosis'] ?? [];
+    $tDescs      = $_POST['trat_desc'] ?? [];
+
+    foreach ($tDescs as $i => $desc) {
+        $duracion = trim($tDuraciones[$i] ?? '');
+        $dosis    = trim($tDosis[$i] ?? '');
+        $desc     = trim($desc ?? '');
+
+        if ($duracion !== '' || $dosis !== '' || $desc !== '') {
+
+            if ($desc === '') {
+                $erroresCampos['tratamientos'] = "Si agrega un tratamiento, debe completar la descripción.";
+                break;
+            }
+
+            if (strlen($desc) > 500) {
+                $erroresCampos['tratamientos'] = "La descripción del tratamiento no puede superar los 500 caracteres.";
+                break;
+            }
+
+            if (strlen($duracion) > 100) {
+                $erroresCampos['tratamientos'] = "La duración del tratamiento no puede superar los 100 caracteres.";
+                break;
+            }
+
+            if (strlen($dosis) > 100) {
+                $erroresCampos['tratamientos'] = "La dosis del tratamiento no puede superar los 100 caracteres.";
+                break;
+            }
+        }
+    }
+
+    if (empty($erroresCampos)) {
+
         $stmt = $conexion->prepare("
             INSERT INTO historia_clinica 
             (fecha, descripcion, observacion, id_mascota)
             VALUES (?, ?, ?, ?)
         ");
+
         $stmt->bind_param("sssi", $fecha, $descripcion, $observacion, $idMascota);
         $stmt->execute();
 
         $idHC = $stmt->insert_id;
         $stmt->close();
 
-        $tDuraciones = $_POST['trat_duracion'] ?? [];
-        $tDosis      = $_POST['trat_dosis'] ?? [];
-        $tDescs      = $_POST['trat_desc'] ?? [];
-
         foreach ($tDuraciones as $i => $duracion) {
+
             $duracion = trim($duracion);
             $dosis    = trim($tDosis[$i] ?? '');
             $desc     = trim($tDescs[$i] ?? '');
 
             if ($duracion !== '' || $dosis !== '' || $desc !== '') {
+
                 $stmtTrat = $conexion->prepare("
                     INSERT INTO tratamientos 
                     (duracion, dosis, descripcion)
                     VALUES (?, ?, ?)
                 ");
+
                 $stmtTrat->bind_param("sss", $duracion, $dosis, $desc);
                 $stmtTrat->execute();
 
@@ -68,13 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     (id_historia_clinica, id_tratamiento)
                     VALUES (?, ?)
                 ");
+
                 $stmtDet->bind_param("ii", $idHC, $idTrat);
                 $stmtDet->execute();
                 $stmtDet->close();
             }
         }
 
-        header("Location: index.php?ok=alta");
+        header("Location: index.php?success=1");
         exit;
     }
 
@@ -82,7 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $postFecha   = $fecha;
     $postDesc    = $descripcion;
     $postObs     = $observacion;
+
 } else {
+
     $postMascota = (int)($_GET['mascota'] ?? 0);
     $postFecha   = date('Y-m-d');
     $postDesc    = '';
@@ -98,6 +151,7 @@ require_once '../../php/menu.php';
 <head>
     <meta charset="utf-8">
     <title>Alta Historia Clínica</title>
+
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -153,6 +207,17 @@ require_once '../../php/menu.php';
             box-shadow: 0 0 0 .2rem rgba(82, 38, 110, .15);
         }
 
+        .form-control.is-invalid {
+            border-color:#dc2626 !important;
+            box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+        }
+
+        .invalid-feedback {
+            display:block;
+            font-size:13px;
+            font-weight:600;
+        }
+
         .btn-purple {
             background: #52266E;
             color: white;
@@ -206,15 +271,6 @@ require_once '../../php/menu.php';
             background: #f0e6f6;
             color: #52266E;
         }
-
-        .alert-pro {
-            background: #fee2e2;
-            color: #991b1b;
-            border-radius: 10px;
-            padding: 12px 15px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 
@@ -237,19 +293,7 @@ require_once '../../php/menu.php';
 
     <div class="form-card">
 
-        <?php if (!empty($errors)) { ?>
-            <div class="alert-pro">
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                Revisá los siguientes campos:
-                <ul class="mb-0 mt-2">
-                    <?php foreach ($errors as $e) { ?>
-                        <li><?= htmlspecialchars($e) ?></li>
-                    <?php } ?>
-                </ul>
-            </div>
-        <?php } ?>
-
-        <form method="POST" id="frmAlta">
+        <form method="POST" id="frmAlta" novalidate>
 
             <div class="section-title">
                 <i class="fas fa-paw mr-1"></i> Datos de la consulta
@@ -258,31 +302,49 @@ require_once '../../php/menu.php';
             <div class="row">
                 <div class="col-md-7">
                     <div class="form-group">
-                        <label>Mascota</label>
-                        <select name="id_mascota" id="selMascota" class="form-control" required>
+                        <label>Mascota <span style="color:#dc2626;">*</span></label>
+
+                        <select 
+                            name="id_mascota" 
+                            id="selMascota" 
+                            class="form-control <?= isset($erroresCampos['id_mascota']) ? 'is-invalid' : '' ?>"
+                        >
                             <option value="">Seleccione una mascota</option>
 
                             <?php foreach ($mascotas as $m) { ?>
                                 <option value="<?= $m['id_mascota'] ?>"
                                     <?= $postMascota == $m['id_mascota'] ? 'selected' : '' ?>>
+                                    HC-<?= str_pad($m['id_mascota'], 4, '0', STR_PAD_LEFT) ?>
+                                    |
                                     <?= htmlspecialchars($m['nombre_mascota'] . ' - ' . $m['apellido_persona'] . ', ' . $m['nombre_persona']) ?>
                                 </option>
                             <?php } ?>
-
                         </select>
+
+                        <?php if(isset($erroresCampos['id_mascota'])) { ?>
+                            <div class="invalid-feedback">
+                                <?= htmlspecialchars($erroresCampos['id_mascota']) ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
 
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Fecha</label>
+                        <label>Fecha <span style="color:#dc2626;">*</span></label>
+
                         <input 
                             type="date" 
                             name="fecha" 
-                            class="form-control"
+                            class="form-control <?= isset($erroresCampos['fecha']) ? 'is-invalid' : '' ?>"
                             value="<?= htmlspecialchars($postFecha) ?>"
-                            required
                         >
+
+                        <?php if(isset($erroresCampos['fecha'])) { ?>
+                            <div class="invalid-feedback">
+                                <?= htmlspecialchars($erroresCampos['fecha']) ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -292,28 +354,49 @@ require_once '../../php/menu.php';
             </div>
 
             <div class="form-group">
-                <label>Descripción</label>
+                <label>Descripción <span style="color:#dc2626;">*</span></label>
+
                 <textarea 
                     name="descripcion" 
-                    class="form-control" 
+                    class="form-control <?= isset($erroresCampos['descripcion']) ? 'is-invalid' : '' ?>" 
                     rows="3"
                     placeholder="Ej: Control general, vacunación, revisión de herida..."
                 ><?= htmlspecialchars($postDesc) ?></textarea>
+
+                <?php if(isset($erroresCampos['descripcion'])) { ?>
+                    <div class="invalid-feedback">
+                        <?= htmlspecialchars($erroresCampos['descripcion']) ?>
+                    </div>
+                <?php } ?>
             </div>
 
             <div class="form-group">
                 <label>Observación</label>
+
                 <textarea 
                     name="observacion" 
-                    class="form-control" 
+                    class="form-control <?= isset($erroresCampos['observacion']) ? 'is-invalid' : '' ?>" 
                     rows="3"
                     placeholder="Ej: El paciente se encuentra en buen estado general..."
                 ><?= htmlspecialchars($postObs) ?></textarea>
+
+                <?php if(isset($erroresCampos['observacion'])) { ?>
+                    <div class="invalid-feedback">
+                        <?= htmlspecialchars($erroresCampos['observacion']) ?>
+                    </div>
+                <?php } ?>
             </div>
 
             <div class="section-title mt-4">
                 <i class="fas fa-pills mr-1"></i> Tratamientos
             </div>
+
+            <?php if(isset($erroresCampos['tratamientos'])) { ?>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    <?= htmlspecialchars($erroresCampos['tratamientos']) ?>
+                </div>
+            <?php } ?>
 
             <div id="tratList">
                 <div class="text-center text-muted py-3" id="emptyTrat">
