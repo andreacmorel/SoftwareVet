@@ -1,14 +1,21 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según la ruta/perfil
 require_once '../../php/validateRoute.php';
+
+// Array donde se guardarán los errores de validación
 $erroresCampos = [];
 
+// Variables iniciales para mantener valores vacíos al cargar el formulario
 $fecha = '';
 $hora = '';
 $motivo = '';
 $id_profesional = 0;
 $id_mascota = 0;
 
+// Consulta para obtener los profesionales y cargarlos en el select
 $sqlProfesionales = "
     SELECT p.id_profesional, per.nombre_persona, per.apellido_persona
     FROM profesional p
@@ -16,36 +23,46 @@ $sqlProfesionales = "
     ORDER BY per.apellido_persona ASC
 ";
 
+// Ejecuta la consulta de profesionales
 $resProfesionales = mysqli_query($conexion, $sqlProfesionales);
 
+// Consulta para obtener las mascotas y cargarlas en el select
 $sqlMascotas = "
     SELECT id_mascota, nombre_mascota
     FROM mascota
     ORDER BY nombre_mascota ASC
 ";
 
+// Ejecuta la consulta de mascotas
 $resMascotas = mysqli_query($conexion, $sqlMascotas);
 
+// Verifica si el formulario fue enviado por método POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Recibe y limpia los datos enviados desde el formulario
     $fecha = trim($_POST['fecha'] ?? '');
     $hora = trim($_POST['hora'] ?? '');
     $motivo = trim($_POST['motivo'] ?? '');
+
+    // Convierte los ID recibidos a enteros
     $id_profesional = (int)($_POST['id_profesional'] ?? 0);
     $id_mascota = (int)($_POST['id_mascota'] ?? 0);
 
+    // Valida que la fecha no esté vacía y que no sea anterior a la actual
     if (empty($fecha)) {
         $erroresCampos['fecha'] = "La fecha es obligatoria.";
     } elseif ($fecha < date('Y-m-d')) {
         $erroresCampos['fecha'] = "La fecha no puede ser anterior a la actual.";
     }
 
+    // Valida que la hora no esté vacía y que no sea anterior a la actual si el turno es para hoy
     if (empty($hora)) {
         $erroresCampos['hora'] = "La hora es obligatoria.";
     } elseif ($fecha == date('Y-m-d') && $hora < date('H:i')) {
         $erroresCampos['hora'] = "La hora no puede ser anterior a la actual.";
     }
 
+    // Valida que el motivo no esté vacío y respete la cantidad de caracteres permitida
     if (empty($motivo)) {
         $erroresCampos['motivo'] = "El motivo es obligatorio.";
     } elseif (strlen($motivo) < 3) {
@@ -54,9 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $erroresCampos['motivo'] = "No puede superar los 150 caracteres.";
     }
 
+    // Valida que se haya seleccionado un profesional
     if ($id_profesional <= 0) {
         $erroresCampos['id_profesional'] = "Debe seleccionar un profesional.";
     } else {
+
+        // Verifica que el profesional seleccionado exista en la base de datos
         $validarProfesional = $conexion->query("
             SELECT id_profesional
             FROM profesional
@@ -64,14 +84,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             LIMIT 1
         ");
 
+        // Si no existe, muestra error
         if (!$validarProfesional || $validarProfesional->num_rows == 0) {
             $erroresCampos['id_profesional'] = "El profesional seleccionado no es válido.";
         }
     }
 
+    // Valida que se haya seleccionado una mascota
     if ($id_mascota <= 0) {
         $erroresCampos['id_mascota'] = "Debe seleccionar una mascota.";
     } else {
+
+        // Verifica que la mascota seleccionada exista en la base de datos
         $validarMascota = $conexion->query("
             SELECT id_mascota
             FROM mascota
@@ -79,13 +103,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             LIMIT 1
         ");
 
+        // Si no existe, muestra error
         if (!$validarMascota || $validarMascota->num_rows == 0) {
             $erroresCampos['id_mascota'] = "La mascota seleccionada no es válida.";
         }
     }
 
+    // Si no hay errores, verifica que el profesional no tenga otro turno en esa fecha y hora
     if (empty($erroresCampos)) {
 
+        // Prepara la consulta para buscar turnos repetidos
         $validarTurno = $conexion->prepare("
             SELECT id_turno
             FROM turnos
@@ -95,25 +122,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             LIMIT 1
         ");
 
+        // Vincula fecha, hora e ID del profesional
         $validarTurno->bind_param("ssi", $fecha, $hora, $id_profesional);
+
+        // Ejecuta la consulta
         $validarTurno->execute();
+
+        // Obtiene el resultado
         $resTurno = $validarTurno->get_result();
 
+        // Si existe un turno igual, muestra error
         if ($resTurno->num_rows > 0) {
             $erroresCampos['hora'] = "El profesional ya tiene un turno asignado en esa fecha y hora.";
         }
 
+        // Cierra la consulta preparada
         $validarTurno->close();
     }
 
+    // Si no hay errores, registra el turno
     if (empty($erroresCampos)) {
 
+        // Prepara la consulta INSERT del turno
         $stmt = $conexion->prepare("
             INSERT INTO turnos 
             (fecha, hora, motivo, id_profesional, id_mascota)
             VALUES (?, ?, ?, ?, ?)
         ");
 
+        // Vincula los datos a insertar
+        // s = string, i = integer
         $stmt->bind_param(
             "sssii",
             $fecha,
@@ -123,27 +161,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $id_mascota
         );
 
+        // Ejecuta la inserción del turno
         if ($stmt->execute()) {
+
+            // Redirige al listado con mensaje de registro exitoso
             header("Location: index.php?success=1");
             exit;
         } else {
+
+            // Si falla el registro, muestra error general
             $erroresCampos['general'] = "Error al registrar el turno.";
         }
 
+        // Cierra la consulta preparada
         $stmt->close();
     }
-    if (empty($hora)) {
-    $erroresCampos['hora'] = "La hora es obligatoria.";
-} elseif ($hora < '08:00' || $hora > '21:00') {
-    $erroresCampos['hora'] = "El horario debe estar entre 08:00 y 21:00.";
-} elseif ($fecha == date('Y-m-d') && $hora < date('H:i')) {
-    $erroresCampos['hora'] = "La hora no puede ser anterior a la actual.";
 
+    // Valida nuevamente la hora y controla el rango permitido de atención
+    if (empty($hora)) {
+        $erroresCampos['hora'] = "La hora es obligatoria.";
+    } elseif ($hora < '08:00' || $hora > '21:00') {
+        $erroresCampos['hora'] = "El horario debe estar entre 08:00 y 21:00.";
+    } elseif ($fecha == date('Y-m-d') && $hora < date('H:i')) {
+        $erroresCampos['hora'] = "La hora no puede ser anterior a la actual.";
+    }
 }
-}
+
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -208,8 +254,7 @@ require_once '../../php/menu.php';
                     <div class="form-group col-md-6">
                         <label for="fecha">Fecha <span style="color:#dc2626;">*</span></label>
 
-                        <input 
-                            type="date" 
+                        <input type="date" 
                             class="form-control <?= isset($erroresCampos['fecha']) ? 'is-invalid' : '' ?>" 
                             id="fecha" 
                             name="fecha"  
@@ -229,14 +274,13 @@ require_once '../../php/menu.php';
 
                         <input 
                             type="time" 
-    class="form-control <?= isset($erroresCampos['hora']) ? 'is-invalid' : '' ?>" 
-    id="hora" 
-    name="hora"
-    value="<?= htmlspecialchars($hora) ?>"
-    min="08:00"
-    max="20:00"
-    step="1800"
-                        >
+                            class="form-control <?= isset($erroresCampos['hora']) ? 'is-invalid' : '' ?>" 
+                            id="hora" 
+                            name="hora"
+                            value="<?= htmlspecialchars($hora) ?>"
+                            min="08:00"
+                            max="20:00"
+                            step="1800">
 
                         <?php if (isset($erroresCampos['hora'])) { ?>
                             <div class="invalid-feedback">
@@ -307,15 +351,13 @@ require_once '../../php/menu.php';
                         <select 
                             name="id_mascota" 
                             id="id_mascota" 
-                            class="form-control <?= isset($erroresCampos['id_mascota']) ? 'is-invalid' : '' ?>"
-                        >
+                            class="form-control <?= isset($erroresCampos['id_mascota']) ? 'is-invalid' : '' ?>">
                             <option value="">Seleccione una mascota</option>
 
                             <?php while($m = mysqli_fetch_assoc($resMascotas)) { ?>
                                 <option 
                                     value="<?= $m['id_mascota']; ?>"
-                                    <?= $id_mascota == $m['id_mascota'] ? 'selected' : '' ?>
-                                >
+                                    <?= $id_mascota == $m['id_mascota'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($m['nombre_mascota']); ?>
                                 </option>
                             <?php } ?>

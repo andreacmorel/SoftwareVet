@@ -1,18 +1,36 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a este módulo.
 require_once '../../php/validateRoute.php';
+
+// Carga el menú principal del sistema.
 require_once '../../php/menu.php';
 
+// Obtiene el texto ingresado en el buscador.
+// Si no se envió nada por GET, usa una cadena vacía.
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Variable donde se guardará la condición extra para la búsqueda.
 $whereBuscar = "";
 
+// Verifica si el usuario escribió algo en el buscador.
 if (!empty($buscar)) {
+
+    // Escapa caracteres especiales para usar el texto de forma segura en SQL.
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
+    // Arma el filtro para buscar perfiles por nombre.
     $whereBuscar = " AND nombre_perfil LIKE '%$buscarSeguro%'";
 }
 
 
+// Consulta los perfiles activos registrados en la base de datos.
+// WHERE estado = 1 muestra solo los perfiles activos.
+// $whereBuscar agrega el filtro si se usó el buscador.
+// ORDER BY id_perfil DESC muestra primero los registros más recientes.
 $sql = $conexion->query("
     SELECT id_perfil, nombre_perfil
     FROM perfil
@@ -21,8 +39,11 @@ $sql = $conexion->query("
     ORDER BY id_perfil DESC
 ");
 
+// Verifica si viene success por URL.
+// Esto indica que el perfil fue registrado correctamente.
 if(isset($_GET['success'])) { ?>
 
+    <!-- Mensaje de éxito al registrar un perfil -->
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
@@ -40,6 +61,7 @@ if(isset($_GET['success'])) { ?>
 
 <?php if(isset($_GET['updated'])) { ?>
 
+    <!-- Mensaje de éxito al modificar un perfil -->
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
@@ -57,6 +79,7 @@ if(isset($_GET['success'])) { ?>
 
 <?php if(isset($_GET['deleted'])) { ?>
 
+    <!-- Mensaje de éxito al eliminar un perfil -->
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
@@ -73,8 +96,10 @@ if(isset($_GET['success'])) { ?>
 <?php }
 
 ?>
+
 <?php if(isset($_GET['error']) && $_GET['error'] == 'admin') { ?>
 
+    <!-- Mensaje de error cuando se intenta eliminar el perfil Administrador -->
     <div class="vet-alert-danger">
 
         <div class="vet-alert-danger-icon">
@@ -381,23 +406,23 @@ if(isset($_GET['success'])) { ?>
 
                                 <td class="text-center">
                                     <a href="assign_modules.php?id=<?= $row->id_perfil ?>"
-                                       class="btn-action btn-modulos"
-                                       title="Asignar módulos">
+                                    class="btn-action btn-modulos"
+                                    title="Asignar módulos">
                                         <i class="fas fa-lock"></i>
                                     </a>
 
                                     <a href="edit.php?id=<?= $row->id_perfil ?>"
-                                       class="btn-action btn-edit"
-                                       title="Modificar">
+                                    class="btn-action btn-edit"
+                                    title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
                                     <button class="btn-action btn-delete"
-                                         data-toggle="modal"
-                                         data-target="#modalEliminarPerfil"
-                                         data-id="<?= $row->id_perfil ?>"
-                                         data-nombre="<?= htmlspecialchars($row->nombre_perfil) ?>">
-                                         <i class="fas fa-trash"></i>
+                                        data-toggle="modal"
+                                        data-target="#modalEliminarPerfil"
+                                        data-id="<?= $row->id_perfil ?>"
+                                        data-nombre="<?= htmlspecialchars($row->nombre_perfil) ?>">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>

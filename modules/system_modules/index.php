@@ -1,27 +1,50 @@
 <?php
+
+// Incluye el archivo de conexión a la base de datos.
+// Permite usar la variable $conexion para realizar consultas SQL.
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de rutas.
+// Sirve para controlar que el usuario tenga permiso para acceder a este módulo.
 require_once '../../php/validateRoute.php';
+
+// Incluye el menú principal del sistema.
+// Carga la estructura visual del sistema, como sidebar y barra superior.
 require_once '../../php/menu.php';
 
+// Obtiene el valor enviado por GET desde el buscador.
+// Si no existe, usa una cadena vacía.
+// trim elimina espacios al inicio y al final.
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Variable donde se guardará la condición extra para filtrar la búsqueda.
 $whereBuscar = "";
 
+// Verifica si el usuario escribió algo en el buscador.
 if (!empty($buscar)) {
+
+    // Escapa caracteres especiales para evitar errores en la consulta SQL.
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
+    // Arma la condición de búsqueda.
+    // Busca coincidencias en el nombre del módulo o en la ruta.
     $whereBuscar = " AND (
         nombre_modulo LIKE '%$buscarSeguro%' OR
         ruta LIKE '%$buscarSeguro%'
     )";
 }
 
+// Consulta los módulos registrados en la base de datos.
+// Trae el ID, nombre, ruta, ícono y estado.
+// WHERE 1=1 permite agregar fácilmente filtros como $whereBuscar.
+// ORDER BY id_modulo DESC muestra primero los registros más recientes.
 $sql = $conexion->query("
     SELECT id_modulo, nombre_modulo, ruta, icono, estado
     FROM modulo
     WHERE 1=1
     $whereBuscar
     ORDER BY id_modulo DESC
-");
+");  
 ?>
 
 <!DOCTYPE html>
@@ -361,88 +384,154 @@ tbody tr:hover { background:#fcf8ff; }
                     </tr>
                 </thead>
 
-                <tbody>
-                    <?php if ($sql && $sql->num_rows > 0) { ?>
-                        <?php while ($row = $sql->fetch_object()) { ?>
-                            <tr class="<?= $row->estado == 0 ? 'inactivo-row' : '' ?>">
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="modulo-icon">
-                                            <i class="<?= !empty($row->icono) ? htmlspecialchars($row->icono) : 'fas fa-th-large' ?>"></i>
-                                        </span>
+<tbody>
 
-                                        <div>
-                                            <div class="modulo-name">
-                                                <?= htmlspecialchars($row->nombre_modulo) ?>
-                                            </div>
-                                            <div class="modulo-id">
-                                                #<?= $row->id_modulo ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+    <!-- Verifica que la consulta se haya ejecutado correctamente y que existan módulos para mostrar -->
+    <?php if ($sql && $sql->num_rows > 0) { ?>
 
-                                <td>
-                                    <span class="ruta-badge">
-                                        <?= htmlspecialchars($row->ruta) ?>
-                                    </span>
-                                </td>
+        <!-- Recorre todos los módulos obtenidos desde la base de datos -->
+        <?php while ($row = $sql->fetch_object()) { ?>
 
-                                <td class="dato-muted">
-                                    <?php if (!empty($row->icono)) { ?>
-                                        <i class="<?= htmlspecialchars($row->icono) ?> mr-1"></i>
-                                        <?= htmlspecialchars($row->icono) ?>
-                                    <?php } else { ?>
-                                        —
-                                    <?php } ?>
-                                </td>
+            <!-- Si el módulo está inactivo se aplica una clase especial a la fila -->
+            <tr class="<?= $row->estado == 0 ? 'inactivo-row' : '' ?>">
 
-                                <td class="text-center">
-                                    <?php if ($row->estado == 1) { ?>
-                                        <span class="badge-estado activo">Activo</span>
-                                    <?php } else { ?>
-                                        <span class="badge-estado inactivo">Inactivo</span>
-                                    <?php } ?>
-                                </td>
+                <!-- Columna con datos principales del módulo -->
+                <td>
 
-                                <td class="acciones-td">
-                                    <div class="acciones-wrap">
+                    <div class="d-flex align-items-center">
 
-                                        <button
-                                            class="btn-action <?= $row->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
-                                            data-toggle="modal"
-                                            data-target="#modalEstadoModulo"
-                                            data-id="<?= $row->id_modulo ?>"
-                                            data-nombre="<?= htmlspecialchars($row->nombre_modulo) ?>"
-                                            data-estado="<?= $row->estado ?>"
-                                            title="<?= $row->estado == 1 ? 'Desactivar módulo' : 'Activar módulo' ?>">
+                        <!-- Muestra el ícono del módulo -->
+                        <span class="modulo-icon">
 
-                                            <i class="<?= $row->estado == 1 ? 'fas fa-lock' : 'fas fa-check' ?>"></i>
-                                        </button>
+                            <!-- Si existe un ícono lo muestra,caso contrario utiliza uno por defecto -->
+                            <i class="<?= !empty($row->icono) ? htmlspecialchars($row->icono) : 'fas fa-th-large' ?>"></i>
 
-                                        <a href="edit.php?id=<?= $row->id_modulo ?>"
-                                           class="btn-action btn-edit"
-                                           title="Modificar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
+                        </span>
 
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                        <div>
+
+                            <!-- Nombre del módulo -->
+                            <div class="modulo-name">
+                                <?= htmlspecialchars($row->nombre_modulo) ?>
+                            </div>
+
+                            <!-- ID del módulo -->
+                            <div class="modulo-id">
+                                #<?= $row->id_modulo ?>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+                <!-- Columna que muestra la ruta del módulo -->
+                <td>
+
+                    <span class="ruta-badge">
+                        <?= htmlspecialchars($row->ruta) ?>
+                    </span>
+
+                </td>
+
+                <!-- Columna que muestra el nombre del ícono utilizado -->
+                <td class="dato-muted">
+
+                    <!-- Verifica si el módulo tiene un ícono configurado -->
+                    <?php if (!empty($row->icono)) { ?>
+
+                        <!-- Muestra el ícono y su nombre -->
+                        <i class="<?= htmlspecialchars($row->icono) ?> mr-1"></i>
+                        <?= htmlspecialchars($row->icono) ?>
+
                     <?php } else { ?>
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                <i class="fas fa-search mr-1"></i>
-                                No se encontraron módulos.
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
 
-        </div>
-    </div>
+                        <!-- Si no tiene ícono muestra un guion -->
+                        —
+
+                    <?php } ?>
+
+                </td>
+
+                <!-- Columna que muestra el estado del módulo -->
+                <td class="text-center">
+
+                    <!-- Verifica si el módulo está activo -->
+                    <?php if ($row->estado == 1) { ?>
+
+                        <!-- Estado activo -->
+                        <span class="badge-estado activo">Activo</span>
+
+                    <?php } else { ?>
+
+                        <!-- Estado inactivo -->
+                        <span class="badge-estado inactivo">Inactivo</span>
+
+                    <?php } ?>
+
+                </td>
+
+                <!-- Columna de acciones -->
+                <td class="acciones-td">
+
+                    <div class="acciones-wrap">
+
+                        <!-- Botón para activar o desactivar el módulo -->
+                        <button
+                            class="btn-action <?= $row->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
+                            data-toggle="modal"
+                            data-target="#modalEstadoModulo"
+                            data-id="<?= $row->id_modulo ?>"
+                            data-nombre="<?= htmlspecialchars($row->nombre_modulo) ?>"
+                            data-estado="<?= $row->estado ?>"
+                            title="<?= $row->estado == 1 ? 'Desactivar módulo' : 'Activar módulo' ?>">
+
+                            <!-- Cambia el ícono según el estado actual -->
+                            <i class="<?= $row->estado == 1 ? 'fas fa-lock' : 'fas fa-check' ?>"></i>
+
+                        </button>
+
+                        <!-- Botón para modificar el módulo -->
+                        <a href="edit.php?id=<?= $row->id_modulo ?>"
+                        class="btn-action btn-edit"
+                        title="Modificar">
+
+                            <i class="fas fa-pen"></i>
+
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        <?php } ?>
+
+    <?php } else { ?>
+
+        <!-- Mensaje mostrado cuando no existen módulos registrados -->
+        <tr>
+
+            <td colspan="5" class="text-center text-muted py-4">
+
+                <i class="fas fa-search mr-1"></i>
+
+                No se encontraron módulos.
+
+            </td>
+
+        </tr>
+
+    <?php } ?>
+
+</tbody>
+
+</table>
+
+</div>
+</div>
 
 </div>
 
@@ -469,7 +558,7 @@ tbody tr:hover { background:#fcf8ff; }
                 <h5 id="nombreEstadoModulo" style="color:#52266E;font-weight:800;"></h5>
 
                 <div id="boxEstadoModulo"
-                     style="border-radius:10px;padding:11px 14px;display:flex;align-items:flex-start;gap:10px;text-align:left;margin-top:18px;width:100%;">
+                    style="border-radius:10px;padding:11px 14px;display:flex;align-items:flex-start;gap:10px;text-align:left;margin-top:18px;width:100%;">
 
                     <i id="iconoInfoModulo" class="fas fa-info-circle" style="font-size:14px;margin-top:2px;flex-shrink:0;"></i>
 

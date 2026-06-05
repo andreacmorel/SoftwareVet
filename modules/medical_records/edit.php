@@ -1,14 +1,20 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según la ruta/perfil
 require_once '../../php/validateRoute.php';
 
+// Obtiene el ID de la historia clínica desde la URL y lo convierte a entero
 $id = (int)($_GET['id'] ?? 0);
 
+// Si el ID no es válido, redirige al listado
 if ($id <= 0) {
     header("Location: index.php");
     exit;
 }
 
+// Consulta las mascotas disponibles para cargarlas en el select
 $rMas = $conexion->query("
     SELECT m.id_mascota, m.nombre_mascota, p.apellido_persona, p.nombre_persona
     FROM mascota m
@@ -17,66 +23,97 @@ $rMas = $conexion->query("
     ORDER BY m.nombre_mascota ASC
 ");
 
+// Array donde se guardarán las mascotas
 $mascotas = [];
+
+// Recorre el resultado y guarda cada mascota dentro del array
 while ($rm = $rMas->fetch_assoc()) {
     $mascotas[] = $rm;
 }
 
+// Array donde se guardarán los errores generales
 $errors = [];
 
+// Prepara la consulta para buscar la historia clínica por ID
 $stmt = $conexion->prepare("
     SELECT id_historia_clinica, fecha, descripcion, observacion, id_mascota
     FROM historia_clinica
     WHERE id_historia_clinica = ?
 ");
+
+// Vincula el ID recibido a la consulta preparada
 $stmt->bind_param("i", $id);
+
+// Ejecuta la consulta
 $stmt->execute();
+
+// Obtiene los datos de la historia clínica
 $historia = $stmt->get_result()->fetch_assoc();
+
+// Cierra la consulta preparada
 $stmt->close();
 
+// Si no encuentra la historia clínica, redirige al listado
 if (!$historia) {
     header("Location: index.php");
     exit;
 }
 
+// Verifica si el formulario fue enviado por método POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Recibe los datos enviados desde el formulario
     $idMascota   = (int)($_POST['id_mascota'] ?? 0);
     $fecha       = trim($_POST['fecha'] ?? '');
     $descripcion = trim($_POST['descripcion'] ?? '');
     $observacion = trim($_POST['observacion'] ?? '');
 
+    // Valida que se haya seleccionado una mascota
     if ($idMascota <= 0) {
         $errors[] = 'Debe seleccionar una mascota.';
     }
 
+    // Valida que la fecha no esté vacía
     if ($fecha === '') {
         $errors[] = 'La fecha es obligatoria.';
     }
 
+    // Si no hay errores, modifica la historia clínica
     if (empty($errors)) {
+
+        // Prepara la consulta UPDATE
         $stmt = $conexion->prepare("
             UPDATE historia_clinica
             SET fecha = ?, descripcion = ?, observacion = ?, id_mascota = ?
             WHERE id_historia_clinica = ?
         ");
 
+        // Vincula los datos a la consulta preparada
         $stmt->bind_param("sssii", $fecha, $descripcion, $observacion, $idMascota, $id);
-        $stmt->execute();
-        $stmt->close();
 
+        // Ejecuta la actualización
+        $stmt->execute();
+
+        // Cierra la consulta
+        $stmt->close();
+        //$stmt significa statement (sentencia o consulta preparada).
+        //Es una variable que guarda una consulta SQL preparada para ejecutarla de forma segura.
+
+        // Redirige al listado con mensaje de modificación exitosa
         header("Location: index.php?ok=modificado");
         exit;
     }
 
+    // Si hubo errores, conserva los datos ingresados en el formulario
     $historia['id_mascota'] = $idMascota;
     $historia['fecha'] = $fecha;
     $historia['descripcion'] = $descripcion;
     $historia['observacion'] = $observacion;
 }
 
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 

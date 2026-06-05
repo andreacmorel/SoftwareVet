@@ -1,9 +1,14 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según la ruta/perfil
 require_once '../../php/validateRoute.php';
 
+// Array donde se guardarán los errores de validación
 $erroresCampos = [];
 
+// Consulta para obtener las mascotas junto con el nombre y apellido del cliente
 $rMas = $conexion->query("
     SELECT m.id_mascota, m.nombre_mascota, p.apellido_persona, p.nombre_persona
     FROM mascota m
@@ -12,28 +17,36 @@ $rMas = $conexion->query("
     ORDER BY m.nombre_mascota ASC
 ");
 
+// Array donde se almacenarán las mascotas obtenidas
 $mascotas = [];
+
+// Recorre el resultado de la consulta y guarda cada mascota en el array
 while ($rm = $rMas->fetch_assoc()) {
     $mascotas[] = $rm;
 }
 
+// Verifica si el formulario fue enviado por método POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    // Recibe los datos principales de la historia clínica
     $idMascota   = (int)($_POST['id_mascota'] ?? 0);
     $fecha       = trim($_POST['fecha'] ?? '');
     $descripcion = trim($_POST['descripcion'] ?? '');
     $observacion = trim($_POST['observacion'] ?? '');
 
+    // Valida que se haya seleccionado una mascota
     if ($idMascota <= 0) {
         $erroresCampos['id_mascota'] = "Debe seleccionar una mascota.";
     }
 
+    // Valida que la fecha no esté vacía y que no sea futura
     if ($fecha === '') {
         $erroresCampos['fecha'] = "La fecha es obligatoria.";
     } elseif ($fecha > date('Y-m-d')) {
         $erroresCampos['fecha'] = "La fecha no puede ser futura.";
     }
 
+    // Valida la descripción de la historia clínica
     if ($descripcion === '') {
         $erroresCampos['descripcion'] = "La descripción es obligatoria.";
     } elseif (strlen($descripcion) < 5) {
@@ -42,36 +55,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erroresCampos['descripcion'] = "No puede superar los 500 caracteres.";
     }
 
+    // Valida que la observación no supere los 500 caracteres
     if (strlen($observacion) > 500) {
         $erroresCampos['observacion'] = "No puede superar los 500 caracteres.";
     }
 
+    // Recibe los datos de tratamientos enviados como arrays
     $tDuraciones = $_POST['trat_duracion'] ?? [];
     $tDosis      = $_POST['trat_dosis'] ?? [];
     $tDescs      = $_POST['trat_desc'] ?? [];
 
+    // Recorre los tratamientos cargados en el formulario
     foreach ($tDescs as $i => $desc) {
+
+        // Limpia los datos de cada tratamiento
         $duracion = trim($tDuraciones[$i] ?? '');
         $dosis    = trim($tDosis[$i] ?? '');
         $desc     = trim($desc ?? '');
 
+        // Valida solo si el usuario escribió algún dato del tratamiento
         if ($duracion !== '' || $dosis !== '' || $desc !== '') {
 
+            // Si agrega un tratamiento, la descripción es obligatoria
             if ($desc === '') {
                 $erroresCampos['tratamientos'] = "Si agrega un tratamiento, debe completar la descripción.";
                 break;
             }
 
+            // Valida largo máximo de la descripción del tratamiento
             if (strlen($desc) > 500) {
                 $erroresCampos['tratamientos'] = "La descripción del tratamiento no puede superar los 500 caracteres.";
                 break;
             }
 
+            // Valida largo máximo de la duración
             if (strlen($duracion) > 100) {
                 $erroresCampos['tratamientos'] = "La duración del tratamiento no puede superar los 100 caracteres.";
                 break;
             }
 
+            // Valida largo máximo de la dosis
             if (strlen($dosis) > 100) {
                 $erroresCampos['tratamientos'] = "La dosis del tratamiento no puede superar los 100 caracteres.";
                 break;
@@ -79,56 +102,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Si no hay errores, guarda la historia clínica
     if (empty($erroresCampos)) {
 
+        // Prepara la consulta para insertar la historia clínica
         $stmt = $conexion->prepare("
             INSERT INTO historia_clinica 
             (fecha, descripcion, observacion, id_mascota)
             VALUES (?, ?, ?, ?)
         ");
 
+        // Vincula los valores a la consulta preparada
         $stmt->bind_param("sssi", $fecha, $descripcion, $observacion, $idMascota);
+
+        // Ejecuta la inserción
         $stmt->execute();
 
+        // Obtiene el ID de la historia clínica recién creada
         $idHC = $stmt->insert_id;
+
+        // Cierra la consulta preparada
         $stmt->close();
 
+        // Recorre los tratamientos cargados para guardarlos
         foreach ($tDuraciones as $i => $duracion) {
 
+            // Limpia los datos del tratamiento
             $duracion = trim($duracion);
             $dosis    = trim($tDosis[$i] ?? '');
             $desc     = trim($tDescs[$i] ?? '');
 
+            // Solo guarda el tratamiento si al menos un campo fue completado
             if ($duracion !== '' || $dosis !== '' || $desc !== '') {
 
+                // Inserta el tratamiento
                 $stmtTrat = $conexion->prepare("
                     INSERT INTO tratamientos 
                     (duracion, dosis, descripcion)
                     VALUES (?, ?, ?)
                 ");
 
+                // Vincula duración, dosis y descripción
                 $stmtTrat->bind_param("sss", $duracion, $dosis, $desc);
+
+                // Ejecuta la inserción del tratamiento
                 $stmtTrat->execute();
 
+                // Obtiene el ID del tratamiento creado
                 $idTrat = $stmtTrat->insert_id;
+
+                // Cierra la consulta del tratamiento
                 $stmtTrat->close();
 
+                // Inserta la relación entre historia clínica y tratamiento
                 $stmtDet = $conexion->prepare("
                     INSERT INTO detalle_historia_clinica 
                     (id_historia_clinica, id_tratamiento)
                     VALUES (?, ?)
                 ");
 
+                // Vincula el ID de historia clínica y el ID de tratamiento
                 $stmtDet->bind_param("ii", $idHC, $idTrat);
+
+                // Ejecuta la inserción del detalle
                 $stmtDet->execute();
+
+                // Cierra la consulta del detalle
                 $stmtDet->close();
             }
         }
 
+        // Redirige al listado con mensaje de éxito
         header("Location: index.php?success=1");
         exit;
     }
 
+    // Si hubo errores, conserva los valores ingresados en el formulario
     $postMascota = $idMascota;
     $postFecha   = $fecha;
     $postDesc    = $descripcion;
@@ -136,15 +185,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 } else {
 
+    // Si no se envió el formulario, carga valores iniciales
     $postMascota = (int)($_GET['mascota'] ?? 0);
     $postFecha   = date('Y-m-d');
     $postDesc    = '';
     $postObs     = '';
 }
 
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -430,29 +480,60 @@ require_once '../../php/menu.php';
 <script src="../../js/sb-admin-2.min.js"></script>
 
 <script>
+//tratIdx: funciona como contador para asignar un identificador único a cada tratamiento.
+//addTrat(): crea un nuevo bloque de tratamiento con los campos:
+//Duración.
+//Dosis.
+//Descripción.
+//appendChild(): inserta el nuevo tratamiento dentro del contenedor principal.
+//removeTrat(): elimina el tratamiento seleccionado.
+//querySelectorAll('.trat-row'): verifica cuántos tratamientos quedan cargados.
+
+//utilizaste JavaScript dinámico (DOM) para 
+// permitir que el usuario agregue múltiples tratamientos a una historia clínica de manera flexible 
+// y sin necesidad de recargar la página.
+
+// Variable que funciona como contador para identificar cada tratamiento agregado
 let tratIdx = 0;
 
+// =====================================================
+// FUNCIÓN PARA AGREGAR UN NUEVO TRATAMIENTO
+// =====================================================
 function addTrat() {
+
+    // Busca el mensaje que aparece cuando no hay tratamientos cargados
     const empty = document.getElementById('emptyTrat');
 
+    // Si existe el mensaje, lo elimina
     if (empty) {
         empty.remove();
     }
 
+    // Crea un nuevo contenedor para el tratamiento
     const div = document.createElement('div');
+
+    // Asigna la clase CSS utilizada para el diseño
     div.className = 'trat-row';
+
+    // Asigna un ID único usando el contador
     div.id = 'trat-' + tratIdx;
 
+    // Genera dinámicamente el contenido HTML del tratamiento
     div.innerHTML = `
+
+        <!-- Botón para eliminar el tratamiento -->
         <button type="button" class="btn-del-trat" onclick="removeTrat(${tratIdx})">
             <i class="fas fa-times"></i>
         </button>
 
+        <!-- Título del tratamiento -->
         <strong style="color:#52266E;">
             <i class="fas fa-pills mr-1"></i> Tratamiento
         </strong>
 
         <div class="row mt-3">
+
+            <!-- Campo duración -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Duración</label>
@@ -465,6 +546,7 @@ function addTrat() {
                 </div>
             </div>
 
+            <!-- Campo dosis -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Dosis</label>
@@ -476,8 +558,10 @@ function addTrat() {
                     >
                 </div>
             </div>
+
         </div>
 
+        <!-- Campo descripción del tratamiento -->
         <div class="form-group mb-0">
             <label>Descripción del tratamiento</label>
             <textarea 
@@ -489,28 +573,46 @@ function addTrat() {
         </div>
     `;
 
+    // Agrega el nuevo tratamiento dentro del contenedor principal
     document.getElementById('tratList').appendChild(div);
+
+    // Incrementa el contador para el próximo tratamiento
     tratIdx++;
 }
 
+// =====================================================
+// FUNCIÓN PARA ELIMINAR UN TRATAMIENTO
+// =====================================================
 function removeTrat(id) {
+
+    // Busca el tratamiento seleccionado por su ID
     const row = document.getElementById('trat-' + id);
 
+    // Si existe, lo elimina del documento
     if (row) {
         row.remove();
     }
 
+    // Verifica si ya no quedan tratamientos cargados
     if (document.querySelectorAll('.trat-row').length === 0) {
+
+        // Muestra nuevamente el mensaje de lista vacía
         document.getElementById('tratList').innerHTML = `
             <div class="text-center text-muted py-3" id="emptyTrat">
+
+                <!-- Ícono decorativo -->
                 <i class="fas fa-pills fa-2x mb-2" style="color:#d8c2e8;"></i>
+
                 <br>
+
+                <!-- Mensaje informativo -->
                 Ningún tratamiento agregado aún
+
             </div>
         `;
     }
 }
-</script>
 
+</script>
 </body>
 </html>

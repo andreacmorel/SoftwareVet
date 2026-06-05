@@ -1,46 +1,59 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permiso para acceder a esta ruta
 require_once '../../php/validateRoute.php';
+
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 
-
+// Obtiene los filtros enviados por GET
 $filtro_profesional = (int)($_GET['profesional'] ?? 0);
 $filtro_estado      = $_GET['estado'] ?? '';
 $filtro_fecha_desde = $_GET['fecha_desde'] ?? '';
 $filtro_fecha_hasta = $_GET['fecha_hasta'] ?? '';
 
+// Lista de estados permitidos para evitar valores incorrectos
 $estados_validos = ['pendiente', 'confirmado', 'en_atencion', 'completado', 'cancelado'];
 
+// Arrays para armar la consulta preparada dinámicamente
 $where = [];
 $params = [];
 $types = '';
 
+// Filtro por profesional
 if ($filtro_profesional) {
     $where[] = "t.id_profesional = ?";
     $params[] = $filtro_profesional;
     $types .= 'i';
 }
 
+// Filtro por estado, validando que sea un estado permitido
 if ($filtro_estado && in_array($filtro_estado, $estados_validos)) {
     $where[] = "t.estado = ?";
     $params[] = $filtro_estado;
     $types .= 's';
 }
 
+// Filtro por fecha desde
 if ($filtro_fecha_desde) {
     $where[] = "t.fecha >= ?";
     $params[] = $filtro_fecha_desde;
     $types .= 's';
 }
 
+// Filtro por fecha hasta
 if ($filtro_fecha_hasta) {
     $where[] = "t.fecha <= ?";
     $params[] = $filtro_fecha_hasta;
     $types .= 's';
 }
 
+// Arma el WHERE final solo si existen filtros
 $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
 
+// Consulta principal del listado de turnos
 $sql = "
     SELECT 
         t.id_turno, 
@@ -61,6 +74,7 @@ $sql = "
     ORDER BY t.fecha DESC, t.hora DESC
 ";
 
+// Si hay filtros, ejecuta la consulta como preparada
 if ($params) {
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param($types, ...$params);
@@ -68,9 +82,11 @@ if ($params) {
     $result = $stmt->get_result();
     $stmt->close();
 } else {
+    // Si no hay filtros, ejecuta la consulta directamente
     $result = $conexion->query($sql);
 }
 
+// Consulta para cargar profesionales en el filtro del listado
 $resProfiltro = $conexion->query("
     SELECT 
         p.id_profesional, 
@@ -80,73 +96,81 @@ $resProfiltro = $conexion->query("
     ORDER BY per.apellido_persona
 ");
 
-    if(isset($_GET['success'])) { ?>
-        <div class="vet-alert-success">
-            <div class="vet-alert-icon">
-                <i class="fas fa-check"></i>
-            </div>
-
-            <div class="vet-alert-content">
-                <h5>Turno registrado</h5>
-                <p>El turno fue registrado correctamente.</p>
-            </div>
+// Mensaje de éxito cuando se registra un turno
+if(isset($_GET['success'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
         </div>
-    <?php } ?>
 
-    <?php if(isset($_GET['updated'])) { ?>
-        <div class="vet-alert-success">
-            <div class="vet-alert-icon">
-                <i class="fas fa-check"></i>
-            </div>
-
-            <div class="vet-alert-content">
-                <h5>Turno actualizado</h5>
-                <p>Los datos del turno fueron actualizados correctamente.</p>
-            </div>
+        <div class="vet-alert-content">
+            <h5>Turno registrado</h5>
+            <p>El turno fue registrado correctamente.</p>
         </div>
-    <?php } ?>
+    </div>
+<?php } ?>
 
-    <?php if(isset($_GET['status'])) { ?>
-        <div class="vet-alert-success">
-            <div class="vet-alert-icon">
-                <i class="fas fa-check"></i>
-            </div>
-
-            <div class="vet-alert-content">
-                <h5>Estado actualizado</h5>
-                <p>El estado del turno fue actualizado correctamente.</p>
-            </div>
+<?php
+// Mensaje de éxito cuando se actualiza un turno
+if(isset($_GET['updated'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
         </div>
-    <?php } ?>
 
-    <?php if(isset($_GET['deleted'])) { ?>
-        <div class="vet-alert-success">
-            <div class="vet-alert-icon">
-                <i class="fas fa-check"></i>
-            </div>
-
-            <div class="vet-alert-content">
-                <h5>Turno eliminado</h5>
-                <p>El turno fue eliminado correctamente.</p>
-            </div>
+        <div class="vet-alert-content">
+            <h5>Turno actualizado</h5>
+            <p>Los datos del turno fueron actualizados correctamente.</p>
         </div>
-    <?php } ?>
+    </div>
+<?php } ?>
 
-    <?php if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
-        <div class="vet-alert-error">
-            <div class="vet-alert-error-icon">
-                <i class="fas fa-exclamation"></i>
-            </div>
-
-            <div class="vet-alert-content">
-                <h5>Acción no permitida</h5>
-                <p>No se puede modificar un turno cancelado o completado.</p>
-            </div>
+<?php
+// Mensaje de éxito cuando se actualiza el estado de un turno
+if(isset($_GET['status'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
         </div>
-    <?php }
+
+        <div class="vet-alert-content">
+            <h5>Estado actualizado</h5>
+            <p>El estado del turno fue actualizado correctamente.</p>
+        </div>
+    </div>
+<?php } ?>
+
+<?php
+// Mensaje de éxito cuando se elimina un turno
+if(isset($_GET['deleted'])) { ?>
+    <div class="vet-alert-success">
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Turno eliminado</h5>
+            <p>El turno fue eliminado correctamente.</p>
+        </div>
+    </div>
+<?php } ?>
+
+<?php
+// Mensaje de error cuando se intenta modificar un turno cancelado o completado
+if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
+    <div class="vet-alert-error">
+        <div class="vet-alert-error-icon">
+            <i class="fas fa-exclamation"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Acción no permitida</h5>
+            <p>No se puede modificar un turno cancelado o completado.</p>
+        </div>
+    </div>
+<?php }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 

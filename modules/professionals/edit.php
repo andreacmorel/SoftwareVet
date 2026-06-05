@@ -1,74 +1,98 @@
 <?php
+// Incluye el archivo de conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según el perfil/ruta
 require_once '../../php/validateRoute.php';
 
+// Verifica que llegue un ID por la URL y que no esté vacío
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de profesional no válido.");
 }
 
+// Convierte el ID recibido a entero para trabajar con el profesional correcto
 $id = (int)$_GET['id'];
+
+// Array donde se guardarán los errores de validación
 $erroresCampos = [];
 
+// Verifica si el formulario fue enviado por método POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Recibe y limpia los datos personales enviados desde el formulario
     $nombre       = trim($_POST['nombre_persona']);
     $apellido     = trim($_POST['apellido_persona']);
     $telefono     = trim($_POST['telefono']);
     $email        = trim($_POST['email']);
+
+    // Recibe y limpia los datos del domicilio enviados desde el formulario
     $calle        = trim($_POST['calle']);
     $numero_calle = trim($_POST['numero_calle']);
     $barrio       = trim($_POST['barrio']);
     $manzana      = trim($_POST['manzana']);
 
+    // Valida que el nombre no esté vacío y tenga al menos 3 caracteres
     if (empty($nombre)) {
         $erroresCampos['nombre_persona'] = "El nombre es obligatorio.";
     } elseif (strlen($nombre) < 3) {
         $erroresCampos['nombre_persona'] = "Debe tener al menos 3 caracteres.";
     }
 
+    // Valida que el apellido no esté vacío y tenga al menos 3 caracteres
     if (empty($apellido)) {
         $erroresCampos['apellido_persona'] = "El apellido es obligatorio.";
     } elseif (strlen($apellido) < 3) {
         $erroresCampos['apellido_persona'] = "Debe tener al menos 3 caracteres.";
     }
 
+    // Valida que el teléfono no esté vacío y contenga solo números
     if (empty($telefono)) {
         $erroresCampos['telefono'] = "El teléfono es obligatorio.";
     } elseif (!preg_match('/^[0-9]+$/', $telefono)) {
         $erroresCampos['telefono'] = "Ingrese solo números.";
     }
 
+    // Valida que el correo no esté vacío y tenga un formato válido
     if (empty($email)) {
         $erroresCampos['email'] = "El correo es obligatorio.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erroresCampos['email'] = "Ingrese un correo válido.";
     }
 
+    // Valida que la calle no esté vacía
     if (empty($calle)) {
         $erroresCampos['calle'] = "La calle es obligatoria.";
     }
 
+    // Valida que el número de calle no esté vacío y contenga solo números
     if (empty($numero_calle)) {
         $erroresCampos['numero_calle'] = "El número es obligatorio.";
     } elseif (!preg_match('/^[0-9]+$/', $numero_calle)) {
         $erroresCampos['numero_calle'] = "Ingrese solo números.";
     }
 
+    // Valida que el barrio no esté vacío
     if (empty($barrio)) {
         $erroresCampos['barrio'] = "El barrio es obligatorio.";
     }
 
+    // Si no existen errores de validación, comienza el proceso de modificación
     if (empty($erroresCampos)) {
 
+        // Busca la persona asociada al profesional que se está editando
         $sqlBuscar = "SELECT id_persona FROM profesional WHERE id_profesional = '$id'";
         $resBuscar = mysqli_query($conexion, $sqlBuscar);
 
+        // Si no encuentra el profesional, guarda un error general
         if (!$resBuscar || mysqli_num_rows($resBuscar) == 0) {
             $erroresCampos['general'] = "Profesional no encontrado.";
         } else {
 
+            // Obtiene el id_persona relacionado al profesional
             $profesional = mysqli_fetch_assoc($resBuscar);
             $id_persona  = $profesional['id_persona'];
+
+            // Escapa los datos antes de enviarlos a la base de datos
             $nombre       = $conexion->real_escape_string($nombre);
             $apellido     = $conexion->real_escape_string($apellido);
             $telefono     = $conexion->real_escape_string($telefono);
@@ -78,38 +102,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $barrio       = $conexion->real_escape_string($barrio);
             $manzana      = $conexion->real_escape_string($manzana);
 
+            // Modifica los datos personales en la tabla persona
             $sqlPersona = "UPDATE persona SET nombre_persona   = '$nombre',apellido_persona = '$apellido',telefono         = '$telefono',
                 email = '$email' WHERE id_persona = '$id_persona'";
 
+            // Si falla la modificación de persona, guarda un error general
             if (!mysqli_query($conexion, $sqlPersona)) {
                 $erroresCampos['general'] = "Error al modificar persona.";
             } else {
 
+                // Verifica si el profesional ya tiene un domicilio cargado
                 $sqlDomicilioExiste = "SELECT id_domicilio FROM domicilio WHERE id_profesional = '$id'";
                 $resDomicilioExiste = mysqli_query($conexion, $sqlDomicilioExiste);
 
+                // Si falla la búsqueda del domicilio, guarda un error general
                 if (!$resDomicilioExiste) {
                     $erroresCampos['general'] = "Error al buscar domicilio.";
                 } else {
 
+                    // Si existe domicilio, se prepara una consulta UPDATE
                     if (mysqli_num_rows($resDomicilioExiste) > 0) {
+
+                        // Obtiene el ID del domicilio existente
                         $domicilio    = mysqli_fetch_assoc($resDomicilioExiste);
                         $id_domicilio = $domicilio['id_domicilio'];
 
+                        // Modifica el domicilio ya existente
                         $sqlDomicilio = "UPDATE domicilio SET calle = '$calle',numero_calle = '$numero_calle',
                             barrio = '$barrio',manzana = '$manzana'
                             WHERE id_domicilio = '$id_domicilio'
                         ";
+
                     } else {
+
+                        // Si no existe domicilio, se prepara una consulta INSERT
                         $sqlDomicilio = "
                             INSERT INTO domicilio (calle, numero_calle, barrio, manzana, id_profesional)
                             VALUES ('$calle', '$numero_calle', '$barrio', '$manzana', '$id')
                         ";
                     }
 
+                    // Ejecuta la consulta de domicilio, ya sea UPDATE o INSERT
                     if (!mysqli_query($conexion, $sqlDomicilio)) {
                         $erroresCampos['general'] = "Error al modificar domicilio.";
                     } else {
+
+                        // Si todo se modificó correctamente, redirige al listado con mensaje de éxito
                         header("Location: index.php?updated=1");
                         exit;
                     }
@@ -118,6 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    // Si hubo errores, conserva los datos ingresados para mostrarlos nuevamente en el formulario
     $row = [
         'nombre_persona'   => $_POST['nombre_persona'],
         'apellido_persona' => $_POST['apellido_persona'],
@@ -131,6 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 } else {
 
+    // Si no se envió el formulario, busca los datos actuales del profesional para cargarlos en el formulario
     $sql = "SELECT c.id_profesional,c.id_persona,p.nombre_persona,p.apellido_persona,p.telefono,
             p.email,d.calle,d.numero_calle,d.barrio,d.manzana
         FROM profesional c
@@ -138,12 +178,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         LEFT JOIN domicilio d ON d.id_profesional = c.id_profesional
         WHERE c.id_profesional = '$id'";
 
+    // Ejecuta la consulta de búsqueda del profesional
     $res = mysqli_query($conexion, $sql);
 
+    // Si no encuentra el profesional, corta la ejecución
     if (!$res || mysqli_num_rows($res) == 0) {
         die("Profesional no encontrado.");
     }
 
+    // Guarda los datos encontrados para mostrarlos en el formulario
     $row = mysqli_fetch_assoc($res);
 }
 
@@ -425,90 +468,231 @@ require_once '../../php/menu.php';
 <script src="/SoftwareVet/js/sb-admin-2.min.js"></script>
 
 <script>
+// Escucha el envío del formulario
 document.getElementById('frmEditar').addEventListener('submit', function (e) {
+
+    // Se asume válido hasta encontrar un error
     var valid = true;
 
+    // Marca un campo como inválido y muestra el mensaje
     function setError(inputId, errId, msg) {
         var el = document.getElementById(inputId);
         var errEl = document.getElementById(errId);
+
         el.classList.add('is-invalid');
-        if (errEl) errEl.textContent = msg;
+
+        if (errEl) {
+            errEl.textContent = msg;
+        }
+
         valid = false;
     }
 
-    function clearError(inputId) {
+    // Limpia el error visual de un campo
+    function clearError(inputId, errId) {
         var el = document.getElementById(inputId);
+        var errEl = document.getElementById(errId);
+
         el.classList.remove('is-invalid');
+
+        if (errEl) {
+            errEl.textContent = '';
+        }
     }
 
-    var soloNuevos = !document.querySelector('.is-invalid');
+    // =========================
+    // LIMPIAR ERRORES PREVIOS
+    // =========================
 
-    if (soloNuevos) {
-        var nombre = document.getElementById('inputNombre').value.trim();
-        if (nombre === '') {
-            setError('inputNombre', 'err-nombre_persona', 'El nombre es obligatorio.');
-        } else if (nombre.length < 3) {
-            setError('inputNombre', 'err-nombre_persona', 'Debe tener al menos 3 caracteres.');
-        } else { clearError('inputNombre'); }
+    clearError('inputNombre', 'err-nombre_persona');
+    clearError('inputApellido', 'err-apellido_persona');
+    clearError('inputTelefono', 'err-telefono');
+    clearError('inputEmail', 'err-email');
+    clearError('inputCalle', 'err-calle');
+    clearError('inputNumeroCalle', 'err-numero_calle');
+    clearError('inputBarrio', 'err-barrio');
 
-        var apellido = document.getElementById('inputApellido').value.trim();
-        if (apellido === '') {
-            setError('inputApellido', 'err-apellido_persona', 'El apellido es obligatorio.');
-        } else if (apellido.length < 3) {
-            setError('inputApellido', 'err-apellido_persona', 'Debe tener al menos 3 caracteres.');
-        } else { clearError('inputApellido'); }
+    // =========================
+    // VALIDACIÓN NOMBRE
+    // =========================
 
-        var telefono = document.getElementById('inputTelefono').value.trim();
-        if (telefono === '') {
-            setError('inputTelefono', 'err-telefono', 'El teléfono es obligatorio.');
-        } else if (!/^[0-9]+$/.test(telefono)) {
-            setError('inputTelefono', 'err-telefono', 'Ingrese solo números.');
-        } else { clearError('inputTelefono'); }
+    var nombre = document.getElementById('inputNombre').value.trim();
 
-        var email = document.getElementById('inputEmail').value.trim();
-        if (email === '') {
-            setError('inputEmail', 'err-email', 'El correo es obligatorio.');
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            setError('inputEmail', 'err-email', 'Ingrese un correo válido.');
-        } else { clearError('inputEmail'); }
-
-        var calle = document.getElementById('inputCalle').value.trim();
-        if (calle === '') {
-            setError('inputCalle', 'err-calle', 'La calle es obligatoria.');
-        } else { clearError('inputCalle'); }
-
-        var numeroCalle = document.getElementById('inputNumeroCalle').value.trim();
-        if (numeroCalle === '') {
-            setError('inputNumeroCalle', 'err-numero_calle', 'El número es obligatorio.');
-        } else if (!/^[0-9]+$/.test(numeroCalle)) {
-            setError('inputNumeroCalle', 'err-numero_calle', 'Ingrese solo números.');
-        } else { clearError('inputNumeroCalle'); }
-
-        var barrio = document.getElementById('inputBarrio').value.trim();
-        if (barrio === '') {
-            setError('inputBarrio', 'err-barrio', 'El barrio es obligatorio.');
-        } else { clearError('inputBarrio'); }
+    if (nombre === '') {
+        setError(
+            'inputNombre',
+            'err-nombre_persona',
+            'El nombre es obligatorio.'
+        );
+    } else if (nombre.length < 3) {
+        setError(
+            'inputNombre',
+            'err-nombre_persona',
+            'Debe tener al menos 3 caracteres.'
+        );
     }
+
+    // =========================
+    // VALIDACIÓN APELLIDO
+    // =========================
+
+    var apellido = document.getElementById('inputApellido').value.trim();
+
+    if (apellido === '') {
+        setError(
+            'inputApellido',
+            'err-apellido_persona',
+            'El apellido es obligatorio.'
+        );
+    } else if (apellido.length < 3) {
+        setError(
+            'inputApellido',
+            'err-apellido_persona',
+            'Debe tener al menos 3 caracteres.'
+        );
+    }
+
+    // =========================
+    // VALIDACIÓN TELÉFONO
+    // =========================
+
+    var telefono = document.getElementById('inputTelefono').value.trim();
+
+    if (telefono === '') {
+        setError(
+            'inputTelefono',
+            'err-telefono',
+            'El teléfono es obligatorio.'
+        );
+    } else if (!/^[0-9]+$/.test(telefono)) {
+        setError(
+            'inputTelefono',
+            'err-telefono',
+            'Ingrese solo números.'
+        );
+    }
+
+    // =========================
+    // VALIDACIÓN EMAIL
+    // =========================
+
+    var email = document.getElementById('inputEmail').value.trim();
+
+    if (email === '') {
+        setError(
+            'inputEmail',
+            'err-email',
+            'El correo es obligatorio.'
+        );
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setError(
+            'inputEmail',
+            'err-email',
+            'Ingrese un correo válido.'
+        );
+    }
+
+    // =========================
+    // VALIDACIÓN CALLE
+    // =========================
+
+    var calle = document.getElementById('inputCalle').value.trim();
+
+    if (calle === '') {
+        setError(
+            'inputCalle',
+            'err-calle',
+            'La calle es obligatoria.'
+        );
+    }
+
+    // =========================
+    // VALIDACIÓN NÚMERO CALLE
+    // =========================
+
+    var numeroCalle = document.getElementById('inputNumeroCalle').value.trim();
+
+    if (numeroCalle === '') {
+        setError(
+            'inputNumeroCalle',
+            'err-numero_calle',
+            'El número es obligatorio.'
+        );
+    } else if (!/^[0-9]+$/.test(numeroCalle)) {
+        setError(
+            'inputNumeroCalle',
+            'err-numero_calle',
+            'Ingrese solo números.'
+        );
+    }
+
+    // =========================
+    // VALIDACIÓN BARRIO
+    // =========================
+
+    var barrio = document.getElementById('inputBarrio').value.trim();
+
+    if (barrio === '') {
+        setError(
+            'inputBarrio',
+            'err-barrio',
+            'El barrio es obligatorio.'
+        );
+    }
+
+    // =========================
+    // SI HAY ERRORES
+    // =========================
 
     if (!valid) {
+
+        // Cancela el envío
         e.preventDefault();
+
+        // Busca el primer campo inválido
         var firstInvalid = document.querySelector('.is-invalid');
+
         if (firstInvalid) {
-            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Lleva la vista al campo
+            firstInvalid.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            // Coloca el foco
             firstInvalid.focus();
         }
     }
 });
 
-['inputNombre','inputApellido','inputTelefono','inputEmail',
- 'inputCalle','inputNumeroCalle','inputBarrio'].forEach(function (id) {
+// ====================================
+// LIMPIA ERRORES AL EDITAR EL CAMPO
+// ====================================
+
+[
+    'inputNombre',
+    'inputApellido',
+    'inputTelefono',
+    'inputEmail',
+    'inputCalle',
+    'inputNumeroCalle',
+    'inputBarrio'
+].forEach(function (id) {
+
     var el = document.getElementById(id);
+
     if (el) {
-        el.addEventListener('input',  function () { el.classList.remove('is-invalid'); });
-        el.addEventListener('change', function () { el.classList.remove('is-invalid'); });
+
+        el.addEventListener('input', function () {
+            el.classList.remove('is-invalid');
+        });
+
+        el.addEventListener('change', function () {
+            el.classList.remove('is-invalid');
+        });
     }
 });
 </script>
-
 </body>
 </html>

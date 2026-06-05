@@ -1,71 +1,106 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../settings/conexion.php';
+
+// Valida que el usuario tenga permiso para acceder a esta ruta.
 require_once 'validateRoute.php';
+
+// Incluye las clases necesarias de PHPMailer.
 require '../phpmailer/src/PHPMailer.php';
 require '../phpmailer/src/SMTP.php';
 require '../phpmailer/src/Exception.php';
 
+// Importa las clases PHPMailer y Exception para poder usarlas.
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+// Verifica que el formulario haya enviado el email.
 if (!isset($_POST['email'])) {
+
+    // Si no se recibió email, redirige con mensaje de error.
     header("Location: forgot_password.php?mensaje=error");
     exit;
 }
 
+// Obtiene el email enviado y elimina espacios innecesarios.
 $email = trim($_POST['email']);
 
 
+// Busca en la base de datos si existe un usuario con ese email.
 $sql = "SELECT * FROM usuario WHERE email = '$email'";
 $resultado = mysqli_query($conexion, $sql);
 
+// Si la consulta falla, redirige con mensaje de error.
 if (!$resultado) {
     header("Location: forgot_password.php?mensaje=error");
     exit;
 }
 
+// Obtiene los datos del usuario encontrado.
 $user = mysqli_fetch_assoc($resultado);
 
 
+// Si existe un usuario con ese email.
 if ($user) {
 
+    // Genera un token seguro y único para recuperar la contraseña.
     $token = bin2hex(random_bytes(32));
 
-    $update = "UPDATE usuario 
-               SET reset_token = '$token'
-               WHERE email = '$email'";
+    // Guarda el token generado en la tabla usuario.
+    $update = "UPDATE usuario SET reset_token = '$token'
+                WHERE email = '$email'";
 
     mysqli_query($conexion, $update);
 
+    // Arma el enlace que recibirá el usuario para cambiar su contraseña.
     $link = "http://localhost/SoftwareVet/php/reset_password.php?token=$token";
 
+    // Crea una nueva instancia de PHPMailer.
     $mail = new PHPMailer(true);
 
     try {
 
+        // Configura el envío por SMTP.
         $mail->isSMTP();
+
+        // Servidor SMTP de Gmail.
         $mail->Host       = 'smtp.gmail.com';
+
+        // Activa autenticación SMTP.
         $mail->SMTPAuth   = true;
 
+        // Cuenta de Gmail utilizada para enviar el correo.
         $mail->Username   = 'vetsys.softwareveterinario@gmail.com';
+
+        // Contraseña de aplicación de Gmail.
         $mail->Password   = 'fvzv elnl znyf herr';
 
+        // Tipo de seguridad del envío.
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+        // Puerto usado por Gmail para STARTTLS.
         $mail->Port       = 587;
 
+        // Define la codificación para permitir acentos y caracteres especiales.
         $mail->CharSet = 'UTF-8';
 
+        // Define el remitente del correo.
         $mail->setFrom(
             'vetsys.softwareveterinario@gmail.com',
             'Software Veterinario'
         );
 
+        // Agrega como destinatario el email ingresado por el usuario.
         $mail->addAddress($email);
 
+        // Indica que el contenido del correo será HTML.
         $mail->isHTML(true);
 
+        // Asunto del correo.
         $mail->Subject = 'Recuperar contraseña - VetSys';
 
+        // Cuerpo del correo con diseño HTML.
         $mail->Body = '
         <div style="
             background:#edf1f5;
@@ -182,20 +217,25 @@ if ($user) {
         </div>
         ';
 
+        // Envía el correo de recuperación.
         $mail->send();
 
+        // Si se envió correctamente, redirige con mensaje OK.
         header("Location: forgot_password.php?mensaje=ok");
         exit;
 
     } catch (Exception $e) {
 
+        // Si ocurre un error al enviar el correo, redirige con error de mail.
         header("Location: forgot_password.php?mensaje=mail_error");
         exit;
     }
 
 } else {
 
+    // Si no existe un usuario con ese email, redirige con error.
     header("Location: forgot_password.php?mensaje=error");
     exit;
 }
+
 ?>

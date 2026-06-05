@@ -1,16 +1,26 @@
 <?php
+
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según la ruta/perfil
 require_once '../../php/validateRoute.php';
 
+// Array donde se almacenarán los errores de validación
 $erroresCampos = [];
 
+// Obtiene el ID del turno desde la URL y lo convierte a entero
 $id_turno = (int)($_GET["id"] ?? 0);
 
+// Verifica que el ID sea válido
 if ($id_turno <= 0) {
+
+    // Redirige al listado si el ID es incorrecto
     header("Location: index.php?error=id");
     exit;
 }
 
+// Consulta para obtener los datos del turno seleccionado
 $sql = $conexion->query("
     SELECT 
         id_turno,
@@ -24,63 +34,87 @@ $sql = $conexion->query("
     WHERE id_turno = $id_turno
 ");
 
+// Obtiene los datos del turno
 $datos = $sql ? $sql->fetch_object() : null;
 
+// Si no encuentra el turno, redirige al listado
 if (!$datos) {
     header("Location: index.php?error=noexiste");
     exit;
 }
 
+// Evita modificar turnos completados o cancelados
 if ($datos->estado == 'Completado' || $datos->estado == 'Cancelado') {
     header("Location: index.php?error=estado");
     exit;
 }
 
+// Carga los datos actuales del turno en variables
 $fecha = $datos->fecha;
 $hora = substr($datos->hora, 0, 5);
 $motivo = $datos->motivo;
 $id_profesional = (int)$datos->id_profesional;
 $id_mascota = (int)$datos->id_mascota;
 
+// Verifica si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Recibe y limpia los datos enviados por el formulario
     $fecha = trim($_POST["fecha"] ?? '');
     $hora = trim($_POST["hora"] ?? '');
     $motivo = trim($_POST["motivo"] ?? '');
     $id_profesional = (int)($_POST["id_profesional"] ?? 0);
     $id_mascota = (int)($_POST["id_mascota"] ?? 0);
 
+    // Valida que la fecha no esté vacía
     if (empty($fecha)) {
         $erroresCampos['fecha'] = "La fecha es obligatoria.";
+
+    // Valida que la fecha no sea anterior a la actual
     } elseif ($fecha < date('Y-m-d')) {
         $erroresCampos['fecha'] = "La fecha no puede ser anterior a la actual.";
     }
 
+    // Valida que la hora no esté vacía
     if (empty($hora)) {
         $erroresCampos['hora'] = "La hora es obligatoria.";
+
+    // Valida horario permitido
     } elseif ($hora < '08:00' || $hora > '20:00') {
         $erroresCampos['hora'] = "El horario debe estar entre 08:00 y 20:00.";
+
+    // Si es hoy, valida que la hora no sea anterior a la actual
     } elseif ($fecha == date('Y-m-d') && $hora < date('H:i')) {
         $erroresCampos['hora'] = "La hora no puede ser anterior a la actual.";
     }
 
+    // Valida que el motivo no esté vacío
     if (empty($motivo)) {
         $erroresCampos['motivo'] = "El motivo es obligatorio.";
+
+    // Valida longitud mínima
     } elseif (strlen($motivo) < 3) {
         $erroresCampos['motivo'] = "Debe tener al menos 3 caracteres.";
+
+    // Valida longitud máxima
     } elseif (strlen($motivo) > 150) {
         $erroresCampos['motivo'] = "No puede superar los 150 caracteres.";
     }
 
+    // Valida que se haya seleccionado un profesional
     if ($id_profesional <= 0) {
         $erroresCampos['id_profesional'] = "Debe seleccionar un profesional.";
     }
 
+    // Valida que se haya seleccionado una mascota
     if ($id_mascota <= 0) {
         $erroresCampos['id_mascota'] = "Debe seleccionar una mascota.";
     }
 
+    // Si no hay errores, verifica que no exista otro turno para el mismo profesional
     if (empty($erroresCampos)) {
+
+        // Consulta preparada para validar turnos duplicados
         $validarTurno = $conexion->prepare("
             SELECT id_turno
             FROM turnos
@@ -91,18 +125,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             LIMIT 1
         ");
 
+        // Vincula los parámetros
         $validarTurno->bind_param("ssii", $fecha, $hora, $id_profesional, $id_turno);
+
+        // Ejecuta la consulta
         $validarTurno->execute();
+
+        // Obtiene el resultado
         $resTurno = $validarTurno->get_result();
 
+        // Si existe un turno en el mismo horario para ese profesional, muestra error
         if ($resTurno->num_rows > 0) {
             $erroresCampos['hora'] = "El profesional ya posee un turno asignado para esa fecha y horario.";
         }
 
+        // Cierra la consulta preparada
         $validarTurno->close();
     }
 
+    // Si no existen errores, actualiza el turno
     if (empty($erroresCampos)) {
+
+        // Consulta preparada para modificar el turno
         $stmt = $conexion->prepare("
             UPDATE turnos 
             SET fecha = ?,
@@ -113,19 +157,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE id_turno = ?
         ");
 
-        $stmt->bind_param("sssiii", $fecha, $hora, $motivo, $id_profesional, $id_mascota, $id_turno);
+        // Vincula los parámetros de actualización
+        $stmt->bind_param(
+            "sssiii",
+            $fecha,
+            $hora,
+            $motivo,
+            $id_profesional,
+            $id_mascota,
+            $id_turno
+        );
 
+        // Ejecuta la actualización
         if ($stmt->execute()) {
+
+            // Redirige al listado con mensaje de éxito
             header("Location: index.php?updated=1");
             exit;
+
         } else {
+
+            // Guarda mensaje de error si falla la actualización
             $erroresCampos['general'] = "Error al modificar el turno.";
         }
 
+        // Cierra la consulta preparada
         $stmt->close();
     }
 }
 
+// Consulta para cargar los profesionales en el select
 $profesionales = $conexion->query("
     SELECT p.id_profesional, CONCAT(per.apellido_persona, ', ', per.nombre_persona) AS nombre
     FROM profesional p
@@ -133,15 +194,16 @@ $profesionales = $conexion->query("
     ORDER BY per.apellido_persona ASC
 ");
 
+// Consulta para cargar las mascotas en el select
 $mascotas = $conexion->query("
     SELECT id_mascota, nombre_mascota 
     FROM mascota
     ORDER BY nombre_mascota ASC
 ");
 
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -295,11 +357,10 @@ label {
 
 <div class="form-group col-md-6">
     <label>Fecha <span style="color:#dc2626;">*</span></label>
-    <input type="date"
-           name="fecha"
-           class="form-control <?= isset($erroresCampos['fecha']) ? 'is-invalid' : '' ?>"
-           min="<?= date('Y-m-d') ?>"
-           value="<?= htmlspecialchars($fecha) ?>">
+    <input type="date"name="fecha"
+        class="form-control <?= isset($erroresCampos['fecha']) ? 'is-invalid' : '' ?>"
+        min="<?= date('Y-m-d') ?>"
+        value="<?= htmlspecialchars($fecha) ?>">
 
     <?php if(isset($erroresCampos['fecha'])) { ?>
         <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['fecha']) ?></div>
@@ -309,12 +370,9 @@ label {
 <div class="form-group col-md-6">
     <label>Hora <span style="color:#dc2626;">*</span></label>
 
-   <input
-    type="time"
-    name="hora"
+    <input type="time"name="hora"
     class="form-control <?= isset($erroresCampos['hora']) ? 'is-invalid' : '' ?>"
-    value="<?= htmlspecialchars($hora) ?>"
->
+    value="<?= htmlspecialchars($hora) ?>">
 
     <?php if(isset($erroresCampos['hora'])) { ?>
         <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['hora']) ?></div>
@@ -325,10 +383,9 @@ label {
 
 <div class="form-group">
     <label>Motivo <span style="color:#dc2626;">*</span></label>
-    <input type="text"
-           name="motivo"
-           class="form-control <?= isset($erroresCampos['motivo']) ? 'is-invalid' : '' ?>"
-           value="<?= htmlspecialchars($motivo) ?>">
+    <input type="text" name="motivo"
+        class="form-control <?= isset($erroresCampos['motivo']) ? 'is-invalid' : '' ?>"
+        value="<?= htmlspecialchars($motivo) ?>">
 
     <?php if(isset($erroresCampos['motivo'])) { ?>
         <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['motivo']) ?></div>

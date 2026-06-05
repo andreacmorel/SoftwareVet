@@ -1,24 +1,45 @@
 <?php
 require_once __DIR__ . '/../settings/conexion.php';
-//require_once 'validateRoute.php';
 
+// Obtiene la URL actual para identificar qué módulo está abierto.
 $uri = $_SERVER['REQUEST_URI'];
+/*
+| Función isActive()
+| Verifica si la ruta actual contiene la ruta recibida.
+| Si coincide, devuelve la clase CSS 'nav-active'.
+| Se utiliza para resaltar la opción activa del menú.
+*/
 function isActive(string $path): string {
     global $uri;
     return (strpos($uri, $path) !== false) ? 'nav-active' : '';
 }
+/*
+| Función isOpen()
+| Recorre un conjunto de rutas y verifica si alguna coincide
+| con la URL actual. Si coincide devuelve 'show' para abrir
+| automáticamente el menú desplegable.
+*/
 function isOpen(array $paths): string {
     global $uri;
     foreach ($paths as $p) { if (strpos($uri, $p) !== false) return 'show'; }
     return '';
 }
+/*
 
-
+| Inicio de sesión
+| Verifica si existe una sesión activa. Si no existe,
+| la crea para poder acceder a los datos del usuario.
+*/
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+/*
+| Obtención del perfil del usuario
+| Inicializa el nombre del perfil y luego consulta la base
+| de datos para obtener el perfil correspondiente al usuario
+| que inició sesión.
+*/
 $nombrePerfil = 'Sin perfil';
 
 if (isset($_SESSION['id_perfil'])) {
@@ -38,9 +59,17 @@ if (isset($_SESSION['id_perfil'])) {
 }
     }
 }
-
+/*
+| Seguridad de salida
+| Convierte caracteres especiales para evitar problemas
+| de visualización o posibles ataques XSS.
+*/
 $nombrePerfilSeguro = htmlspecialchars($nombrePerfil);
-
+/*
+| Contador de turnos del día
+| Obtiene la cantidad de turnos registrados para la fecha actual.
+| Se utiliza para mostrar la notificación en el menú lateral.
+*/
 $turnosHoyCount = 0;
 
 if (isset($conexion)) {
@@ -121,8 +150,8 @@ if (isset($conexion)) {
         <li class="nav-item has-sub">
             <?php $turnosOpen = isOpen(['/turnos/']); ?>
             <a class="nav-link <?= $turnosOpen ? '' : 'collapsed' ?>"
-               href="#" data-toggle="collapse" data-target="#collapseTurnos"
-               aria-expanded="<?= $turnosOpen ? 'true' : 'false' ?>" data-label="Turnos">
+            href="#" data-toggle="collapse" data-target="#collapseTurnos"
+            aria-expanded="<?= $turnosOpen ? 'true' : 'false' ?>" data-label="Turnos">
                 <i class="fas fa-fw fa-calendar-check nav-icon"></i>
                 <span>Turnos</span>
                 <?php if ($turnosHoyCount > 0): ?>
@@ -179,8 +208,8 @@ if (isset($conexion)) {
         <li class="nav-item has-sub">
             <?php $agendaOpen = isOpen(['/agenda/']); ?>
             <a class="nav-link <?= $agendaOpen ? '' : 'collapsed' ?>"
-               href="#" data-toggle="collapse" data-target="#collapseAgenda"
-               aria-expanded="<?= $agendaOpen ? 'true' : 'false' ?>" data-label="Administración">
+            href="#" data-toggle="collapse" data-target="#collapseAgenda"
+            aria-expanded="<?= $agendaOpen ? 'true' : 'false' ?>" data-label="Administración">
                 <i class="fas fa-fw fa-sliders-h nav-icon"></i>
                 <span>Administración</span>
             </a>
@@ -226,13 +255,13 @@ if (isset($conexion)) {
             if (isset($conexion)) {
                 $resNotif = $conexion->query("
                     SELECT t.hora, t.motivo, t.estado, m.nombre_mascota,
-                           CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional
+                    CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional
                     FROM turnos t
                     INNER JOIN mascota m     ON t.id_mascota = m.id_mascota
                     INNER JOIN profesional p ON t.id_profesional = p.id_profesional
                     INNER JOIN persona per   ON p.id_persona = per.id_persona
                     WHERE t.fecha = CURDATE()
-                      AND t.estado IN ('pendiente','confirmado','en_atencion')
+                    AND t.estado IN ('pendiente','confirmado','en_atencion')
                     ORDER BY t.hora ASC
                     LIMIT 8
                 ");
@@ -270,7 +299,7 @@ if (isset($conexion)) {
 
                     <div class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
-                           id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="user-avatar mr-2"><?= $iniciales ?></div>
                             <div class="d-none d-lg-block text-left mr-1">
                                 <div style="font-size:.85rem; font-weight:700; color:#52266E; line-height:1.2;">
@@ -282,7 +311,7 @@ if (isset($conexion)) {
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in user-dropdown"
-                             aria-labelledby="userDropdown">
+                            aria-labelledby="userDropdown">
                             <div class="user-info">
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar mr-2" style="width:40px;height:40px;font-size:1rem;">
@@ -306,46 +335,80 @@ if (isset($conexion)) {
             </nav>
 
             <script>
-            (function tickClock() {
+                /* Reloj y fecha en tiempo real
+                | Actualiza la hora y la fecha mostradas en la barra superior
+                | del sistema cada segundo.
+                */
+            (function tickClock() {}
+                // Obtiene la fecha y hora actual.
                 var now   = new Date();
+                // Obtiene horas, minutos y segundos con dos dígitos.
                 var hh    = now.getHours().toString().padStart(2,'0');
                 var mm    = now.getMinutes().toString().padStart(2,'0');
                 var ss    = now.getSeconds().toString().padStart(2,'0');
+                // Array con los nombres de los días.
                 var dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+                // Array con los nombres abreviados de los meses.
                 var meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+                // Obtiene los elementos donde se mostrará la hora y la fecha.
                 var eH = document.getElementById('topbar-hora');
                 var eF = document.getElementById('topbar-fecha');
+                // Muestra la hora actual.
                 if (eH) eH.textContent = hh + ':' + mm + ':' + ss;
+                // Muestra la fecha actual.
                 if (eF) eF.textContent = dias[now.getDay()] + ' ' + now.getDate() + ' ' + meses[now.getMonth()] + ' ' + now.getFullYear();
+                // Vuelve a ejecutar la función cada segundo.
                 setTimeout(tickClock, 1000);
             })();
-
+            /*
+            | Cambio de modo del menú lateral
+            | Permite alternar entre:
+            | - Menú completo
+            | - Solo íconos
+            | - Menú oculto
+            | Además guarda la preferencia en localStorage.
+            */           
             (function() {
+                // Modos disponibles del menú.
                 var MODES  = ['full', 'icons', 'hidden'];
+                // Descripción de cada modo.
                 var LABELS = ['Menú completo', 'Solo íconos', 'Menú oculto'];
+                // Obtiene el body y el botón que cambia el modo
                 var body   = document.body;
                 var btn    = document.getElementById('sidebarModeBtn');
-
+                // Recupera el último modo guardado.        
                 var currentMode = localStorage.getItem('sidebarMode') || 'full';
+                // Aplica el modo inicial.
                 applyMode(currentMode);
-
+                // Verifica que exista el botón.        
                 if (btn) {
                     btn.addEventListener('click', function() {
+                        // Escucha el clic para cambiar entre modos.
+                        // Obtiene la posición actual dentro del array.
                         var idx  = MODES.indexOf(currentMode);
+                        // Calcula el siguiente modo.
                         var next = MODES[(idx + 1) % MODES.length];
+                        // Aplica el nuevo modo.
                         applyMode(next);
+                        // Guarda la preferencia en el navegador.
                         localStorage.setItem('sidebarMode', next);
                     });
                 }
-
+                // Función que aplica el modo seleccionado.        
                 function applyMode(mode) {
                     currentMode = mode;
+                    // Actualiza el atributo data-sidebar.
                     body.setAttribute('data-sidebar', mode);
+                    // Obtiene el índice del modo actual.
                     var idx = MODES.indexOf(mode);
+                    // Actualiza el tooltip del botón.
                     if (btn) btn.setAttribute('title', 'Modo actual: ' + LABELS[idx] + ' → click para cambiar');
                 }
             })();
-
+            /*
+            | Menú responsive para dispositivos móviles
+            | Permite abrir y cerrar el sidebar en pantallas pequeñas.
+             */            
             (function() {
                 var toggleTop = document.getElementById('sidebarToggleTop');
                 var overlay   = document.getElementById('sidebarOverlay');

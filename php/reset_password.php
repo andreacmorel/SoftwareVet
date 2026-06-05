@@ -1,18 +1,23 @@
 <?php
+// Incluye la conexión a la base de datos.
 require_once '../settings/conexion.php';
+// Valida que el usuario tenga permisos para acceder a esta ruta.
 require_once 'validateRoute.php';
-
+// Verifica que se haya recibido un token por la URL.
 if (!isset($_GET['token'])) {
+    // Si no existe token, detiene la ejecución.
     die("Token no válido");
 }
-
+// Obtiene el token recibido.
 $token = $_GET['token'];
-
+// Busca en la base de datos un usuario que tenga ese token de recuperación.
 $sql = "SELECT * FROM usuario WHERE reset_token='$token'";
 $resultado = mysqli_query($conexion, $sql);
+// Obtiene los datos del usuario encontrado.
 $user = mysqli_fetch_assoc($resultado);
-
+// Verifica que exista un usuario asociado al token.
 if (!$user) {
+    // Si el token no existe o ya fue utilizado, muestra error.
     die("Token inválido");
 }
 ?>
@@ -23,7 +28,6 @@ if (!$user) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VetSys | Nueva contraseña</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/SoftwareVet/vendor/fontawesome-free/css/all.min.css">
 
@@ -294,8 +298,9 @@ if (!$user) {
         <div class="login-box">
 
             <?php if (isset($_GET['mensaje'])) { ?>
-
+            <!-- Verifica si existe algún mensaje de error -->
                 <?php if ($_GET['mensaje'] == 'error') { ?>
+                <!-- Error cuando las contraseñas ingresadas no coinciden -->
                     <div class="alert alert-danger">
                         <i class="fas fa-times-circle"></i>
                         Las contraseñas no coinciden.
@@ -303,6 +308,7 @@ if (!$user) {
                 <?php } ?>
 
                 <?php if ($_GET['mensaje'] == 'db_error') { ?>
+                <!-- Error al actualizar la contraseña en la base de datos -->
                     <div class="alert alert-danger">
                         <i class="fas fa-times-circle"></i>
                         No se pudo actualizar la contraseña.
@@ -326,14 +332,8 @@ if (!$user) {
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
 
-                    <input 
-                        type="password" 
-                        name="password" 
-                        class="input" 
-                        placeholder="Nueva contraseña" 
-                        id="password"
-                        required
-                    >
+                    <input type="password" name="password" class="input" placeholder="Nueva contraseña" 
+                    id="password"required>
 
                     <span class="toggle-password" onclick="togglePassword('password', 'eye1')">
                         <i class="fas fa-eye" id="eye1"></i>
@@ -343,14 +343,8 @@ if (!$user) {
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
 
-                    <input 
-                        type="password" 
-                        name="password2" 
-                        class="input" 
-                        placeholder="Confirmar contraseña" 
-                        id="password2"
-                        required
-                    >
+                    <input type="password" name="password2" class="input" placeholder="Confirmar contraseña" 
+                        id="password2"required>
 
                     <span class="toggle-password" onclick="togglePassword('password2', 'eye2')">
                         <i class="fas fa-eye" id="eye2"></i>
@@ -373,25 +367,34 @@ if (!$user) {
 </div>
 
 <script>
+    // Función que permite mostrar u ocultar la contraseña.
 function togglePassword(inputId, eyeId){
-
+    // Obtiene el campo de contraseña.
     const input = document.getElementById(inputId);
+    // Obtiene el ícono del ojo.
     const eye = document.getElementById(eyeId);
-
-    if(input.type === 'password'){
+    // Si la contraseña está oculta.
+    if(input.type === 'password'){  
+    // La muestra en texto plano.
         input.type = 'text';
+        // Cambia el ícono a ojo tachado.
         eye.classList.remove('fa-eye');
         eye.classList.add('fa-eye-slash');
     }else{
+        // Vuelve a ocultar la contraseña.
         input.type = 'password';
+        // Restaura el ícono original.
         eye.classList.remove('fa-eye-slash');
         eye.classList.add('fa-eye');
     }
 }
-
+// Oculta automáticamente los mensajes de error luego de 4 segundos.
 setTimeout(() => {
+    // Busca cualquier alerta en pantalla.
     const alert = document.querySelector('.alert');
+    // Si existe una alerta.
     if(alert){
+        // La oculta.
         alert.style.display = 'none';
     }
 }, 4000);

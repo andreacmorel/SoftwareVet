@@ -1,69 +1,93 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según la ruta/perfil
 require_once '../../php/validateRoute.php';
 
+// Array donde se guardarán los errores de validación
 $erroresCampos = [];
 
+// Consulta para obtener todos los clientes y mostrarlos en el select
 $sqlClientes = "
 SELECT c.id_cliente, p.nombre_persona, p.apellido_persona
 FROM cliente c
 INNER JOIN persona p ON c.id_persona = p.id_persona
 ";
+
+// Ejecuta la consulta de clientes
 $resClientes = mysqli_query($conexion, $sqlClientes);
 
+// Consulta para obtener todas las especies y razas disponibles
 $sqlEspecies = "
 SELECT id_especie, nombre_especie, raza 
 FROM especie
 ";
+
+// Ejecuta la consulta de especies
 $resEspecies = mysqli_query($conexion, $sqlEspecies);
 
+// Verifica si el formulario fue enviado por método POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Recibe y limpia los datos enviados desde el formulario
     $nombre = trim($_POST['nombre_mascota'] ?? '');
     $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
     $sexo = trim($_POST['sexo'] ?? '');
     $peso = trim($_POST['peso'] ?? '');
     $color = trim($_POST['color'] ?? '');
     $edad = trim($_POST['edad'] ?? '');
+
+    // Convierte a entero los IDs recibidos
     $id_especie = (int)($_POST['id_especie'] ?? 0);
     $id_cliente = (int)($_POST['id_cliente'] ?? 0);
 
+    // Valida que el nombre de la mascota no esté vacío y tenga al menos 2 caracteres
     if (empty($nombre)) {
         $erroresCampos['nombre_mascota'] = "El nombre es obligatorio.";
     } elseif (strlen($nombre) < 2) {
         $erroresCampos['nombre_mascota'] = "Debe tener al menos 2 caracteres.";
     }
 
+    // Valida que se haya seleccionado el sexo
     if (empty($sexo)) {
         $erroresCampos['sexo'] = "Seleccione el sexo.";
     }
 
+    // Valida que el peso no esté vacío y sea mayor a 0
     if (empty($peso)) {
         $erroresCampos['peso'] = "El peso es obligatorio.";
     } elseif ($peso <= 0) {
         $erroresCampos['peso'] = "El peso debe ser mayor a 0.";
     }
 
+    // Valida que la edad no sea negativa si fue ingresada
     if (!empty($edad) && $edad < 0) {
         $erroresCampos['edad'] = "La edad no puede ser negativa.";
     }
 
+    // Valida que la fecha de nacimiento no sea mayor a la fecha actual
     if (!empty($fecha_nacimiento) && $fecha_nacimiento > date('Y-m-d')) {
         $erroresCampos['fecha_nacimiento'] = "La fecha no puede ser futura.";
     }
 
+    // Valida que se haya seleccionado una especie
     if (empty($id_especie)) {
         $erroresCampos['id_especie'] = "Seleccione una especie.";
     }
 
+    // Valida que se haya seleccionado un cliente
     if (empty($id_cliente)) {
         $erroresCampos['id_cliente'] = "Seleccione un cliente.";
     }
 
+    // Si no hay errores, verifica que la mascota no esté duplicada para el mismo cliente
     if (empty($erroresCampos)) {
 
+        // Escapa el nombre antes de usarlo en la consulta SQL
         $nombreSeguro = $conexion->real_escape_string($nombre);
 
+        // Consulta si ya existe una mascota con el mismo nombre para ese cliente
         $sqlExiste = "
             SELECT id_mascota
             FROM mascota
@@ -71,22 +95,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             AND id_cliente = $id_cliente
         ";
 
+        // Ejecuta la consulta de existencia
         $resExiste = mysqli_query($conexion, $sqlExiste);
 
+        // Si encuentra un registro, muestra error de duplicado
         if ($resExiste && mysqli_num_rows($resExiste) > 0) {
             $erroresCampos['nombre_mascota'] = "La mascota ya existe para este cliente.";
         }
     }
 
+    // Si no hay errores, guarda la mascota en la base de datos
     if (empty($erroresCampos)) {
 
+        // Escapa los valores de texto para evitar problemas con caracteres especiales
         $nombreSeguro = $conexion->real_escape_string($nombre);
         $sexoSeguro = $conexion->real_escape_string($sexo);
         $colorSeguro = $conexion->real_escape_string($color);
 
+        // Si la fecha está vacía, se guarda NULL; si tiene valor, se escapa y se guarda
         $fechaSQL = empty($fecha_nacimiento) ? "NULL" : "'" . $conexion->real_escape_string($fecha_nacimiento) . "'";
+
+        // Si la edad está vacía, se guarda NULL; si tiene valor, se escapa y se guarda
         $edadSQL = empty($edad) ? "NULL" : "'" . $conexion->real_escape_string($edad) . "'";
 
+        // Consulta para insertar la nueva mascota
         $sqlInsert = "
             INSERT INTO mascota (
                 nombre_mascota,
@@ -110,12 +142,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             )
         ";
 
+        // Ejecuta la inserción
         $resultado = mysqli_query($conexion, $sqlInsert);
 
+        // Si se guarda correctamente, redirige al listado con mensaje de éxito
         if ($resultado) {
             header("Location: index.php?success=1");
             exit;
         } else {
+
+            // Si ocurre un error al guardar, muestra mensaje general
             $erroresCampos['general'] = "Error al guardar mascota.";
         }
     }

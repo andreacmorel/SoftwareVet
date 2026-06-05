@@ -1,16 +1,28 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Incluye la validación de acceso según ruta/perfil
 require_once '../../php/validateRoute.php';
 
+// Obtiene los filtros enviados por GET
 $buscar = $_GET['buscar'] ?? '';
 $fecha_desde = $_GET['fecha_desde'] ?? '';
 $fecha_hasta = $_GET['fecha_hasta'] ?? '';
 
+// Condición base para ir agregando filtros dinámicamente
 $where = "WHERE 1=1";
+
+// Array donde se guardan los valores que se van a vincular al prepare
 $params = [];
+
+// Variable donde se guardan los tipos de datos para bind_param
 $types = "";
 
+// Si el usuario escribió algo en el buscador
 if (!empty($buscar)) {
+
+    // Agrega filtros para buscar por mascota, descripción, observación o ID
     $where .= " AND (
         m.nombre_mascota LIKE ? OR
         h.descripcion LIKE ? OR
@@ -18,26 +30,34 @@ if (!empty($buscar)) {
         h.id_historia_clinica LIKE ?
     )";
 
+    // Prepara el texto de búsqueda con comodines
     $busqueda = "%$buscar%";
+
+    // Guarda los valores que reemplazarán a los signos ?
     $params[] = $busqueda;
     $params[] = $busqueda;
     $params[] = $busqueda;
     $params[] = $busqueda;
+
+    // Indica que los 4 parámetros son string
     $types .= "ssss";
 }
 
+// Si se seleccionó fecha desde, agrega filtro por fecha mínima
 if (!empty($fecha_desde)) {
     $where .= " AND h.fecha >= ?";
     $params[] = $fecha_desde;
     $types .= "s";
 }
 
+// Si se seleccionó fecha hasta, agrega filtro por fecha máxima
 if (!empty($fecha_hasta)) {
     $where .= " AND h.fecha <= ?";
     $params[] = $fecha_hasta;
     $types .= "s";
 }
 
+// Consulta principal del listado de historias clínicas
 $sql = "
     SELECT 
         h.id_historia_clinica,
@@ -51,16 +71,31 @@ $sql = "
     ORDER BY h.fecha DESC
 ";
 
+// Si existen filtros, usa consulta preparada
 if ($params) {
+
+    // Prepara la consulta SQL
     $stmt = $conexion->prepare($sql);
+
+    // Vincula dinámicamente los parámetros
     $stmt->bind_param($types, ...$params);
+
+    // Ejecuta la consulta
     $stmt->execute();
+
+    // Obtiene el resultado
     $result = $stmt->get_result();
+
+    // Cierra la consulta preparada
     $stmt->close();
+
 } else {
+
+    // Si no hay filtros, ejecuta la consulta directamente
     $result = $conexion->query($sql);
 }
 
+// Incluye el menú principal
 require_once '../../php/menu.php';
 ?>
 
@@ -424,15 +459,15 @@ require_once '../../php/menu.php';
 
                                 <td class="text-center align-middle">
                                     <a href="show_treatment.php?id=<?= $h->id_historia_clinica ?>"
-                                       class="btn-action btn-treatment"
-                                       title="Ver tratamientos">
+                                    class="btn-action btn-treatment"
+                                    title="Ver tratamientos">
                                         <i class="fas fa-pills"></i>
                                     </a>
                                 </td>
 
                                 <td class="text-center align-middle">
 
-                                   <a href="print.php?id=<?= $h->id_historia_clinica ?>&pdf=1"
+                                <a href="print.php?id=<?= $h->id_historia_clinica ?>&pdf=1"
                                     class="btn-action btn-print"
                                     title="Descargar PDF">
                                     <i class="fas fa-file-pdf"></i>

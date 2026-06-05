@@ -269,13 +269,7 @@
 
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        class="input" 
-                        placeholder="Ingrese su email" 
-                        required
-                    >
+                    <input type="email" name="email" class="input" placeholder="Ingrese su email" required>
                 </div>
 
                 <button type="submit" class="btn-login">

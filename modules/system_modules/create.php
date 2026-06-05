@@ -1,38 +1,60 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a este módulo.
 require_once '../../php/validateRoute.php';
 
+// Array donde se almacenan los errores de validación del formulario.
 $erroresCampos = [];
 
+// Verifica si se presionó el botón Guardar del formulario.
 if (!empty($_POST['btnGuardar'])) {
 
+    // Obtiene y limpia los datos enviados desde el formulario.
     $nombre_modulo = trim($_POST['nombre_modulo'] ?? '');
     $ruta = trim($_POST['ruta'] ?? '');
     $icono = trim($_POST['icono'] ?? '');
 
+    // Valida que el nombre del módulo no esté vacío.
     if (empty($nombre_modulo)) {
         $erroresCampos['nombre_modulo'] = "El nombre del módulo es obligatorio.";
+
+    // Valida que el nombre del módulo tenga al menos 3 caracteres.
     } elseif (strlen($nombre_modulo) < 3) {
         $erroresCampos['nombre_modulo'] = "Debe tener al menos 3 caracteres.";
+
+    // Valida que el nombre del módulo no supere los 50 caracteres.
     } elseif (strlen($nombre_modulo) > 50) {
         $erroresCampos['nombre_modulo'] = "No puede superar los 50 caracteres.";
     }
 
+    // Valida que la ruta no esté vacía.
     if (empty($ruta)) {
         $erroresCampos['ruta'] = "La ruta es obligatoria.";
+
+    // Valida que la ruta no supere los 255 caracteres.
     } elseif (strlen($ruta) > 255) {
         $erroresCampos['ruta'] = "La ruta no puede superar los 255 caracteres.";
     }
 
+    // Valida el icono solo si fue completado.
+    // No es obligatorio, pero si se ingresa no debe superar los 100 caracteres.
     if (!empty($icono) && strlen($icono) > 100) {
         $erroresCampos['icono'] = "El icono no puede superar los 100 caracteres.";
     }
 
+    // Si no hay errores de campos, verifica duplicados.
     if (empty($erroresCampos)) {
 
+        // Escapa el nombre del módulo para usarlo de forma segura en SQL.
         $nombreSeguro = $conexion->real_escape_string($nombre_modulo);
+
+        // Escapa la ruta para usarla de forma segura en SQL.
         $rutaSeguro = $conexion->real_escape_string($ruta);
 
+        // Consulta si ya existe un módulo activo con el mismo nombre.
         $validarNombre = $conexion->query("
             SELECT id_modulo
             FROM modulo
@@ -41,10 +63,12 @@ if (!empty($_POST['btnGuardar'])) {
             LIMIT 1
         ");
 
+        // Si encuentra un módulo activo con ese nombre, guarda un error.
         if ($validarNombre && $validarNombre->num_rows > 0) {
             $erroresCampos['nombre_modulo'] = "Ya existe un módulo activo con ese nombre.";
         }
 
+        // Consulta si ya existe un módulo activo con la misma ruta.
         $validarRuta = $conexion->query("
             SELECT id_modulo
             FROM modulo
@@ -53,25 +77,32 @@ if (!empty($_POST['btnGuardar'])) {
             LIMIT 1
         ");
 
+        // Si encuentra un módulo activo con esa ruta, guarda un error.
         if ($validarRuta && $validarRuta->num_rows > 0) {
             $erroresCampos['ruta'] = "Ya existe un módulo activo con esa ruta.";
         }
     }
 
+    // Si no hubo errores de validación ni duplicados, registra el módulo.
     if (empty($erroresCampos)) {
 
+        // Escapa nuevamente los datos antes de insertarlos en la base.
         $nombreSeguro = $conexion->real_escape_string($nombre_modulo);
         $rutaSeguro = $conexion->real_escape_string($ruta);
         $iconoSeguro = $conexion->real_escape_string($icono);
 
+        // Inserta el nuevo módulo con estado activo.
         $insert = $conexion->query("
             INSERT INTO modulo (nombre_modulo, ruta, icono, estado)
             VALUES ('$nombreSeguro', '$rutaSeguro', '$iconoSeguro', 1)
         ");
 
+        // Si el registro fue exitoso, redirige al listado con mensaje de éxito.
         if ($insert) {
             header("Location: index.php?success=1");
             exit;
+
+        // Si ocurre un error al insertar, guarda un mensaje general.
         } else {
             $erroresCampos['general'] = "Error al registrar módulo.";
         }

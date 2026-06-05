@@ -1,50 +1,74 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a este módulo.
 require_once '../../php/validateRoute.php';
 
+// Array donde se almacenarán los errores de validación del formulario.
 $erroresCampos = [];
 
+// Verifica que se haya recibido un ID por la URL.
 if (!isset($_GET['id']) || empty($_GET['id'])) {
+
+    // Si no llega un ID válido, se detiene la ejecución.
     die("ID de perfil no válido.");
 }
 
+// Convierte el ID recibido a número entero.
 $id = (int)$_GET['id'];
 
+// Consulta los datos del perfil que se quiere modificar.
 $perfilEditar = $conexion->query("
     SELECT id_perfil, nombre_perfil
     FROM perfil
     WHERE id_perfil = $id
 ")->fetch_object();
 
+// Verifica que el perfil exista.
 if (!$perfilEditar) {
+
+    // Si no existe, se detiene la ejecución.
     die("Perfil no encontrado.");
 }
 
+// Verifica si se presionó el botón Modificar del formulario.
 if (!empty($_POST['btnModificar'])) {
 
+    // Obtiene el nombre del perfil enviado desde el formulario.
+    // trim elimina espacios innecesarios al inicio y al final.
     $nombre_perfil = trim($_POST['nombre_perfil'] ?? '');
 
+    // Valida que el nombre del perfil no esté vacío.
     if (empty($nombre_perfil)) {
 
         $erroresCampos['nombre_perfil'] = "El nombre del perfil es obligatorio.";
 
+    // Valida que el nombre tenga al menos 3 caracteres.
     } elseif (strlen($nombre_perfil) < 3) {
 
         $erroresCampos['nombre_perfil'] = "Debe tener al menos 3 caracteres.";
 
+    // Valida que el nombre no supere los 50 caracteres.
     } elseif (strlen($nombre_perfil) > 50) {
 
         $erroresCampos['nombre_perfil'] = "No puede superar los 50 caracteres.";
 
+    // Valida que solo se ingresen letras y espacios.
     } elseif (!preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/', $nombre_perfil)) {
 
         $erroresCampos['nombre_perfil'] = "Solo se permiten letras y espacios.";
     }
 
+    // Si no hay errores de validación, verifica duplicados.
     if (empty($erroresCampos)) {
 
+        // Escapa caracteres especiales antes de usar el dato en SQL.
         $nombreSeguro = $conexion->real_escape_string($nombre_perfil);
 
+        // Busca si existe otro perfil con el mismo nombre.
+        // Se excluye el perfil actual con id_perfil != $id.
         $existe = $conexion->query("
             SELECT id_perfil
             FROM perfil
@@ -53,29 +77,34 @@ if (!empty($_POST['btnModificar'])) {
             LIMIT 1
         ");
 
+        // Si existe otro perfil con ese nombre, guarda un error.
         if ($existe && $existe->num_rows > 0) {
 
             $erroresCampos['nombre_perfil'] = "Ya existe otro perfil con ese nombre.";
         }
     }
 
+    // Si no hubo errores, actualiza el perfil.
     if (empty($erroresCampos)) {
 
+        // Escapa nuevamente el nombre antes de actualizar.
         $nombreSeguro = $conexion->real_escape_string($nombre_perfil);
 
+        // Modifica el nombre del perfil en la base de datos.
         $conexion->query("
             UPDATE perfil
             SET nombre_perfil = '$nombreSeguro'
             WHERE id_perfil = $id
         ");
 
+        // Redirige al listado con mensaje de modificación exitosa.
         header("Location: index.php?updated=1");
         exit;
     }
 
+    // Si hubo errores, mantiene el dato escrito en el formulario.
     $perfilEditar->nombre_perfil = $nombre_perfil;
 }
-
 require_once '../../php/menu.php';
 ?>
 

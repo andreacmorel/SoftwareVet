@@ -1,10 +1,19 @@
 <?php
+
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a esta ruta
 require_once '../../php/validateRoute.php';
+
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 
+// Obtiene el ID de la mascota enviado por la URL y lo convierte a entero
 $id = (int) $_GET['id'];
 
+// Consulta para obtener toda la información de la mascota,
+// incluyendo datos del cliente propietario y la especie
 $sql = "SELECT 
             m.*,
             e.nombre_especie,
@@ -19,31 +28,59 @@ $sql = "SELECT
         INNER JOIN especie e ON m.id_especie = e.id_especie
         WHERE m.id_mascota = $id";
 
+// Ejecuta la consulta
 $result = mysqli_query($conexion, $sql);
+
+// Obtiene los datos de la mascota en un arreglo asociativo
 $mascota = mysqli_fetch_assoc($result);
 
+// Si no encuentra la mascota, detiene la ejecución
 if (!$mascota) {
     die("Mascota no encontrada");
 }
 
+// =====================================================
+// FORMATEO DE DATOS PARA MOSTRAR EN LA FICHA
+// =====================================================
+
+// Si existe fecha de nacimiento y no es una fecha inválida,
+// la convierte al formato dd/mm/aaaa.
+// Caso contrario muestra "No registrada".
 $fechaNacimiento = (!empty($mascota['fecha_nacimiento']) && $mascota['fecha_nacimiento'] != '0000-00-00')
     ? date('d/m/Y', strtotime($mascota['fecha_nacimiento']))
     : 'No registrada';
 
-$color = !empty($mascota['color']) ? htmlspecialchars($mascota['color']) : 'Sin especificar';
+// Si existe color lo muestra protegido con htmlspecialchars,
+// caso contrario muestra un texto por defecto
+$color = !empty($mascota['color'])
+    ? htmlspecialchars($mascota['color'])
+    : 'Sin especificar';
 
+// Si existe edad y es mayor a 0, agrega la palabra "años"
+// caso contrario muestra "No registrada"
 $edad = (!empty($mascota['edad']) && $mascota['edad'] > 0)
     ? htmlspecialchars($mascota['edad']) . ' años'
     : 'No registrada';
 
+// Si existe peso y es mayor a 0, agrega la unidad "kg"
+// caso contrario muestra "No registrado"
 $peso = (!empty($mascota['peso']) && $mascota['peso'] > 0)
     ? htmlspecialchars($mascota['peso']) . ' kg'
     : 'No registrado';
 
-$telefono = !empty($mascota['telefono']) ? htmlspecialchars($mascota['telefono']) : 'Sin teléfono';
-$email = !empty($mascota['email']) ? htmlspecialchars($mascota['email']) : 'Sin email';
-?>
+// Si existe teléfono lo muestra protegido con htmlspecialchars
+// caso contrario muestra un mensaje por defecto
+$telefono = !empty($mascota['telefono'])
+    ? htmlspecialchars($mascota['telefono'])
+    : 'Sin teléfono';
 
+// Si existe email lo muestra protegido con htmlspecialchars
+// caso contrario muestra un mensaje por defecto
+$email = !empty($mascota['email'])
+    ? htmlspecialchars($mascota['email'])
+    : 'Sin email';
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 

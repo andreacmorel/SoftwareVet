@@ -1,35 +1,63 @@
 <?php
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permiso para acceder a esta ruta
 require_once '../../php/validateRoute.php';
+
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 
+// Obtiene el texto ingresado en el buscador
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Obtiene el filtro de especie enviado por GET y lo convierte a entero
 $id_especie = (int)($_GET['id_especie'] ?? 0);
+
+// Obtiene el filtro de sexo enviado por GET
 $sexo = trim($_GET['sexo'] ?? '');
 
+// Obtiene la página actual. Si no existe, usa la página 1
 $pagina = max(1, (int)($_GET['pagina'] ?? 1));
+
+// Cantidad de registros que se mostrarán por página
 $porPagina = 10;
+
+// Calcula desde qué registro debe comenzar la consulta
 $desde = ($pagina - 1) * $porPagina;
 
+// Condición base para poder agregar filtros dinámicamente
 $where = "WHERE 1=1";
 
+// Si el usuario escribió algo en el buscador
 if ($buscar !== '') {
+
+    // Escapa el texto buscado para evitar errores o inyección SQL
     $buscarSeguro = $conexion->real_escape_string($buscar);
+
+    // Agrega filtro por nombre de mascota o nombre completo del cliente
     $where .= " AND (
         m.nombre_mascota LIKE '%$buscarSeguro%' 
         OR CONCAT(p.nombre_persona, ' ', p.apellido_persona) LIKE '%$buscarSeguro%'
     )";
 }
 
+// Si se seleccionó una especie, agrega el filtro correspondiente
 if ($id_especie > 0) {
     $where .= " AND m.id_especie = $id_especie";
 }
 
+// Si se seleccionó un sexo, agrega el filtro correspondiente
 if ($sexo !== '') {
+
+    // Escapa el valor del sexo antes de usarlo en la consulta
     $sexoSeguro = $conexion->real_escape_string($sexo);
+
+    // Filtra por sexo de la mascota
     $where .= " AND m.sexo = '$sexoSeguro'";
 }
 
+// Consulta la cantidad total de mascotas según los filtros aplicados
 $totalQuery = $conexion->query("
     SELECT COUNT(*) AS total
     FROM mascota m
@@ -39,9 +67,13 @@ $totalQuery = $conexion->query("
     $where
 ");
 
+// Obtiene el total de registros encontrados
 $total = $totalQuery->fetch_object()->total;
+
+// Calcula la cantidad total de páginas
 $totalPaginas = ceil($total / $porPagina);
 
+// Consulta las mascotas que se van a mostrar en la página actual
 $mascotas = $conexion->query("
     SELECT 
         m.id_mascota,
@@ -62,20 +94,27 @@ $mascotas = $conexion->query("
     LIMIT $desde, $porPagina
 ");
 
+// Consulta las especies para cargarlas en el filtro/select
 $especies = $conexion->query("
     SELECT id_especie, nombre_especie
     FROM especie
     ORDER BY nombre_especie
 ");
 ?>
-<?php if(isset($_GET['success'])) { ?>
 
+<?php
+// Muestra mensaje de éxito si se registró una mascota correctamente
+if(isset($_GET['success'])) { ?>
+
+    <!-- Alerta personalizada de registro exitoso -->
     <div class="vet-alert-success">
 
+        <!-- Ícono de confirmación -->
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido del mensaje -->
         <div class="vet-alert-content">
             <h5>Registro exitoso</h5>
             <p>La mascota fue registrada correctamente.</p>
@@ -85,34 +124,22 @@ $especies = $conexion->query("
 
 <?php } ?>
 
-<?php if(isset($_GET['updated'])) { ?>
+<?php
+// Muestra mensaje de éxito si se modificó una mascota correctamente
+if(isset($_GET['updated'])) { ?>
 
+    <!-- Alerta personalizada de actualización exitosa -->
     <div class="vet-alert-success">
 
+        <!-- Ícono de confirmación -->
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido del mensaje -->
         <div class="vet-alert-content">
             <h5>Cambios guardados</h5>
             <p>La información fue actualizada correctamente.</p>
-        </div>
-
-    </div>
-
-<?php } ?>
-
-<?php if(isset($_GET['deleted'])) { ?>
-
-    <div class="vet-alert-success">
-
-        <div class="vet-alert-icon">
-            <i class="fas fa-check"></i>
-        </div>
-
-        <div class="vet-alert-content">
-            <h5>Registro eliminado</h5>
-            <p>La mascota fue eliminada correctamente.</p>
         </div>
 
     </div>
@@ -373,7 +400,7 @@ $especies = $conexion->query("
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nueva Mascota
             </a>
-             <a href="reporte_excel.php" class="btn btn-success ml-2" title="Exportar a Excel">
+            <a href="reporte_excel.php" class="btn btn-success ml-2" title="Exportar a Excel">
             <i class="fas fa-file-excel"></i>
         </a>
         </div>
@@ -385,9 +412,8 @@ $especies = $conexion->query("
 
             <div class="col-md-7">
                 <label>Buscar</label>
-                <input type="text" name="buscar" class="form-control"
-                       placeholder="Nombre o propietario"
-                       value="<?= htmlspecialchars($buscar) ?>">
+                <input type="text" name="buscar" class="form-control"placeholder="Nombre o propietario"
+                    value="<?= htmlspecialchars($buscar) ?>">
             </div>
 
             <div class="col-md-2">
@@ -459,17 +485,32 @@ $especies = $conexion->query("
                                 </td>
 
                                 <td>
-                                    <?php if ($row->sexo == 'H') { ?>
-                                        <span class="badge-hembra">
-                                        <i class="fas fa-venus"></i> Hembra
-                                        </span>
-                                    <?php } elseif ($row->sexo == 'M') { ?>
+                                    <?php
+                                    // Verifica si el sexo de la mascota es H (Hembra)
+                                    if ($row->sexo == 'H') {    ?>
+                                    <!-- Badge visual para mascota hembra -->
+                                    <span class="badge-hembra">
+                                    <i class="fas fa-venus"></i> Hembra</span>
+                                    <?php
+                                    // Verifica si el sexo de la mascota es M (Macho)
+                                    } elseif ($row->sexo == 'M') {
+                                    ?>
+                                        <!-- Badge visual para mascota macho -->
                                         <span class="badge-macho">
-                                        <i class="fas fa-mars"></i> Macho
-                                         </span>
-                                     <?php } else { ?>
-                                           —
-                                        <?php } ?>
+                                            <i class="fas fa-mars"></i> Macho
+                                        </span>
+
+                                    <?php
+
+                                    // Si no tiene sexo definido o contiene otro valor
+                                    } else {
+                                    ?>
+
+                                        <!-- Muestra un guion cuando no hay información -->
+                                        —
+
+                                    <?php } ?>
+
                                 </td>
                                 <td>
                                     <?= !empty($row->peso) ? htmlspecialchars($row->peso) . ' <small class="text-muted">kg</small>' : '—' ?>
@@ -489,20 +530,20 @@ $especies = $conexion->query("
 
                                 <td class="text-center">
                                     <a href="pet_record.php?id=<?= $row->id_mascota ?>"
-                                       class="btn-action btn-view" title="Ver ficha">
+                                    class="btn-action btn-view" title="Ver ficha">
                                         <i class="fas fa-file-medical"></i>
                                     </a>
 
                                     <a href="edit.php?id=<?= $row->id_mascota ?>"
-                                       class="btn-action btn-edit" title="Modificar">
+                                    class="btn-action btn-edit" title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
                                     <button class="btn-action btn-delete"
-                                         data-toggle="modal"
-                                         data-target="#modalEliminar"
-                                         data-id="<?= $row->id_mascota ?>"
-                                         data-nombre="<?=($row->nombre_mascota) ?>">
+                                        data-toggle="modal"
+                                        data-target="#modalEliminar"
+                                        data-id="<?= $row->id_mascota ?>"
+                                        data-nombre="<?=($row->nombre_mascota) ?>">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -529,7 +570,7 @@ $especies = $conexion->query("
                 <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
                     <li class="page-item <?= $pagina == $i ? 'active' : '' ?>">
                         <a class="page-link"
-                           href="?pagina=<?= $i ?>&buscar=<?= urlencode($buscar) ?>&id_especie=<?= $id_especie ?>&sexo=<?= urlencode($sexo) ?>">
+                        href="?pagina=<?= $i ?>&buscar=<?= urlencode($buscar) ?>&id_especie=<?= $id_especie ?>&sexo=<?= urlencode($sexo) ?>">
                             <?= $i ?>
                         </a>
                     </li>

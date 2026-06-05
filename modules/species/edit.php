@@ -1,51 +1,87 @@
 <?php
+
+// Incluye el archivo de conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permiso para acceder a este módulo.
 require_once '../../php/validateRoute.php';
 
+// Array donde se guardarán los errores de validación del formulario.
 $erroresCampos = [];
 
+// Verifica que se haya recibido un ID por la URL.
 if (!isset($_GET['id']) || empty($_GET['id'])) {
+
+    // Si no se recibió un ID válido, detiene la ejecución.
     die("ID de especie no válido.");
 }
 
+// Convierte el ID recibido a número entero.
 $id = (int)$_GET['id'];
 
+// Prepara la consulta para buscar la especie que se desea modificar.
 $stmt = $conexion->prepare("
     SELECT id_especie, nombre_especie, raza
     FROM especie
     WHERE id_especie = ?
 ");
 
+// Vincula el ID a la consulta preparada.
+// "i" indica que el dato es de tipo entero.
 $stmt->bind_param("i", $id);
+
+// Ejecuta la consulta.
 $stmt->execute();
+
+// Obtiene el resultado de la consulta.
 $res = $stmt->get_result();
 
+// Verifica si se encontró una especie con ese ID.
 if ($res->num_rows == 0) {
+
+    // Si no se encuentra, detiene la ejecución.
     die("Especie no encontrada.");
 }
 
+// Guarda los datos encontrados en un array asociativo.
 $row = $res->fetch_assoc();
+
+// Cierra la consulta preparada.
 $stmt->close();
 
+// Verifica si el formulario fue enviado mediante POST.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Obtiene el nombre de la especie enviado desde el formulario.
+    // trim elimina espacios al inicio y al final.
     $nombre_especie = trim($_POST['nombre_especie'] ?? '');
+
+    // Obtiene la raza enviada desde el formulario.
     $raza = trim($_POST['raza'] ?? '');
 
+    // Valida que el nombre de especie no esté vacío.
     if (empty($nombre_especie)) {
         $erroresCampos['nombre_especie'] = "El nombre de la especie es obligatorio.";
+
+    // Valida que el nombre de especie tenga al menos 3 caracteres.
     } elseif (strlen($nombre_especie) < 3) {
         $erroresCampos['nombre_especie'] = "Debe tener al menos 3 caracteres.";
     }
 
+    // Valida que la raza no esté vacía.
     if (empty($raza)) {
         $erroresCampos['raza'] = "La raza es obligatoria.";
+
+    // Valida que la raza tenga al menos 3 caracteres.
     } elseif (strlen($raza) < 3) {
         $erroresCampos['raza'] = "Debe tener al menos 3 caracteres.";
     }
 
+    // Si no hay errores, verifica que no exista otra especie igual.
     if (empty($erroresCampos)) {
 
+        // Prepara consulta para buscar especie y raza duplicadas.
+        // Se excluye la especie actual usando id_especie != ?.
         $stmtExiste = $conexion->prepare("
             SELECT id_especie
             FROM especie
@@ -54,42 +90,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             AND id_especie != ?
         ");
 
+        // Vincula nombre, raza e ID actual.
+        // "ssi" significa string, string, integer.
         $stmtExiste->bind_param("ssi", $nombre_especie, $raza, $id);
+
+        // Ejecuta la consulta de duplicado.
         $stmtExiste->execute();
 
+        // Obtiene el resultado.
         $resExiste = $stmtExiste->get_result();
 
+        // Si encuentra registros, significa que ya existe esa especie y raza.
         if ($resExiste->num_rows > 0) {
             $erroresCampos['raza'] = "Esta especie y raza ya están registradas.";
         }
 
+        // Cierra la consulta preparada.
         $stmtExiste->close();
     }
 
+    // Si no existen errores, actualiza la especie.
     if (empty($erroresCampos)) {
 
+        // Prepara la consulta para modificar especie y raza.
         $stmt = $conexion->prepare("
             UPDATE especie 
             SET nombre_especie = ?, raza = ?
             WHERE id_especie = ?
         ");
 
+        // Vincula los nuevos datos y el ID de la especie.
         $stmt->bind_param("ssi", $nombre_especie, $raza, $id);
 
+        // Ejecuta la actualización.
         if ($stmt->execute()) {
+
+            // Si se actualiza correctamente, redirige al listado con mensaje de éxito.
             header("Location: index.php?updated=1");
             exit;
+
         } else {
+
+            // Si ocurre un error, guarda un mensaje general.
             $erroresCampos['general'] = "Error al modificar especie.";
         }
 
+        // Cierra la consulta preparada.
         $stmt->close();
     }
 
+    // Si hubo errores, conserva los datos escritos en el formulario.
     $row['nombre_especie'] = $nombre_especie;
     $row['raza'] = $raza;
 }
-
 require_once '../../php/menu.php';
 ?>
 

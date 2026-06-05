@@ -1,14 +1,28 @@
 <?php
+
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a esta ruta
 require_once '../../php/validateRoute.php';
+
+// Incluye el menú principal del sistema
 require_once '../../php/menu.php';
 
+// Obtiene el texto ingresado en el buscador
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Variable donde se almacenará la condición WHERE de la consulta
 $where = "";
 
+// Si el usuario escribió algo en el buscador
 if (!empty($buscar)) {
+
+    // Escapa caracteres especiales para evitar problemas en la consulta SQL
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
+    // Construye el filtro de búsqueda para nombre, apellido,
+    // teléfono, correo electrónico y barrio
     $where = "WHERE 
         p.nombre_persona LIKE '%$buscarSeguro%' OR
         p.apellido_persona LIKE '%$buscarSeguro%' OR
@@ -18,14 +32,22 @@ if (!empty($buscar)) {
     ";
 }
 
- if(isset($_GET['success'])) { ?>
+// ======================================================
+// MENSAJE DE ÉXITO AL REGISTRAR UN PROFESIONAL
+// ======================================================
 
+// Verifica si llegó el parámetro success por URL
+if(isset($_GET['success'])) { ?>
+
+    <!-- Alerta personalizada de registro exitoso -->
     <div class="vet-alert-success">
 
+        <!-- Ícono de confirmación -->
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido del mensaje -->
         <div class="vet-alert-content">
             <h5>Registro exitoso</h5>
             <p>El profesional fue registrado correctamente.</p>
@@ -35,14 +57,24 @@ if (!empty($buscar)) {
 
 <?php } ?>
 
-<?php if(isset($_GET['updated'])) { ?>
+<?php
 
+// ======================================================
+// MENSAJE DE ÉXITO AL MODIFICAR UN PROFESIONAL
+// ======================================================
+
+// Verifica si llegó el parámetro updated por URL
+if(isset($_GET['updated'])) { ?>
+
+    <!-- Alerta personalizada de actualización exitosa -->
     <div class="vet-alert-success">
 
+        <!-- Ícono de confirmación -->
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido del mensaje -->
         <div class="vet-alert-content">
             <h5>Cambios guardados</h5>
             <p>La información fue actualizada correctamente.</p>
@@ -52,14 +84,24 @@ if (!empty($buscar)) {
 
 <?php } ?>
 
-<?php if(isset($_GET['deleted'])) { ?>
+<?php
 
+// ======================================================
+// MENSAJE DE ÉXITO AL ELIMINAR UN PROFESIONAL
+// ======================================================
+
+// Verifica si llegó el parámetro deleted por URL
+if(isset($_GET['deleted'])) { ?>
+
+    <!-- Alerta personalizada de eliminación exitosa -->
     <div class="vet-alert-success">
 
+        <!-- Ícono de confirmación -->
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido del mensaje -->
         <div class="vet-alert-content">
             <h5>Registro eliminado</h5>
             <p>El profesional fue eliminado correctamente.</p>
@@ -68,7 +110,6 @@ if (!empty($buscar)) {
     </div>
 
 <?php } ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -273,22 +314,20 @@ if (!empty($buscar)) {
         </div>
     </div>
 
-  <form method="GET" class="filter-card">
+<form method="GET" class="filter-card">
         <div class="row align-items-end">
 
             <div class="col-md-10">
                 <label>Buscar</label>
-                <input type="text"
-                       name="buscar"
-                       class="form-control"
-                       placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
-                       value="<?= htmlspecialchars($buscar) ?>">
+                <input type="text" name="buscar" class="form-control"
+                    placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
+                    value="<?= htmlspecialchars($buscar) ?>">
             </div>
 
             <div class="col-md-2 ">
                 <button type="submit" class="btn btn-purple">
-                 <i class="fas fa-filter"></i>
-             </button>
+                <i class="fas fa-filter"></i>
+            </button>
             </div>
 
         </div>
@@ -356,7 +395,7 @@ if (!empty($buscar)) {
 
                                 <td class="text-center">
                                     <a href="edit.php?id=<?= $row->id_profesional ?>"
-                                       class="btn-action btn-edit" title="Modificar">
+                                    class="btn-action btn-edit" title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
 

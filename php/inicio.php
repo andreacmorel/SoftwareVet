@@ -1,10 +1,17 @@
 <?php 
+// Incluye el archivo menu.php que contiene el menú principal del sistema.
 require_once __DIR__ . '/menu.php';
+
+// Incluye la validación de rutas y permisos.
+// Actualmente está comentada, por lo que no se ejecuta.
 //require_once 'validateRoute.php';
+
 ?>
 
 <?php if (isset($_GET['error']) && $_GET['error'] == 'sin_permiso') { ?>
 
+    <!-- Muestra un mensaje de error cuando el usuario intenta acceder
+        a un módulo para el cual no tiene permisos. -->
     <div class="alert alert-danger">
         No tiene permisos para acceder a este módulo.
     </div>

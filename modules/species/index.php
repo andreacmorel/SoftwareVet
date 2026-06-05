@@ -1,21 +1,39 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a este módulo.
 require_once '../../php/validateRoute.php';
+
+// Carga el menú principal del sistema.
 require_once '../../php/menu.php';
 
+// Obtiene el texto ingresado en el buscador.
+// Si no existe, toma una cadena vacía.
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Variable donde se guardará la condición WHERE de búsqueda.
 $where = "";
 
+// Verifica si el usuario escribió algo en el buscador.
 if (!empty($buscar)) {
+
+    // Escapa caracteres especiales para usar el texto de forma segura en SQL.
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
+    // Arma el filtro de búsqueda por nombre de especie o raza.
     $where = "WHERE 
         e.nombre_especie LIKE '%$buscarSeguro%' OR
         e.raza LIKE '%$buscarSeguro%'
     ";
 }
+
+// Verifica si viene el parámetro success por URL.
+// Esto indica que una especie fue registrada correctamente.
 if(isset($_GET['success'])) { ?>
 
+    <!-- Mensaje de éxito al registrar una especie -->
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
@@ -33,6 +51,7 @@ if(isset($_GET['success'])) { ?>
 
 <?php if(isset($_GET['updated'])) { ?>
 
+    <!-- Mensaje de éxito al modificar una especie -->
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
@@ -50,10 +69,11 @@ if(isset($_GET['success'])) { ?>
 
 <?php if(isset($_GET['deleted'])) { ?>
 
+    <!-- Mensaje de éxito al eliminar una especie -->
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
-             <i class="fas fa-pen"></i>
+            <i class="fas fa-pen"></i>
         </div>
 
         <div class="vet-alert-content">
@@ -322,7 +342,7 @@ if ($sql->num_rows > 0) {
             <td class="text-center">
 
                 <a href="edit.php?id=<?= $row->id_especie ?>"
-                   class="btn-action btn-edit">
+                class="btn-action btn-edit">
                     <i class="fas fa-pen"></i>
                 </a>
 
@@ -383,27 +403,50 @@ if ($sql->num_rows > 0) {
 <script src="../../js/sb-admin-2.min.js"></script>
 
 <script>
+
+// Se ejecuta cuando se está por abrir el modal de eliminación.
 $('#modalEliminar').on('show.bs.modal', function (event) {
+
+    // Obtiene el botón que activó o abrió el modal.
     var boton = $(event.relatedTarget);
 
+    // Coloca dentro del modal el nombre del registro que se quiere eliminar.
+    // Ese nombre viene desde el atributo data-nombre del botón.
     $('#nombreEliminar').text(boton.data('nombre'));
+
+    // Arma dinámicamente el enlace de eliminación.
+    // Toma el ID desde data-id y lo envía por URL al archivo delete.php.
     $('#btnEliminar').attr('href', 'delete.php?id=' + boton.data('id'));
 });
+
 </script>
+
 <script>
 
+// Espera 3.5 segundos antes de ocultar el mensaje de éxito.
 setTimeout(() => {
 
+    // Busca en la página si existe una alerta de éxito.
     const alerta = document.querySelector('.vet-alert-success');
 
+    // Verifica que la alerta exista.
     if(alerta){
 
+        // Aplica una transición suave para la animación.
         alerta.style.transition = '.4s';
+
+        // Hace que la alerta se vuelva transparente.
         alerta.style.opacity = '0';
+
+        // Mueve la alerta un poco hacia arriba.
         alerta.style.transform = 'translateY(-10px)';
 
+        // Espera que termine la animación.
         setTimeout(() => {
+
+            // Elimina la alerta del HTML.
             alerta.remove();
+
         }, 400);
     }
 

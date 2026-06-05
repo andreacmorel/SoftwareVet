@@ -1,58 +1,92 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder a este módulo.
 require_once '../../php/validateRoute.php';
 
+// Array donde se almacenan los errores de validación del formulario.
 $erroresCampos = [];
 
+// Obtiene el ID del módulo enviado por la URL.
+// Si no existe, toma el valor 0.
 $id = (int)($_GET['id'] ?? 0);
 
+// Verifica que el ID recibido sea válido.
 if ($id <= 0) {
+
+    // Si el ID no es válido, redirige al listado de módulos.
     header("Location: index.php");
     exit;
 }
 
+// Consulta los datos del módulo que se desea modificar.
 $modulo = $conexion->query("
     SELECT id_modulo, nombre_modulo, ruta, icono
     FROM modulo
     WHERE id_modulo = $id
 ")->fetch_object();
 
+// Verifica que el módulo exista.
 if (!$modulo) {
+
+    // Si no existe, redirige al listado.
     header("Location: index.php");
     exit;
 }
 
+// Verifica si se presionó el botón Modificar.
 if (!empty($_POST['btnModificar'])) {
 
+    // Obtiene y limpia los datos enviados desde el formulario.
     $nombre_modulo = trim($_POST['nombre_modulo'] ?? '');
     $ruta = trim($_POST['ruta'] ?? '');
     $icono = trim($_POST['icono'] ?? '');
 
+    // Valida que el nombre del módulo no esté vacío.
     if (empty($nombre_modulo)) {
         $erroresCampos['nombre_modulo'] = "El nombre del módulo es obligatorio.";
+
+    // Valida que tenga al menos 3 caracteres.
     } elseif (strlen($nombre_modulo) < 3) {
         $erroresCampos['nombre_modulo'] = "Debe tener al menos 3 caracteres.";
+
+    // Valida que no supere los 50 caracteres.
     } elseif (strlen($nombre_modulo) > 50) {
         $erroresCampos['nombre_modulo'] = "No puede superar los 50 caracteres.";
+
+    // Valida que solo tenga letras, números y espacios.
     } elseif (!preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s]+$/', $nombre_modulo)) {
         $erroresCampos['nombre_modulo'] = "Solo se permiten letras, números y espacios.";
     }
 
+    // Valida que la ruta no esté vacía.
     if (empty($ruta)) {
         $erroresCampos['ruta'] = "La ruta es obligatoria.";
+
+    // Valida que la ruta no supere los 255 caracteres.
     } elseif (strlen($ruta) > 255) {
         $erroresCampos['ruta'] = "La ruta no puede superar los 255 caracteres.";
     }
 
+    // Valida el icono solo si fue completado.
+    // No es obligatorio, pero si se ingresa no debe superar los 100 caracteres.
     if (!empty($icono) && strlen($icono) > 100) {
         $erroresCampos['icono'] = "El icono no puede superar los 100 caracteres.";
     }
 
+    // Si no hay errores, valida duplicados en la base de datos.
     if (empty($erroresCampos)) {
 
+        // Escapa el nombre del módulo para usarlo seguro en SQL.
         $nombreSeguro = $conexion->real_escape_string($nombre_modulo);
+
+        // Escapa la ruta para usarla seguro en SQL.
         $rutaSeguro = $conexion->real_escape_string($ruta);
 
+        // Verifica si ya existe otro módulo activo con el mismo nombre.
+        // Se excluye el módulo actual con id_modulo != $id.
         $validarNombre = $conexion->query("
             SELECT id_modulo
             FROM modulo
@@ -62,10 +96,13 @@ if (!empty($_POST['btnModificar'])) {
             LIMIT 1
         ");
 
+        // Si encuentra un módulo activo con ese nombre, guarda el error.
         if ($validarNombre && $validarNombre->num_rows > 0) {
             $erroresCampos['nombre_modulo'] = "Ya existe un módulo activo con ese nombre.";
         }
 
+        // Verifica si ya existe otro módulo activo con la misma ruta.
+        // También excluye el módulo actual.
         $validarRuta = $conexion->query("
             SELECT id_modulo
             FROM modulo
@@ -75,17 +112,21 @@ if (!empty($_POST['btnModificar'])) {
             LIMIT 1
         ");
 
+        // Si encuentra un módulo activo con esa ruta, guarda el error.
         if ($validarRuta && $validarRuta->num_rows > 0) {
             $erroresCampos['ruta'] = "Ya existe un módulo activo con esa ruta.";
         }
     }
 
+    // Si no hubo errores, actualiza el módulo.
     if (empty($erroresCampos)) {
 
+        // Escapa nuevamente los datos antes de actualizar.
         $nombreSeguro = $conexion->real_escape_string($nombre_modulo);
         $rutaSeguro = $conexion->real_escape_string($ruta);
         $iconoSeguro = $conexion->real_escape_string($icono);
 
+        // Actualiza el nombre, la ruta y el icono del módulo.
         $update = $conexion->query("
             UPDATE modulo
             SET nombre_modulo = '$nombreSeguro',
@@ -94,20 +135,26 @@ if (!empty($_POST['btnModificar'])) {
             WHERE id_modulo = $id
         ");
 
+        // Si la actualización fue correcta, redirige al listado.
         if ($update) {
             header("Location: index.php?updated=1");
             exit;
+
+        // Si hubo error al modificar, guarda un mensaje general.
         } else {
             $erroresCampos['general'] = "Error al modificar módulo.";
         }
     }
 
+    // Si hubo errores, conserva los datos ingresados en el formulario.
     $modulo->nombre_modulo = $nombre_modulo;
     $modulo->ruta = $ruta;
     $modulo->icono = $icono;
 }
 
+// Carga el menú principal del sistema.
 require_once '../../php/menu.php';
+
 ?>
 
 <!DOCTYPE html>

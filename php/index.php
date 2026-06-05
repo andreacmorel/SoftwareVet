@@ -37,7 +37,7 @@
             box-shadow:0 20px 45px rgba(0,0,0,.15);
         }
 
-      .login-left{
+    .login-left{
     width:50%;
     position:relative;
 

@@ -1,14 +1,27 @@
 <?php
+
+// Incluye la conexión a la base de datos.
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga permisos para acceder al módulo.
 require_once '../../php/validateRoute.php';
+
+// Carga el menú principal del sistema.
 require_once '../../php/menu.php';
 
+// Obtiene el texto ingresado en el buscador.
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Variable donde se almacenará el filtro de búsqueda.
 $whereBuscar = "";
 
+// Verifica si el usuario ingresó algún criterio de búsqueda.
 if (!empty($buscar)) {
+
+    // Escapa caracteres especiales para evitar problemas en SQL.
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
+    // Construye el filtro para buscar por usuario, email o perfil.
     $whereBuscar = " AND (
         u.usuario LIKE '%$buscarSeguro%' OR
         u.email LIKE '%$buscarSeguro%' OR
@@ -16,6 +29,7 @@ if (!empty($buscar)) {
     )";
 }
 
+// Consulta que obtiene los usuarios junto con su perfil y estado.
 $usuarios = $conexion->query("
     SELECT u.id_usuario, u.usuario, u.email, u.estado, p.nombre_perfil
     FROM usuario u
@@ -25,12 +39,13 @@ $usuarios = $conexion->query("
     ORDER BY u.id_usuario DESC
 ");
 ?>
+
 <?php if(isset($_GET['activated'])) { ?>
 <div class="vet-alert-success">
     <div class="vet-alert-icon">
         <i class="fas fa-user-check"></i>
     </div>
-
+    <!-- Mensaje mostrado cuando un usuario fue activado -->
     <div class="vet-alert-content">
         <h5>Usuario activado</h5>
         <p>El usuario fue activado correctamente.</p>
@@ -43,7 +58,7 @@ $usuarios = $conexion->query("
     <div class="vet-alert-icon">
         <i class="fas fa-user-lock"></i>
     </div>
-
+    <!-- Mensaje mostrado cuando un usuario fue desactivado -->
     <div class="vet-alert-content">
         <h5>Usuario desactivado</h5>
         <p>El usuario fue desactivado correctamente.</p>
@@ -367,12 +382,8 @@ tbody tr:hover { background:#fcf8ff; }
 
         <div class="col-md-10">
             <label>Buscar</label>
-            <input 
-                type="text"
-                name="buscar"
-                class="form-control"
-                placeholder="Buscar por usuario, email o perfil"
-                value="<?= htmlspecialchars($buscar) ?>"
+            <input type="text" name="buscar" class="form-control" placeholder="Buscar por usuario, email o perfil"
+            value="<?= htmlspecialchars($buscar) ?>"
             >
         </div>
 
@@ -401,12 +412,13 @@ tbody tr:hover { background:#fcf8ff; }
 </thead>
 
 <tbody>
-
+<!-- Verifica si existen usuarios para mostrar -->
 <?php if ($usuarios && $usuarios->num_rows > 0) { ?>
+<!-- Recorre todos los usuarios encontrados -->
 <?php while ($user = $usuarios->fetch_object()) { ?>
 
 <tr class="<?= $user->estado == 0 ? 'inactivo-row' : '' ?>">
-
+<!-- Datos del usuario -->
 <td>
     <div class="d-flex align-items-center">
         <span class="user-icon">
@@ -433,20 +445,22 @@ tbody tr:hover { background:#fcf8ff; }
         <?= htmlspecialchars($user->nombre_perfil) ?>
     </span>
 </td>
-
+<!-- Columna que muestra el estado actual del usuario -->
 <td class="text-center">
+    <!-- Verifica si el usuario se encuentra activo -->
     <?php if ($user->estado == 1) { ?>
+    <!-- Muestra la etiqueta "Activo" con estilo verde -->
         <span class="badge-estado activo">Activo</span>
     <?php } else { ?>
+    <!-- Si el estado es 0, muestra la etiqueta "Inactivo" con estilo rojo -->
         <span class="badge-estado inactivo">Inactivo</span>
     <?php } ?>
 </td>
 
 <td class="acciones-td">
     <div class="acciones-wrap">
-
-       <button
-    class="btn-action <?= $user->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
+    <!-- Botón para activar o desactivar usuario -->
+    <button class="btn-action <?= $user->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
     data-toggle="modal"
     data-target="#modalEstadoUsuario"
     data-id="<?= $user->id_usuario ?>"
@@ -456,10 +470,10 @@ tbody tr:hover { background:#fcf8ff; }
     <i class="<?= $user->estado == 1 ? 'fas fa-user-lock' : 'fas fa-user-check' ?>"></i>
 
 </button>
-
+    <!-- Botón para modificar usuario -->
         <a href="edit.php?id=<?= $user->id_usuario ?>" 
-           class="btn-action btn-edit"
-           title="Modificar">
+        class="btn-action btn-edit"
+        title="Modificar">
             <i class="fas fa-pen"></i>
         </a>
 
@@ -488,6 +502,7 @@ tbody tr:hover { background:#fcf8ff; }
 </div>
 
 </div>
+<!-- Cuerpo del modal-->
 <div class="modal fade" id="modalEstadoUsuario" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered">
@@ -513,8 +528,8 @@ tbody tr:hover { background:#fcf8ff; }
             <div class="text-center p-4">
 
                 <i id="iconoEstadoUsuario"
-                   class="fas fa-user-lock fa-3x mb-3"
-                   style="color:#d8c2e8;">
+                class="fas fa-user-lock fa-3x mb-3"
+                style="color:#d8c2e8;">
                 </i>
 
                 <p class="mb-1" id="textoEstadoUsuario"></p>
@@ -523,8 +538,8 @@ tbody tr:hover { background:#fcf8ff; }
                     style="color:#52266E;font-weight:800;">
                 </h5>
 
-               <div id="boxEstadoUsuario"
-     style="
+    <div id="boxEstadoUsuario"
+    style="
         border-radius:10px;
         padding:11px 14px;
         display:flex;
@@ -536,16 +551,16 @@ tbody tr:hover { background:#fcf8ff; }
 ">
 
     <i id="iconoInfoEstado"
-       class="fas fa-info-circle"
-       style="font-size:14px;margin-top:2px;flex-shrink:0;">
+    class="fas fa-info-circle"
+    style="font-size:14px;margin-top:2px;flex-shrink:0;">
     </i>
 
     <p id="mensajeInfoEstado"
-       style="
+    style="
             font-size:12.5px;
             line-height:1.55;
             margin:0;
-       ">
+    ">
     </p>
 
 </div>
@@ -553,7 +568,7 @@ tbody tr:hover { background:#fcf8ff; }
             </div>
 
             <div class="d-flex justify-content-end p-3"
-                 style="gap:10px;border-top:1px solid #eee;">
+                style="gap:10px;border-top:1px solid #eee;">
 
                 <button type="button"
                         class="btn btn-light"
@@ -563,11 +578,11 @@ tbody tr:hover { background:#fcf8ff; }
                 </button>
 
                 <a href="#"
-                   id="btnConfirmarEstadoUsuario"
-                   class="btn btn-danger">
+                id="btnConfirmarEstadoUsuario"
+                class="btn btn-danger">
 
                     <i id="iconoBotonEstado"
-                       class="fas fa-user-lock">
+                    class="fas fa-user-lock">
                     </i>
 
                     <span id="textoBotonEstado">
@@ -587,17 +602,17 @@ tbody tr:hover { background:#fcf8ff; }
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
 <script>
-
+    // Se ejecuta cuando se abre el modal de cambio de estado.
 $('#modalEstadoUsuario').on('show.bs.modal', function (event) {
-
+    // Obtiene el botón que abrió el modal.
     var button = $(event.relatedTarget);
-
+    // Obtiene los datos del usuario.
     var id = button.data('id');
     var usuario = button.data('usuario');
     var estado = button.data('estado');
-
+    // Muestra el nombre del usuario en el modal.
     $('#nombreEstadoUsuario').text(usuario);
-
+    // Si el usuario está activo.
     if (estado == 1) {
 
         $('#textoEstadoUsuario').text(
@@ -637,7 +652,8 @@ $('#modalEstadoUsuario').on('show.bs.modal', function (event) {
             .addClass('fa-user-lock');
 
     } else {
-
+        // Configura el modal para desactivar usuario.
+        // Cambia textos, colores, iconos y botón.
         $('#textoEstadoUsuario').text(
             '¿Estás seguro de activar al usuario?'
         );
@@ -679,16 +695,19 @@ $('#modalEstadoUsuario').on('show.bs.modal', function (event) {
 
 </script>
 <script>
+// Oculta automáticamente los mensajes de éxito luego de 3.5 segundos.
 setTimeout(() => {
 
     const alerta = document.querySelector('.vet-alert-success');
 
     if(alerta){
 
+        // Aplica animación de salida.
         alerta.style.transition = '.4s';
         alerta.style.opacity = '0';
         alerta.style.transform = 'translateY(-10px)';
 
+        // Elimina la alerta del DOM.
         setTimeout(() => {
             alerta.remove();
         }, 400);

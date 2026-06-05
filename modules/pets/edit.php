@@ -1,38 +1,78 @@
 <?php
+
+// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Valida que el usuario tenga acceso a la ruta
 require_once '../../php/validateRoute.php';
 
+// Array donde se almacenarán los errores de validación
 $erroresCampos = [];
 
+// Verifica que exista un ID recibido por GET
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("ID de mascota no válido.");
 }
 
+// Convierte el ID recibido a entero por seguridad
 $id = (int) $_GET['id'];
 
+
+// ===============================
+// OBTENER CLIENTES
+// ===============================
+
+// Consulta para obtener clientes junto con su nombre y apellido
 $sqlClientes = "
 SELECT c.id_cliente, p.nombre_persona, p.apellido_persona
 FROM cliente c
 INNER JOIN persona p ON c.id_persona = p.id_persona
 ";
+
+// Ejecuta la consulta
 $resClientes = mysqli_query($conexion, $sqlClientes);
 
+
+// ===============================
+// OBTENER ESPECIES
+// ===============================
+
+// Consulta para obtener especies registradas
 $sqlEspecies = "
-SELECT id_especie, nombre_especie, raza 
+SELECT id_especie, nombre_especie, raza
 FROM especie
 ";
+
+// Ejecuta la consulta
 $resEspecies = mysqli_query($conexion, $sqlEspecies);
 
+
+// ===============================
+// OBTENER DATOS DE LA MASCOTA
+// ===============================
+
+// Busca la mascota a editar
 $sqlMascota = "SELECT * FROM mascota WHERE id_mascota = $id";
+
+// Ejecuta la consulta
 $resMascota = mysqli_query($conexion, $sqlMascota);
+
+// Obtiene los datos en un array asociativo
 $mascota = mysqli_fetch_assoc($resMascota);
 
+// Si la mascota no existe se detiene la ejecución
 if (!$mascota) {
     die("Mascota no encontrada.");
 }
 
+
+// ===============================
+// PROCESAR FORMULARIO
+// ===============================
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Obtiene y limpia los datos enviados
     $nombre = trim($_POST['nombre_mascota'] ?? '');
     $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
     $sexo = trim($_POST['sexo'] ?? '');
@@ -42,42 +82,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_especie = (int)($_POST['id_especie'] ?? 0);
     $id_cliente = (int)($_POST['id_cliente'] ?? 0);
 
+
+    // ===============================
+    // VALIDACIONES
+    // ===============================
+
+    // Validación del nombre
     if (empty($nombre)) {
         $erroresCampos['nombre_mascota'] = "El nombre es obligatorio.";
     } elseif (strlen($nombre) < 2) {
         $erroresCampos['nombre_mascota'] = "Debe tener al menos 2 caracteres.";
     }
 
+    // Validación del sexo
     if (empty($sexo)) {
         $erroresCampos['sexo'] = "Seleccione el sexo.";
     }
 
+    // Validación del peso
     if (empty($peso)) {
         $erroresCampos['peso'] = "El peso es obligatorio.";
     } elseif ($peso <= 0) {
         $erroresCampos['peso'] = "El peso debe ser mayor a 0.";
     }
 
+    // Validación de edad
     if (!empty($edad) && $edad < 0) {
         $erroresCampos['edad'] = "La edad no puede ser negativa.";
     }
 
+    // Validación de fecha futura
     if (!empty($fecha_nacimiento) && $fecha_nacimiento > date('Y-m-d')) {
         $erroresCampos['fecha_nacimiento'] = "La fecha no puede ser futura.";
     }
 
+    // Validación de especie
     if (empty($id_especie)) {
         $erroresCampos['id_especie'] = "Seleccione una especie.";
     }
 
+    // Validación de cliente
     if (empty($id_cliente)) {
         $erroresCampos['id_cliente'] = "Seleccione un cliente.";
     }
 
+
+    // ===============================
+    // VALIDAR DUPLICADOS
+    // ===============================
+
+    // Solo si no hubo errores previos
     if (empty($erroresCampos)) {
 
+        // Escapa el nombre para evitar problemas en SQL
         $nombreSeguro = $conexion->real_escape_string($nombre);
 
+        // Busca otra mascota con el mismo nombre y cliente
+        // excluyendo la mascota actual
         $sqlExiste = "
             SELECT id_mascota
             FROM mascota
@@ -86,22 +147,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             AND id_mascota != $id
         ";
 
+        // Ejecuta la consulta
         $resExiste = mysqli_query($conexion, $sqlExiste);
 
+        // Si encuentra registros se genera error
         if ($resExiste && mysqli_num_rows($resExiste) > 0) {
-            $erroresCampos['nombre_mascota'] = "Ya existe otra mascota con ese nombre para este cliente.";
+            $erroresCampos['nombre_mascota'] =
+                "Ya existe otra mascota con ese nombre para este cliente.";
         }
     }
 
+
+    // ===============================
+    // ACTUALIZAR REGISTRO
+    // ===============================
+
     if (empty($erroresCampos)) {
 
+        // Escapa valores de texto
         $nombreSeguro = $conexion->real_escape_string($nombre);
         $sexoSeguro = $conexion->real_escape_string($sexo);
         $colorSeguro = $conexion->real_escape_string($color);
 
-        $fechaSQL = empty($fecha_nacimiento) ? "NULL" : "'" . $conexion->real_escape_string($fecha_nacimiento) . "'";
-        $edadSQL = empty($edad) ? "NULL" : "'" . $conexion->real_escape_string($edad) . "'";
+        // Maneja campos opcionales
+        $fechaSQL = empty($fecha_nacimiento)
+            ? "NULL"
+            : "'" . $conexion->real_escape_string($fecha_nacimiento) . "'";
 
+        $edadSQL = empty($edad)
+            ? "NULL"
+            : "'" . $conexion->real_escape_string($edad) . "'";
+
+        // Consulta UPDATE
         $sqlUpdate = "
             UPDATE mascota SET
                 nombre_mascota = '$nombreSeguro',
@@ -115,17 +192,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE id_mascota = $id
         ";
 
+        // Ejecuta la actualización
         if (mysqli_query($conexion, $sqlUpdate)) {
+
+            // Redirecciona al listado indicando éxito
             header("Location: index.php?updated=1");
             exit;
+
         } else {
-            $erroresCampos['general'] = "Error al modificar mascota.";
+
+            // Error general de actualización
+            $erroresCampos['general'] =
+                "Error al modificar mascota.";
         }
     }
 
+    // Conserva los datos ingresados en el formulario
+    // en caso de que existan errores
     $mascota = $_POST;
 }
-
 require_once '../../php/menu.php';
 ?>
 
@@ -240,8 +325,8 @@ select.form-control.is-invalid {
                         <label>Nombre <span style="color:#dc2626;">*</span></label>
 
                         <input type="text" name="nombre_mascota"
-                               class="form-control <?= isset($erroresCampos['nombre_mascota']) ? 'is-invalid' : '' ?>"
-                               value="<?= htmlspecialchars($mascota['nombre_mascota'] ?? '') ?>">
+                            class="form-control <?= isset($erroresCampos['nombre_mascota']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($mascota['nombre_mascota'] ?? '') ?>">
 
                         <?php if(isset($erroresCampos['nombre_mascota'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['nombre_mascota']) ?></div>
@@ -252,8 +337,8 @@ select.form-control.is-invalid {
                         <label>Fecha nacimiento</label>
 
                         <input type="date" name="fecha_nacimiento"
-                               class="form-control <?= isset($erroresCampos['fecha_nacimiento']) ? 'is-invalid' : '' ?>"
-                               value="<?= htmlspecialchars($mascota['fecha_nacimiento'] ?? '') ?>">
+                            class="form-control <?= isset($erroresCampos['fecha_nacimiento']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($mascota['fecha_nacimiento'] ?? '') ?>">
 
                         <?php if(isset($erroresCampos['fecha_nacimiento'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['fecha_nacimiento']) ?></div>
@@ -281,8 +366,8 @@ select.form-control.is-invalid {
                         <label>Peso (kg) <span style="color:#dc2626;">*</span></label>
 
                         <input type="number" step="0.01" min="0.1" name="peso"
-                               class="form-control <?= isset($erroresCampos['peso']) ? 'is-invalid' : '' ?>"
-                               value="<?= htmlspecialchars($mascota['peso'] ?? '') ?>">
+                            class="form-control <?= isset($erroresCampos['peso']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($mascota['peso'] ?? '') ?>">
 
                         <?php if(isset($erroresCampos['peso'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['peso']) ?></div>
@@ -294,15 +379,15 @@ select.form-control.is-invalid {
                     <div class="form-group col-md-6">
                         <label>Color</label>
                         <input type="text" name="color" class="form-control"
-                               value="<?= htmlspecialchars($mascota['color'] ?? '') ?>">
+                            value="<?= htmlspecialchars($mascota['color'] ?? '') ?>">
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>Edad</label>
 
                         <input type="number" min="0" name="edad"
-                               class="form-control <?= isset($erroresCampos['edad']) ? 'is-invalid' : '' ?>"
-                               value="<?= htmlspecialchars($mascota['edad'] ?? '') ?>">
+                            class="form-control <?= isset($erroresCampos['edad']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($mascota['edad'] ?? '') ?>">
 
                         <?php if(isset($erroresCampos['edad'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['edad']) ?></div>

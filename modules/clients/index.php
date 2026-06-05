@@ -1,14 +1,28 @@
 <?php
+
+// Conexión a la base de datos
 require_once '../../settings/conexion.php';
+
+// Validación de acceso según sesión/perfil
 require_once '../../php/validateRoute.php';
+
+// Inclusión del menú principal del sistema
 require_once '../../php/menu.php';
 
+// Obtiene el texto ingresado en el buscador
+// Si no existe, asigna una cadena vacía
 $buscar = trim($_GET['buscar'] ?? '');
+
+// Variable donde se almacenará la cláusula WHERE de la consulta
 $where = "";
 
+// Verifica si el usuario ingresó algún criterio de búsqueda
 if (!empty($buscar)) {
+
+    // Protege el valor ingresado para evitar errores o inyecciones SQL
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
+    // Construye la condición de búsqueda para varios campos
     $where = "WHERE 
         p.nombre_persona LIKE '%$buscarSeguro%' OR
         p.apellido_persona LIKE '%$buscarSeguro%' OR
@@ -18,49 +32,97 @@ if (!empty($buscar)) {
     ";
 }
 ?>
+
+<!-- Mensaje de éxito al registrar un cliente -->
+
 <?php if(isset($_GET['success'])) { ?>
 
+    <!-- Contenedor principal de la alerta -->
+
     <div class="vet-alert-success">
+
+        <!-- Icono de confirmación -->
 
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido de la alerta -->
+
         <div class="vet-alert-content">
+
+            <!-- Título del mensaje -->
+
             <h5>Registro exitoso</h5>
+
+            <!-- Descripción del mensaje -->
+
             <p>El cliente fue registrado correctamente.</p>
+
         </div>
 
     </div>
 
 <?php } ?>
+
+<!-- Mensaje de éxito al modificar un cliente -->
+
 <?php if(isset($_GET['updated'])) { ?>
 
+    <!-- Contenedor principal de la alerta -->
+
     <div class="vet-alert-success">
+
+        <!-- Icono de confirmación -->
 
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido de la alerta -->
+
         <div class="vet-alert-content">
+
+            <!-- Título del mensaje -->
+
             <h5>Cambios guardados</h5>
+
+            <!-- Descripción del mensaje -->
+
             <p>La información fue actualizada correctamente.</p>
+
         </div>
 
     </div>
 
 <?php } ?>
+
+<!-- Mensaje de éxito al eliminar un cliente -->
+
 <?php if(isset($_GET['deleted'])) { ?>
 
+    <!-- Contenedor principal de la alerta -->
+
     <div class="vet-alert-success">
+
+        <!-- Icono de confirmación -->
 
         <div class="vet-alert-icon">
             <i class="fas fa-check"></i>
         </div>
 
+        <!-- Contenido de la alerta -->
+
         <div class="vet-alert-content">
+
+            <!-- Título del mensaje -->
+
             <h5>Registro eliminado</h5>
+
+            <!-- Descripción del mensaje -->
+
             <p>La información fue eliminada correctamente.</p>
+
         </div>
 
     </div>
@@ -290,17 +352,15 @@ if (!empty($buscar)) {
 
             <div class="col-md-10">
                 <label>Buscar</label>
-                <input type="text"
-                       name="buscar"
-                       class="form-control"
-                       placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
-                       value="<?= htmlspecialchars($buscar) ?>">
+                <input type="text"name="buscar"class="form-control"
+                    placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
+                    value="<?= htmlspecialchars($buscar) ?>">
             </div>
 
             <div class="col-md-2 ">
                 <button type="submit" class="btn btn-purple">
-                 <i class="fas fa-filter"></i>
-             </button>
+                <i class="fas fa-filter"></i>
+            </button>
             </div>
         </div>
     </form>
@@ -325,12 +385,12 @@ if (!empty($buscar)) {
 
                     <?php
                     $sql = $conexion->query("
-                      SELECT c.id_cliente,p.nombre_persona,p.apellido_persona,p.telefono,p.email,d.calle,
-                       d.numero_calle,d.barrio,d.manzana
-                       FROM cliente c
-                       INNER JOIN persona p ON c.id_persona = p.id_persona
-                       LEFT JOIN domicilio d ON d.id_cliente = c.id_cliente
-                       $where ORDER BY c.id_cliente DESC");
+                    SELECT c.id_cliente,p.nombre_persona,p.apellido_persona,p.telefono,p.email,d.calle,
+                    d.numero_calle,d.barrio,d.manzana
+                    FROM cliente c
+                    INNER JOIN persona p ON c.id_persona = p.id_persona
+                    LEFT JOIN domicilio d ON d.id_cliente = c.id_cliente
+                    $where ORDER BY c.id_cliente DESC");
 
                     if ($sql->num_rows > 0) {
                         while ($row = $sql->fetch_object()) { ?>
@@ -375,7 +435,7 @@ if (!empty($buscar)) {
 
                                 <td class="text-center">
                                     <a href="edit.php?id=<?= $row->id_cliente ?>"
-                                       class="btn-action btn-edit" title="Modificar">
+                                    class="btn-action btn-edit" title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
