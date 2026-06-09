@@ -11,8 +11,6 @@ $erroresCampos = [];
 
 // Verifica que se haya recibido un ID por la URL.
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-
-    // Si no llega un ID válido, detiene la ejecución.
     die("ID de usuario no válido.");
 }
 
@@ -26,12 +24,16 @@ $usuarioEditar = $conexion->query("
     WHERE id_usuario = $id_usuario
 ")->fetch_object();
 
-// Verifica si el usuario existe.
 if (!$usuarioEditar) {
-
-    // Si no existe, detiene la ejecución.
     die("Usuario no encontrado.");
 }
+
+/*
+| Verifica si el usuario que se está editando es el mismo usuario
+| que inició sesión.
+| Esto sirve para impedir que un administrador cambie su propio perfil.
+*/
+$esMiUsuario = isset($_SESSION['id_usuario']) && ((int)$_SESSION['id_usuario'] === (int)$id_usuario);
 
 // Consulta los perfiles activos para mostrarlos en el select del formulario.
 $perfiles = $conexion->query("
@@ -47,7 +49,18 @@ if (!empty($_POST['btnActualizar'])) {
     // Obtiene y limpia los datos enviados desde el formulario.
     $usuario = trim($_POST['usuario'] ?? '');
     $email = trim($_POST['email'] ?? '');
-    $id_perfil = (int)($_POST['id_perfil'] ?? 0);
+
+    /*
+    | Si el usuario está editando su propia cuenta, NO se toma el perfil enviado
+    | por POST. Se conserva el perfil actual de la base de datos.
+    | Si está editando a otro usuario, sí puede cambiar el perfil desde el select.
+    */
+    if ($esMiUsuario) {
+        $id_perfil = (int)$usuarioEditar->id_perfil;
+    } else {
+        $id_perfil = (int)($_POST['id_perfil'] ?? 0);
+    }
+
     $clave = $_POST['clave'] ?? '';
     $confirmar_clave = $_POST['confirmar_clave'] ?? '';
 
@@ -67,20 +80,21 @@ if (!empty($_POST['btnActualizar'])) {
         $erroresCampos['email'] = "Ingrese un email válido.";
     }
 
-    // Valida que se haya seleccionado un perfil.
-    if (empty($id_perfil)) {
+    /*
+    | La validación del perfil solo se aplica cuando se edita a otro usuario.
+    | Si estoy editando mi propia cuenta, el perfil queda bloqueado y se mantiene igual.
+    */
+    if (!$esMiUsuario && empty($id_perfil)) {
         $erroresCampos['id_perfil'] = "Seleccione un perfil.";
     }
 
     // Valida la contraseña solo si el usuario escribió una nueva.
     if (!empty($clave) || !empty($confirmar_clave)) {
 
-        // Verifica que la contraseña tenga al menos 6 caracteres.
         if (strlen($clave) < 6) {
             $erroresCampos['clave'] = "La contraseña debe tener al menos 6 caracteres.";
         }
 
-        // Verifica que ambas contraseñas coincidan.
         if ($clave !== $confirmar_clave) {
             $erroresCampos['confirmar_clave'] = "Las contraseñas no coinciden.";
         }
@@ -89,19 +103,18 @@ if (!empty($_POST['btnActualizar'])) {
     // Si no existen errores, valida que no haya usuario o email duplicado.
     if (empty($erroresCampos)) {
 
-        // Escapa el usuario y email para evitar errores en SQL.
         $usuarioSeguro = $conexion->real_escape_string($usuario);
         $emailSeguro = $conexion->real_escape_string($email);
 
         // Busca si existe otro usuario con el mismo usuario o email.
         // Se excluye el propio usuario que se está editando.
-        $validarDuplicado = $conexion->query("SELECT id_usuario
+        $validarDuplicado = $conexion->query("
+            SELECT id_usuario
             FROM usuario
             WHERE (usuario = '$usuarioSeguro' OR email = '$emailSeguro')
             AND id_usuario != $id_usuario
         ");
 
-        // Si encuentra otro registro, muestra error.
         if ($validarDuplicado && $validarDuplicado->num_rows > 0) {
             $erroresCampos['usuario'] = "El usuario o email ya se encuentra registrado.";
         }
@@ -110,25 +123,25 @@ if (!empty($_POST['btnActualizar'])) {
     // Si no hay errores, actualiza el usuario.
     if (empty($erroresCampos)) {
 
-        // Si se ingresó una nueva contraseña, también la actualiza.
         if (!empty($clave)) {
 
-            // Encripta la nueva contraseña antes de guardarla.
             $clave_hash = password_hash($clave, PASSWORD_DEFAULT);
 
-            // Actualiza usuario, email, contraseña y perfil.
-            $conexion->query(" UPDATE usuario
+            /*
+            | Se actualiza el perfil usando $id_perfil.
+            | Si es mi propio usuario, ese valor ya fue conservado desde la BD.
+            */
+            $conexion->query("
+                UPDATE usuario
                 SET usuario = '$usuarioSeguro',
-                email = '$emailSeguro',
-                clave = '$clave_hash',
-                id_perfil = $id_perfil
+                    email = '$emailSeguro',
+                    clave = '$clave_hash',
+                    id_perfil = $id_perfil
                 WHERE id_usuario = $id_usuario
             ");
 
         } else {
 
-            // Si no se ingresó contraseña, mantiene la clave anterior.
-            // Solo actualiza usuario, email y perfil.
             $conexion->query("
                 UPDATE usuario
                 SET usuario = '$usuarioSeguro',
@@ -138,7 +151,6 @@ if (!empty($_POST['btnActualizar'])) {
             ");
         }
 
-        // Redirige al listado indicando que la modificación fue exitosa.
         header("Location: index.php?updated=1");
         exit;
     }
@@ -250,6 +262,18 @@ select.form-control.is-invalid {
     font-size: 13px;
     margin-top: 5px;
 }
+
+/* Estilo para mostrar una aclaración cuando el perfil está bloqueado. */
+.alert-info-vet {
+    background: #eef6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 8px;
+}
 </style>
 
 <div class="container-fluid">
@@ -272,7 +296,7 @@ select.form-control.is-invalid {
         </div>
 
         <div class="card-body">
-            <!-- Muestra un mensaje de error general si ocurrió algún problema al modificar el usuario -->
+
             <?php if (isset($erroresCampos['general'])) { ?>
                 <div class="alert alert-danger">
                     <?= htmlspecialchars($erroresCampos['general']) ?>
@@ -293,14 +317,14 @@ select.form-control.is-invalid {
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['usuario']) ?></div>
                         <?php } ?>
                     </div>
-                    <!-- Campo para editar el email del usuario -->
+
                     <div class="form-group col-md-6">
                         <label>Email <span style="color:#dc2626;">*</span></label>
 
                         <input type="email" name="email"
                             class="form-control <?= isset($erroresCampos['email']) ? 'is-invalid' : '' ?>"
                             value="<?= htmlspecialchars($usuarioEditar->email ?? '') ?>">
-                        <!-- Muestra el error del campo email si existe -->
+
                         <?php if(isset($erroresCampos['email'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['email']) ?></div>
                         <?php } ?>
@@ -308,42 +332,47 @@ select.form-control.is-invalid {
                 </div>
 
                 <div class="row">
-                    <!-- Campo opcional para ingresar una nueva contraseña -->
                     <div class="form-group col-md-6">
                         <label>Nueva contraseña</label>
 
                         <input type="password" name="clave"
                             class="form-control <?= isset($erroresCampos['clave']) ? 'is-invalid' : '' ?>">
-                        <!-- Muestra el error del campo contraseña si existe -->
+
                         <?php if(isset($erroresCampos['clave'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['clave']) ?></div>
                         <?php } ?>
-                        <!-- Ayuda visual para indicar que la contraseña no es obligatoria -->
+
                         <div class="help-text">
                             Dejar vacío si no desea cambiarla.
                         </div>
                     </div>
-                    <!-- Campo para confirmar la nueva contraseña -->
+
                     <div class="form-group col-md-6">
                         <label>Confirmar nueva contraseña</label>
 
                         <input type="password" name="confirmar_clave"
                             class="form-control <?= isset($erroresCampos['confirmar_clave']) ? 'is-invalid' : '' ?>">
-                        <!-- Muestra el error si la confirmación no coincide -->
+
                         <?php if(isset($erroresCampos['confirmar_clave'])) { ?>
                             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['confirmar_clave']) ?></div>
                         <?php } ?>
                     </div>
                 </div>
-                <!-- Campo para seleccionar el perfil del usuario -->
+
                 <div class="form-group">
                     <label>Perfil <span style="color:#dc2626;">*</span></label>
 
+                    <!--
+                    | CAMBIO AGREGADO:
+                    | Si el usuario está editando su propia cuenta,
+                    | el select aparece bloqueado para impedir que cambie su propio rol.
+                    -->
                     <select name="id_perfil"
-                        class="form-control <?= isset($erroresCampos['id_perfil']) ? 'is-invalid' : '' ?>">
-                        <!-- Opción inicial del select -->
+                        class="form-control <?= isset($erroresCampos['id_perfil']) ? 'is-invalid' : '' ?>"
+                        <?= $esMiUsuario ? 'disabled' : '' ?>>
+
                         <option value="">Seleccione un perfil</option>
-                        <!-- Recorre los perfiles activos cargados desde la base de datos -->
+
                         <?php while ($perfil = $perfiles->fetch_object()) { ?>
                             <option value="<?= $perfil->id_perfil ?>"
                                 <?= (($usuarioEditar->id_perfil ?? '') == $perfil->id_perfil) ? 'selected' : '' ?>>
@@ -352,7 +381,19 @@ select.form-control.is-invalid {
                         <?php } ?>
 
                     </select>
-                    <!-- Muestra el error del perfil si no se seleccionó uno -->
+
+                    <!--
+                    | Como el select disabled no se envía por POST,
+                    | el PHP conserva el perfil original desde la base de datos.
+                    | Este mensaje explica al usuario por qué no puede modificarlo.
+                    -->
+                    <?php if ($esMiUsuario) { ?>
+                        <div class="alert-info-vet">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Por seguridad, no puede modificar el perfil de su propia cuenta.
+                        </div>
+                    <?php } ?>
+
                     <?php if(isset($erroresCampos['id_perfil'])) { ?>
                         <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['id_perfil']) ?></div>
                     <?php } ?>

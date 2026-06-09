@@ -7,14 +7,22 @@ require_once __DIR__ . '/menu.php';
 //require_once 'validateRoute.php';
 
 ?>
-
-<?php if (isset($_GET['error']) && $_GET['error'] == 'sin_permiso') { ?>
-
-    <!-- Muestra un mensaje de error cuando el usuario intenta acceder
+<!-- Muestra un mensaje de error cuando el usuario intenta acceder
         a un módulo para el cual no tiene permisos. -->
-    <div class="alert alert-danger">
-        No tiene permisos para acceder a este módulo.
+<?php if(isset($_GET['error']) && $_GET['error'] == 'sin_permiso') { ?>
+
+<div class="vet-alert-danger">
+
+    <div class="vet-alert-icon">
+        <i class="fas fa-lock"></i>
     </div>
+
+    <div class="vet-alert-content">
+        <h5>Acceso denegado</h5>
+        <p>Su perfil no posee permisos para acceder a este módulo.</p>
+    </div>
+
+</div>
 
 <?php } ?>
 <style>
@@ -205,6 +213,35 @@ require_once __DIR__ . '/menu.php';
 
     .progress-bar {
         background-color: var(--vet-primary);
+    }
+
+    .vet-alert-danger{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    background:#fdecec;
+    border:1px solid #f5c6cb;
+    color:#c0392b;
+    border-radius:12px;
+    padding:15px 18px;
+    margin-bottom:20px;
+    animation:fade .3s ease;
+    }
+
+    .vet-alert-icon{
+    font-size:22px;
+    margin-top:2px;
+    }
+
+    .vet-alert-content h5{
+        margin:0;
+        font-size:15px;
+        font-weight:800;
+    }
+
+    .vet-alert-content p{
+        margin:4px 0 0;
+        font-size:14px;
     }
 </style>
 
@@ -462,3 +499,8 @@ require_once __DIR__ . '/menu.php';
     </div>
 
 </div>
+
+<script src="/SoftwareVet/vendor/jquery/jquery.min.js"></script>
+<script src="/SoftwareVet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/SoftwareVet/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/SoftwareVet/js/sb-admin-2.min.js"></script>

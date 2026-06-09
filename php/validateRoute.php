@@ -14,7 +14,7 @@ require_once __DIR__ . '/../settings/conexion.php';
 if (!isset($_SESSION['id_usuario'])) {
 
     // Si no hay sesión activa, redirige al login.
-    header("Location: /SoftwareVet/php/index.php");
+    header("Location: /SoftwareVet/php/index.php?error=sesion_requerida");
     exit();
 }
 

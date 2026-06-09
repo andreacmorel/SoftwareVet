@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VetSys | Iniciar sesión</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/SoftwareVet/vendor/fontawesome-free/css/all.min.css">
 
     <style>
-
         *{
             margin:0;
             padding:0;
@@ -37,29 +37,24 @@
             box-shadow:0 20px 45px rgba(0,0,0,.15);
         }
 
-    .login-left{
-    width:50%;
-    position:relative;
-
-    background:
-    linear-gradient(
-        rgba(36,16,48,.58),
-        rgba(82,38,110,.78)
-    ),
-    url('/SoftwareVet/img/login_vet.png');
-
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-
-    color:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:50px;
-}
+        .login-left{
+            width:50%;
+            position:relative;
+            background:
+            linear-gradient(
+                rgba(36,16,48,.58),
+                rgba(82,38,110,.78)
+            ),
+            url('/SoftwareVet/img/login_vet.png');
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:50px;
+        }
 
         .overlay-content{
             max-width:380px;
@@ -115,35 +110,30 @@
             margin-bottom:10px;
         }
 
-        .login-sub{
-            color:#888;
-            margin-bottom:35px;
-        }
-
         .input-group{
             position:relative;
             margin-bottom:22px;
         }
 
-      .input-group > i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #52266E;
+        .input-group > i {
+            position:absolute;
+            left:16px;
+            top:28px;
+            transform:translateY(-50%);
+            color:#52266E;
         }
 
         .input {
-            width: 100%;
-            height: 56px;
-            border: none;
-            background: #f4f2f7;
-            border-radius: 14px;
-            padding-left: 45px;
-            padding-right: 50px;
-            font-size: 15px;
-            transition: .2s;
-            outline: none;
+            width:100%;
+            height:56px;
+            border:2px solid transparent;
+            background:#f4f2f7;
+            border-radius:14px;
+            padding-left:45px;
+            padding-right:50px;
+            font-size:15px;
+            transition:.2s;
+            outline:none;
         }
 
         .input:focus{
@@ -152,20 +142,43 @@
             box-shadow:0 0 0 4px rgba(82,38,110,.12);
         }
 
-       .toggle-password {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #52266E;
-    z-index: 10;
-}
+        .input.is-invalid{
+            border:2px solid #dc3545;
+            background:#fff5f5;
+        }
 
-.toggle-password i {
-    position: static;
-    transform: none;
-}
+        .input.is-invalid:focus{
+            border:2px solid #dc3545;
+            box-shadow:0 0 0 4px rgba(220,53,69,.12);
+        }
+
+        .invalid-feedback{
+            display:none;
+            color:#dc3545;
+            font-size:13px;
+            font-weight:700;
+            margin-top:6px;
+            padding-left:4px;
+        }
+
+        .input.is-invalid ~ .invalid-feedback{
+            display:block;
+        }
+
+        .toggle-password {
+            position:absolute;
+            right:18px;
+            top:28px;
+            transform:translateY(-50%);
+            cursor:pointer;
+            color:#52266E;
+            z-index:10;
+        }
+
+        .toggle-password i {
+            position:static;
+            transform:none;
+        }
 
         .btn-login{
             width:100%;
@@ -224,6 +237,36 @@
             border:1px solid #f5c6cb;
         }
 
+        .vet-alert-danger{
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            background:#fdecec;
+            color:#c0392b;
+            border:1px solid #f5c6cb;
+            border-radius:12px;
+            padding:14px;
+            margin-bottom:20px;
+            animation:fade .3s ease;
+        }
+
+        .vet-alert-icon{
+            font-size:20px;
+            margin-top:2px;
+        }
+
+        .vet-alert-content h5{
+            margin:0 0 4px 0;
+            font-size:15px;
+            font-weight:800;
+        }
+
+        .vet-alert-content p{
+            margin:0;
+            font-size:14px;
+            font-weight:600;
+        }
+
         @keyframes fade{
             from{
                 opacity:0;
@@ -236,7 +279,6 @@
         }
 
         @media(max-width:900px){
-
             .login-container{
                 flex-direction:column;
             }
@@ -255,7 +297,6 @@
                 font-size:2.8rem;
             }
         }
-
     </style>
 </head>
 
@@ -297,11 +338,24 @@
 
             <?php } ?>
 
-            <?php if (isset($_GET['error'])) { ?>
+            <?php if (isset($_GET['error']) && $_GET['error'] == 'sesion_requerida') { ?>
+
+                <div class="vet-alert-danger">
+                    <div class="vet-alert-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div class="vet-alert-content">
+                        <h5>Acceso restringido</h5>
+                        <p>Debe iniciar sesión para acceder a esta sección del sistema.</p>
+                    </div>
+                </div>
+
+            <?php } elseif (isset($_GET['error'])) { ?>
 
                 <div class="alert alert-danger">
                     <i class="fas fa-times-circle"></i>
-                    <?php echo $_GET['error']; ?>
+                    <?= htmlspecialchars($_GET['error']) ?>
                 </div>
 
             <?php } ?>
@@ -309,32 +363,35 @@
             <h2 class="login-title">
                 Iniciar sesión
             </h2>
+
             <br>
 
-            <form action="login.php" method="POST">
+            <form action="login.php" method="POST" id="frmLogin" novalidate>
 
                 <div class="input-group">
-
                     <i class="fas fa-user"></i>
 
-                    <input
-                        type="text"
-                        name="usuario"
-                        class="input"
-                        placeholder="Usuario"
-                        required
-                    >
+                    <input type="text" name="usuario"class="input"id="usuario"
+                        placeholder="Usuario">
 
+                    <div class="invalid-feedback" id="err-usuario">
+                        El usuario es obligatorio.
+                    </div>
                 </div>
 
                 <div class="input-group">
-                    <i class="fas fa-lock"></i> 
+                    <i class="fas fa-lock"></i>
 
-                    <input type="password" name="clave" class="input" placeholder="Contraseña" id="password" required>
+                    <input type="password" name="clave" class="input" id="password"
+                    placeholder="Contraseña">
 
                     <span class="toggle-password" onclick="togglePassword()">
                         <i class="fas fa-eye" id="eye"></i>
                     </span>
+
+                    <div class="invalid-feedback" id="err-clave">
+                        La contraseña es obligatoria.
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-login">
@@ -356,7 +413,6 @@
 </div>
 
 <script>
-
 function togglePassword(){
 
     const input = document.getElementById('password');
@@ -373,16 +429,51 @@ function togglePassword(){
     }
 }
 
+document.getElementById('frmLogin').addEventListener('submit', function(e) {
+    let valido = true;
+
+    const usuario = document.getElementById('usuario');
+    const clave = document.getElementById('password');
+
+    usuario.classList.remove('is-invalid');
+    clave.classList.remove('is-invalid');
+
+    if (usuario.value.trim() === '') {
+        usuario.classList.add('is-invalid');
+        valido = false;
+    }
+
+    if (clave.value.trim() === '') {
+        clave.classList.add('is-invalid');
+        valido = false;
+    }
+
+    if (!valido) {
+        e.preventDefault();
+    }
+});
+
+document.getElementById('usuario').addEventListener('input', function() {
+    if (this.value.trim() !== '') {
+        this.classList.remove('is-invalid');
+    }
+});
+
+document.getElementById('password').addEventListener('input', function() {
+    if (this.value.trim() !== '') {
+        this.classList.remove('is-invalid');
+    }
+});
+
 setTimeout(() => {
 
-    const alert = document.querySelector('.alert');
+    const alert = document.querySelector('.alert, .vet-alert-danger');
 
     if(alert){
         alert.style.display = 'none';
     }
 
 }, 4000);
-
 </script>
 
 </body>

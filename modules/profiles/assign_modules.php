@@ -235,37 +235,42 @@ require_once '../../php/menu.php';
         <form method="POST" novalidate>
 
             <!-- Grilla de módulos: cada tarjeta es un <label> que envuelve su checkbox -->
-            <div class="modulos-grid">
+                <div class="modulos-grid">
 
                 <?php while ($modulo = $modulos->fetch_object()) {
-                    /*
-                     * Determina si el checkbox debe aparecer marcado:
-                     * - Prioridad 1: si el POST ya tiene valores (reenvío por error de validación)
-                     * - Prioridad 2: si el módulo estaba asignado previamente en la BD ($asignados)
-                     */
-                    $checked = in_array($modulo->id_modulo, $_POST['modulos'] ?? $asignados);
+
+                /*
+                * Determina si el checkbox debe aparecer marcado:
+                * - Prioridad 1: si el POST ya tiene valores
+                * - Prioridad 2: si el módulo estaba asignado previamente
+                */
+                $checked = in_array($modulo->id_modulo, $_POST['modulos'] ?? $asignados);
+
                 ?>
 
-                    <!-- La clase "checked" aplica el estilo visual de seleccionado -->
-                    <label class="modulo-item <?= $checked ? 'checked' : '' ?>" for="modulo<?= $modulo->id_modulo ?>">
-                        <input 
-                            type="checkbox"
-                            name="modulos[]"    <!-- Array de módulos enviado al POST -->
-                            value="<?= $modulo->id_modulo ?>"
-                            id="modulo<?= $modulo->id_modulo ?>"
-                            <?= $checked ? 'checked' : '' ?>
-                        >
+        <!-- La clase "checked" aplica el estilo visual de seleccionado -->
+        <label class="modulo-item <?= $checked ? 'checked' : '' ?>" for="modulo<?= $modulo->id_modulo ?>">
 
-                        <div>
-                            <div class="modulo-nombre">
-                                <?= htmlspecialchars($modulo->nombre_modulo) ?>
-                            </div>
-                        </div>
-                    </label>
+            <!-- Array de módulos enviado al POST -->
+            <input
+                type="checkbox"
+                name="modulos[]"
+                value="<?= $modulo->id_modulo ?>"
+                id="modulo<?= $modulo->id_modulo ?>"
+                <?= $checked ? 'checked' : '' ?>>
 
-                <?php } ?>
-
+            <div>
+                <div class="modulo-nombre">
+                    <?= htmlspecialchars($modulo->nombre_modulo ?? '') ?>
+                </div>
             </div>
+
+        </label>
+
+    <?php } ?>
+
+</div>
+    
 
             <!-- Acciones: cancelar vuelve al listado, guardar envía el formulario -->
             <div class="actions-bar">
