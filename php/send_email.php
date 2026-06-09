@@ -3,9 +3,6 @@
 // Incluye la conexión a la base de datos.
 require_once '../settings/conexion.php';
 
-// Valida que el usuario tenga permiso para acceder a esta ruta.
-require_once 'validateRoute.php';
-
 // Incluye las clases necesarias de PHPMailer.
 require '../phpmailer/src/PHPMailer.php';
 require '../phpmailer/src/SMTP.php';

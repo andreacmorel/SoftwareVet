@@ -1,8 +1,6 @@
 <?php
 // Incluye la conexión a la base de datos.
 require_once '../settings/conexion.php';
-// Valida que el usuario tenga permisos para acceder a esta ruta.
-require_once 'validateRoute.php';
 // Verifica que se haya recibido un token por la URL.
 if (!isset($_GET['token'])) {
     // Si no existe token, detiene la ejecución.
