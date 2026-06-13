@@ -8,7 +8,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 $id = $_GET['id'];
 
-$sqlDelete = "DELETE FROM historia_clinica WHERE id_historia_clinica = '$id'";
+$sqlDelete = "UPDATE historia_clinica SET activo = 0 WHERE id_historia_clinica = '$id'";
 $resultadoDelete = mysqli_query($conexion, $sqlDelete);
 
 if (!$resultadoDelete) {

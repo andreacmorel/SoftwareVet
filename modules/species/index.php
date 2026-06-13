@@ -14,7 +14,7 @@ require_once '../../php/menu.php';
 $buscar = trim($_GET['buscar'] ?? '');
 
 // Variable donde se guardará la condición WHERE de búsqueda.
-$where = "";
+$where = "WHERE e.activo = 1";
 
 // Verifica si el usuario escribió algo en el buscador.
 if (!empty($buscar)) {
@@ -23,10 +23,10 @@ if (!empty($buscar)) {
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
     // Arma el filtro de búsqueda por nombre de especie o raza.
-    $where = "WHERE 
+    $where = "WHERE e.activo = 1 AND (
         e.nombre_especie LIKE '%$buscarSeguro%' OR
         e.raza LIKE '%$buscarSeguro%'
-    ";
+    )";
 }
 
 // Verifica si viene el parámetro success por URL.

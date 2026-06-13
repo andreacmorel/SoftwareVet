@@ -13,7 +13,7 @@ require_once '../../php/menu.php';
 $buscar = trim($_GET['buscar'] ?? '');
 
 // Variable donde se almacenará la condición WHERE de la consulta
-$where = "";
+$where = "WHERE c.activo = 1";
 
 // Si el usuario escribió algo en el buscador
 if (!empty($buscar)) {
@@ -23,13 +23,13 @@ if (!empty($buscar)) {
 
     // Construye el filtro de búsqueda para nombre, apellido,
     // teléfono, correo electrónico y barrio
-    $where = "WHERE 
+    $where = "WHERE pr.activo = 1 AND (
         p.nombre_persona LIKE '%$buscarSeguro%' OR
         p.apellido_persona LIKE '%$buscarSeguro%' OR
         p.telefono LIKE '%$buscarSeguro%' OR
         p.email LIKE '%$buscarSeguro%' OR
         d.barrio LIKE '%$buscarSeguro%'
-    ";
+)";
 }
 
 // ======================================================

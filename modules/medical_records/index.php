@@ -11,7 +11,7 @@ $fecha_desde = $_GET['fecha_desde'] ?? '';
 $fecha_hasta = $_GET['fecha_hasta'] ?? '';
 
 // Condición base para ir agregando filtros dinámicamente
-$where = "WHERE 1=1";
+$where = "WHERE h.activo = 1";
 
 // Array donde se guardan los valores que se van a vincular al prepare
 $params = [];

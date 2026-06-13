@@ -65,7 +65,7 @@ if (!$resProfesional) {
 }
 
 // Elimina la persona asociada a ese profesional
-$sqlPersona = "DELETE FROM persona WHERE id_persona = '$id_persona'";
+$sqlPersona = "UPDATE profesional SET activo = 0 WHERE id_profesional = '$id'";
 $resPersona = mysqli_query($conexion, $sqlPersona);
 
 // Si falla la eliminación de la persona, muestra el error

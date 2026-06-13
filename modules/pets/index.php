@@ -27,7 +27,7 @@ $porPagina = 10;
 $desde = ($pagina - 1) * $porPagina;
 
 // Condición base para poder agregar filtros dinámicamente
-$where = "WHERE 1=1";
+$where = "WHERE m.activo = 1";
 
 // Si el usuario escribió algo en el buscador
 if ($buscar !== '') {

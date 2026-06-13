@@ -14,7 +14,7 @@ require_once '../../php/menu.php';
 $buscar = trim($_GET['buscar'] ?? '');
 
 // Variable donde se almacenará la cláusula WHERE de la consulta
-$where = "";
+$where = "WHERE c.activo = 1";
 
 // Verifica si el usuario ingresó algún criterio de búsqueda
 if (!empty($buscar)) {
@@ -23,13 +23,13 @@ if (!empty($buscar)) {
     $buscarSeguro = $conexion->real_escape_string($buscar);
 
     // Construye la condición de búsqueda para varios campos
-    $where = "WHERE 
+    $where = "WHERE c.activo = 1 AND (
         p.nombre_persona LIKE '%$buscarSeguro%' OR
         p.apellido_persona LIKE '%$buscarSeguro%' OR
         p.telefono LIKE '%$buscarSeguro%' OR
         p.email LIKE '%$buscarSeguro%' OR
         d.barrio LIKE '%$buscarSeguro%'
-    ";
+)";
 }
 ?>
 

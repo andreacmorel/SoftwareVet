@@ -10,7 +10,8 @@ if ($id <= 0) {
 }
 
 $stmt = $conexion->prepare("
-    DELETE FROM especie
+    UPDATE especie
+    SET activo = 0
     WHERE id_especie = ?
 ");
 

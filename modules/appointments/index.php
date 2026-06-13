@@ -18,7 +18,7 @@ $filtro_fecha_hasta = $_GET['fecha_hasta'] ?? '';
 $estados_validos = ['pendiente', 'confirmado', 'en_atencion', 'completado', 'cancelado'];
 
 // Arrays para armar la consulta preparada dinámicamente
-$where = [];
+$where = ["t.activo = 1"];
 $params = [];
 $types = '';
 

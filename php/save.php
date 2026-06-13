@@ -3,9 +3,6 @@
 // Incluye la conexión a la base de datos.
 require_once '../settings/conexion.php';
 
-// Valida que el usuario tenga permisos para acceder a esta ruta.
-require_once 'validateRoute.php';
-
 // Verifica que se hayan recibido los datos necesarios desde el formulario.
 if (!isset($_POST['token']) || !isset($_POST['password']) || !isset($_POST['password2'])) {
 

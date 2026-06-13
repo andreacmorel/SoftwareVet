@@ -8,7 +8,8 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 $id = $_GET['id'];
 
-$sqlDelete = "DELETE FROM mascota WHERE id_mascota = '$id'";
+$sqlDelete = "UPDATE mascota SET activo = 0 WHERE id_mascota = '$id'";
+
 $resultadoDelete = mysqli_query($conexion, $sqlDelete);
 
 if (!$resultadoDelete) {

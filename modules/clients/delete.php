@@ -39,17 +39,17 @@ if ($mascotas['total'] > 0) {
     exit;
 }
 
-// Elimina primero el domicilio asociado al cliente
-mysqli_query($conexion, "DELETE FROM domicilio WHERE id_cliente = '$id'");
+// Baja lógica del domicilio asociado al cliente
+mysqli_query($conexion, "UPDATE domicilio SET activo = 0 WHERE id_cliente = '$id'");
 
-// Elimina el registro de la tabla cliente
-if (!mysqli_query($conexion, "DELETE FROM cliente WHERE id_cliente = '$id'")) {
-    die("Error al eliminar cliente: " . mysqli_error($conexion));
+// Baja lógica del registro de la tabla cliente
+if (!mysqli_query($conexion, "UPDATE cliente SET activo = 0 WHERE id_cliente = '$id'")) {
+    die("Error al dar de baja cliente: " . mysqli_error($conexion));
 }
 
-// Elimina la persona asociada al cliente
-if (!mysqli_query($conexion, "DELETE FROM persona WHERE id_persona = '$id_persona'")) {
-    die("Error al eliminar persona: " . mysqli_error($conexion));
+// Baja lógica de la persona asociada al cliente
+if (!mysqli_query($conexion, "UPDATE persona SET activo = 0 WHERE id_persona = '$id_persona'")) {
+    die("Error al dar de baja persona: " . mysqli_error($conexion));
 }
 
 // Redirecciona al listado con mensaje de eliminado correctamente

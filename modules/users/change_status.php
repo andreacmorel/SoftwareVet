@@ -14,7 +14,7 @@ if ($id <= 0) {
     exit;
 }
 // Consulta el estado actual del usuario.
-$usuario = $conexion->query("SELECT estado FROM usuarioWHERE id_usuario = $id");
+$usuario = $conexion->query("SELECT estado FROM usuario WHERE id_usuario = $id");
 
 if (!$usuario || $usuario->num_rows == 0) {
     header("Location: index.php");
@@ -30,7 +30,7 @@ $data = $usuario->fetch_assoc();
 $nuevoEstado = ($data['estado'] == 1) ? 0 : 1;
 
 // Actualiza el estado del usuario en la base de datos.
-$conexion->query("UPDATE usuario SET estado = $nuevoEstadoWHERE id_usuario = $id");
+$conexion->query("UPDATE usuario SET estado = $nuevoEstado WHERE id_usuario = $id");
 // Verifica si el nuevo estado es activo.
 if ($nuevoEstado == 1) {
     // Redirige indicando que el usuario fue activado
