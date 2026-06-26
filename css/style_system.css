@@ -88,3 +88,16 @@
             font-size: 15px;
             margin-bottom: 18px;
         }
+
+        .form-control.is-invalid {
+            border-color:#dc2626 !important;
+            box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
+        }
+
+        .invalid-feedback {
+            display:block;
+            font-size:13px;
+            font-weight:600;
+        }
+
+        

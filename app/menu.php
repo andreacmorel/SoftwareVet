@@ -2,8 +2,7 @@
 require_once __DIR__ . '/../settings/conexion.php';
 
 // Obtiene la URL actual para identificar qué módulo está abierto.
-$uri = $_SERVER['REQUEST_URI'];
-
+$uri = $_SERVER['REQUEST_URI'] ?? '';
 /*
 | Función isActive()
 | Verifica si la ruta actual contiene la ruta recibida.
@@ -12,9 +11,8 @@ $uri = $_SERVER['REQUEST_URI'];
 */
 function isActive(string $path): string {
     global $uri;
-    return (strpos($uri, $path) !== false) ? 'nav-active' : '';
+    return (strpos($uri ?? '', $path) !== false) ? 'nav-active' : '';
 }
-
 /*
 | Función isOpen()
 | Recorre un conjunto de rutas y verifica si alguna coincide
@@ -23,9 +21,13 @@ function isActive(string $path): string {
 */
 function isOpen(array $paths): string {
     global $uri;
+
     foreach ($paths as $p) {
-        if (strpos($uri, $p) !== false) return 'show';
+        if (strpos($uri ?? '', $p) !== false) {
+            return 'show';
+        }
     }
+
     return '';
 }
 
@@ -132,7 +134,7 @@ if (isset($conexion)) {
         <hr class="sidebar-divider">
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/php/inicio') ?>" href="/SoftwareVet/php/inicio.php" data-label="Dashboard">
+            <a class="nav-link <?= isActive('/php/inicio') ?>" href="/SoftwareVet/app/inicio.php" data-label="Dashboard">
                 <i class="fas fa-fw fa-th-large nav-icon"></i>
                 <span>Dashboard</span>
             </a>

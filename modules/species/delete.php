@@ -1,24 +1,8 @@
 <?php
+
 require_once '../../settings/conexion.php';
-require_once '../../php/validateRoute.php';
+require_once '../../app/validateRoute.php';
+require_once 'controllers/speciesController.php';
 
-$id = (int)($_GET['id'] ?? 0);
-
-if ($id <= 0) {
-    header("Location: index.php");
-    exit;
-}
-
-$stmt = $conexion->prepare("
-    UPDATE especie
-    SET activo = 0
-    WHERE id_especie = ?
-");
-
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$stmt->close();
-
-header("Location: index.php?deleted=1");
-exit;
-?>
+$controller = new SpeciesController($conexion);
+$controller->delete($_GET['id'] ?? 0);

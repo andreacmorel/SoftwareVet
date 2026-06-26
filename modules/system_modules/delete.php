@@ -1,20 +1,8 @@
 <?php
+
 require_once '../../settings/conexion.php';
-require_once '../../php/validateRoute.php';
+require_once '../../app/validateRoute.php';
+require_once 'controllers/systemModuleController.php';
 
-$id = (int)($_GET['id'] ?? 0);
-
-if ($id <= 0) {
-    header("Location: index.php");
-    exit;
-}
-
-$conexion->query("
-    UPDATE modulo
-    SET estado = 0
-    WHERE id_modulo = $id
-");
-
-header("Location: index.php");
-exit;
-?>
+$controller = new SystemModuleController($conexion);
+$controller->delete($_GET['id'] ?? 0);

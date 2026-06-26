@@ -3,7 +3,7 @@
 require_once '../../settings/conexion.php';
 
 // Incluye la validación de acceso según la ruta/perfil
-require_once '../../php/validateRoute.php';
+require_once '../../app/validateRoute.php';
 
 // Verifica si se pidió generar PDF mediante el parámetro ?pdf
 $generarPDF = isset($_GET['pdf']);

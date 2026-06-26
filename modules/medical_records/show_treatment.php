@@ -3,7 +3,7 @@
 require_once '../../settings/conexion.php';
 
 // Incluye la validación de acceso según la ruta/perfil
-require_once '../../php/validateRoute.php';
+require_once '../../app/validateRoute.php';
 
 // Obtiene el ID de la historia clínica desde la URL y lo convierte a entero
 $id_historia = (int)($_GET['id'] ?? 0);

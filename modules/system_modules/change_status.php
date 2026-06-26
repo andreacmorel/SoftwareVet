@@ -3,7 +3,7 @@
 require_once '../../settings/conexion.php';
 
 // Valida que el usuario tenga permisos para acceder a este módulo.
-require_once '../../php/validateRoute.php';
+require_once '../../app/validateRoute.php';
 
 // Obtiene el ID del módulo enviado por la URL.
 $id = (int)($_GET['id'] ?? 0);
