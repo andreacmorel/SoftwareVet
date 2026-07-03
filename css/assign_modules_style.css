@@ -1,0 +1,97 @@
+﻿ /* Título principal de la pantalla */
+        .page-title { font-weight: 800; color: #1f2937; margin-bottom: 2px; }
+        .page-title i { color: #52266E; }
+
+        /* Subtítulo descriptivo bajo el título */
+        .page-subtitle { color: #9ca3af; font-size: 14px; }
+
+        /* Pastilla/badge que muestra el nombre del perfil seleccionado */
+        .perfil-badge {
+            display: inline-block;
+            background: #f0e6f6;
+            color: #52266E;
+            font-weight: 800;
+            font-size: 15px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        /* Grilla responsiva de tarjetas de módulos; auto-fill ajusta columnas según el ancho */
+        .modulos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        /* Cada tarjeta de módulo actúa como label para activar su checkbox interno */
+        .modulo-item {
+            background: white;
+            border: 2px solid #eee1f6;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        /* Efecto hover: eleva la tarjeta y resalta el borde */
+        .modulo-item:hover {
+            border-color: #52266E;
+            background: #faf5ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(82,38,110,.1);
+        }
+
+        /* Checkbox estilizado con color corporativo */
+        .modulo-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin-top: 2px;
+            accent-color: #52266E;
+            cursor: pointer;
+        }
+
+        /* Clase aplicada por JS cuando el checkbox está marcado */
+        .modulo-item.checked { border-color: #52266E; background: #faf5ff; }
+
+        .modulo-nombre { font-weight: 700; color: #1f2937; font-size: 14px; }
+
+        /* Tarjeta blanca contenedora de todo el formulario */
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.06);
+            padding: 28px 30px;
+        }
+
+        /* Etiqueta de sección en mayúsculas, estilo igual al de otros formularios del sistema */
+        .section-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #52266E; margin-bottom: 4px; }
+
+        /* Botón principal de guardado */
+        .btn-guardar { background: #52266E; color: white; border-radius: 8px; font-weight: 700; padding: 10px 24px; border: none; }
+        .btn-guardar:hover { background: #3f1d55; color: white; }
+
+        /* Botón secundario de cancelación */
+        .btn-cancelar { border-radius: 8px; font-weight: 600; padding: 10px 20px; color: #6b7280; border: 1px solid #e5e7eb; background: white; }
+        .btn-cancelar:hover { background: #f9fafb; color: #374151; }
+
+        /* Barra inferior con los botones de acción, separada por línea */
+        .actions-bar { display: flex; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #f3f4f6; }
+
+        /* Alerta de error personalizada (reemplaza la clase Bootstrap) */
+        .alert-danger-vet {
+            background: #fdecec;
+            border: 1px solid #f5c6cb;
+            color: #c0392b;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 15px;
+        }

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
@@ -45,234 +45,8 @@ if(isset($_GET['updated'])) { ?>
     <title>Mascotas</title>
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-
-    <style>
-        .page-title {
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 2px;
-        }
-
-        .page-title i {
-            color: #52266E;
-        }
-
-        .page-subtitle {
-            color: #9ca3af;
-            font-size: 14px;
-        }
-
-        .btn-purple {
-            background: #52266E;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .btn-purple:hover {
-            background: #3f1d55;
-            color: white;
-        }
-
-        .badge-total {
-            background: white;
-            color: #52266E;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,.08);
-        }
-
-        .filter-card {
-            background: white;
-            border-radius: 15px;
-            padding: 18px 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            margin-top: 25px;
-            margin-bottom: 25px;
-        }
-
-        .filter-card label {
-            color: #52266E;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .filter-card .form-control {
-            border-radius: 8px;
-            border: 1px solid #d8c2e8;
-            font-size: 14px;
-        }
-
-        .table-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            overflow: hidden;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        thead th {
-            background: #fbf7ff;
-            color: #52266E;
-            font-size: 12px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #eee1f6 !important;
-            font-weight: 800;
-        }
-
-        tbody td {
-            vertical-align: middle !important;
-            font-size: 14px;
-            color: #374151;
-        }
-
-        tbody tr:hover {
-            background: #fcf8ff;
-        }
-
-        .pet-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: #fff3df;
-            color: #f97316;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-
-        .pet-name {
-            font-weight: 800;
-            color: #111827;
-        }
-
-        .pet-id {
-            color: #9ca3af;
-            font-size: 12px;
-        }
-
-        .badge-raza {
-            background: #ead7f7;
-            color: #52266E;
-            padding: 4px 9px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-macho {
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-hembra {
-            background: #fce7f3;
-            color: #be185d;
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .btn-action {
-            width: 31px;
-            height: 31px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            margin: 0 2px;
-        }
-
-        .btn-view {
-            background: #e0f2fe;
-            color: #0284c7;
-        }
-
-        .btn-edit {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .btn-delete {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .pagination .page-link {
-            color: #52266E;
-            border-radius: 8px;
-            margin: 0 2px;
-        }
-
-        .pagination .active .page-link {
-            background: #52266E;
-            border-color: #52266E;
-            color: white;
-        }
-        .vet-alert-success{
-    width:100%;
-    background:linear-gradient(135deg,#f6fffa,#eefcf4);
-    border:1px solid #d7f3e3;
-    border-radius:16px;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    box-shadow:0 6px 18px rgba(25,135,84,.08);
-    margin-bottom:25px;
-    animation:fadeIn .35s ease;
-}
-
-.vet-alert-icon{
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    background:#198754;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    box-shadow:0 4px 10px rgba(25,135,84,.25);
-}
-
-.vet-alert-content h5{
-    margin:0;
-    font-size:15px;
-    font-weight:800;
-    color:#166534;
-}
-
-.vet-alert-content p{
-    margin:3px 0 0;
-    color:#4b5563;
-    font-size:14px;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(-8px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-    </style>
+    <link href="../../css/indexpet.css" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -405,12 +179,19 @@ if(isset($_GET['updated'])) { ?>
 
                                 </td>
                                 <td>
-                                    <?= !empty($row->peso) ? htmlspecialchars($row->peso) . ' <small class="text-muted">kg</small>' : '—' ?>
+                                    <?= !empty($row->peso) ? htmlspecialchars($row->peso) . ' <small class="text-muted">kg</small>' : 'â€”' ?>
                                 </td>
 
-                                <td>
-                                    <?= !empty($row->edad) ? htmlspecialchars($row->edad) . ' años' : '—' ?>
-                                </td>
+                            <td>
+                                <?php if (!empty($row->edad)) { ?>
+                                    <span class="mascota-edad">
+                                    <?= htmlspecialchars($row->edad) ?>
+                                        <?= htmlspecialchars($row->unidad_edad ?? '') ?>
+                                    </span>
+                                <?php } else { ?>
+                                    —
+                                <?php } ?>
+                            </td>
 
                                 <td>
                                     <?= !empty($row->color) ? htmlspecialchars($row->color) : '—' ?>
@@ -455,23 +236,6 @@ if(isset($_GET['updated'])) { ?>
         </div>
     </div>
 
-    <?php if ($totalPaginas > 1) { ?>
-        <nav class="mt-4">
-            <ul class="pagination justify-content-end">
-
-                <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
-                    <li class="page-item <?= $pagina == $i ? 'active' : '' ?>">
-                        <a class="page-link"
-                        href="?pagina=<?= $i ?>&buscar=<?= urlencode($buscar) ?>&id_especie=<?= $id_especie ?>&sexo=<?= urlencode($sexo) ?>">
-                            <?= $i ?>
-                        </a>
-                    </li>
-                <?php } ?>
-
-            </ul>
-        </nav>
-    <?php } ?>
-
 </div>
 
 <div class="modal fade" id="modalEliminar" tabindex="-1">
@@ -498,7 +262,7 @@ if(isset($_GET['updated'])) { ?>
 
                 <p class="mt-3" style="font-size:14px; color:#6b7280;">
                     <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>. Se eliminarán también sus historias clínicas y turnos asociados.
+                    Esta acción es <b>irreversible</b>. Se eliminaran también sus historias clínicas y turnos asociados.
                 </p>
 
             </div>
@@ -510,7 +274,7 @@ if(isset($_GET['updated'])) { ?>
                 </button>
 
                 <a href="#" id="btnConfirmarEliminar" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Sí, eliminar
+                    <i class="fas fa-trash"></i> Sí­, eliminar
                 </a>
 
             </div>
@@ -553,3 +317,4 @@ setTimeout(() => {
 
 </body>
 </html>
+

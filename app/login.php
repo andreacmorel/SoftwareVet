@@ -98,6 +98,12 @@ if (isset($_POST['usuario']) && isset($_POST['clave'])) {
 
         // Guarda el nombre del perfil en la sesión.
         $_SESSION['nombre_perfil'] = $row['nombre_perfil'];
+        
+        // Guarda el nombre.
+        $_SESSION['nombre'] = $row['nombre'];;
+    
+        // Guarda el apellido
+        $_SESSION['apellido'] = $row['apellido'];;
 
         // Redirige al panel principal del sistema.
         header("Location: inicio.php");

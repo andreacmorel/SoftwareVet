@@ -1,86 +1,20 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
-<style>
-.titulo-pagina { font-weight: 800; color: #1f2937; }
-.titulo-pagina i { color: #52266E; }
 
-.subtitulo {
-    color: #9ca3af;
-    font-size: 14px;
-    margin-bottom: 25px;
-}
+<!DOCTYPE html>
+<html lang="es">
 
-.card-form {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 4px 18px rgba(0,0,0,.06);
-}
+<head>
+    <meta charset="utf-8">
+    <title>Modificar Mascota</title>
+    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/editpet.css" rel="stylesheet">
+</head>
 
-.card-header-form {
-    background: #fbf7ff;
-    border-bottom: 1px solid #eee1f6;
-    padding: 18px;
-}
-
-.card-header-form h5 {
-    color: #52266E;
-    font-weight: 800;
-}
-
-label {
-    color: #52266E;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.form-control {
-    border-radius: 8px;
-    border: 1px solid #d8c2e8;
-}
-
-.form-control:focus {
-    border-color: #52266E;
-    box-shadow: 0 0 0 3px rgba(82,38,110,.1);
-}
-
-.form-control.is-invalid {
-    border-color:#dc2626 !important;
-    box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
-}
-
-.invalid-feedback {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.btn-purple {
-    background: #52266E;
-    color: white;
-    border-radius: 8px;
-    font-weight: 700;
-    padding: 8px 22px;
-}
-
-.btn-purple:hover { background: #3f1d55; color: white; }
-
-.btn-cancelar {
-    background: #e5e7eb;
-    color: #374151;
-    border-radius: 8px;
-    font-weight: 700;
-    padding: 8px 22px;
-}
-
-.btn-cancelar:hover { background: #d1d5db; color: #111827; }
-
-select.form-control.is-invalid {
-    background-image: none !important;
-}
-</style>
+<body>
 
 <div class="container-fluid">
 
@@ -89,7 +23,7 @@ select.form-control.is-invalid {
     </h1>
 
     <div class="subtitulo">
-        Modificá los datos del paciente.
+        Modifica los datos del paciente.
     </div>
 
     <div class="card card-form mb-4">
@@ -164,24 +98,67 @@ select.form-control.is-invalid {
                 </div>
 
                 <div class="row">
+
                     <div class="form-group col-md-6">
                         <label>Color</label>
-                        <input type="text" name="color" class="form-control"
+
+                        <input type="text" name="color"
+                            class="form-control"
                             value="<?= htmlspecialchars($mascota['color'] ?? '') ?>">
                     </div>
 
-                    <div class="form-group col-md-6">
-                        <label>Edad</label>
+                <div class="form-group col-md-6">
+                    <label>Edad</label>
 
-                        <input type="number" min="0" name="edad"
-                            class="form-control <?= isset($erroresCampos['edad']) ? 'is-invalid' : '' ?>"
-                            value="<?= htmlspecialchars($mascota['edad'] ?? '') ?>">
+                    <div class="row">
 
-                        <?php if(isset($erroresCampos['edad'])) { ?>
-                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['edad']) ?></div>
-                        <?php } ?>
+                        <div class="col-md-6">
+                            <input type="number"
+                                min="0"
+                                name="edad"
+                                class="form-control <?= isset($erroresCampos['edad']) ? 'is-invalid' : '' ?>"
+                                value="<?= htmlspecialchars($mascota['edad'] ?? '') ?>"
+                                placeholder="Ej: 3">
+
+                            <?php if(isset($erroresCampos['edad'])) { ?>
+                                <div class="invalid-feedback">
+                                    <?= htmlspecialchars($erroresCampos['edad']) ?>
+                                </div>
+                            <?php } ?>
+                        </div>
+
+                        <div class="col-md-6">
+                            <select name="unidad_edad"
+                                class="form-control <?= isset($erroresCampos['unidad_edad']) ? 'is-invalid' : '' ?>">
+
+                                <option value="">Seleccione</option>
+
+                                <option value="dias" <?= (($mascota['unidad_edad'] ?? '') == 'dias') ? 'selected' : '' ?>>
+                                    Días
+                                </option>
+
+                                <option value="meses" <?= (($mascota['unidad_edad'] ?? '') == 'meses') ? 'selected' : '' ?>>
+                                    Meses
+                                </option>
+
+                                <option value="años" <?= (($mascota['unidad_edad'] ?? '') == 'años') ? 'selected' : '' ?>>
+                                    Años
+                                </option>
+
+                            </select>
+
+                            <?php if(isset($erroresCampos['unidad_edad'])) { ?>
+                                <div class="invalid-feedback">
+                                    <?= htmlspecialchars($erroresCampos['unidad_edad']) ?>
+                                </div>
+                            <?php } ?>
+
+                        </div>
+
                     </div>
                 </div>
+
+            </div>
 
                 <div class="form-group">
                     <label>Especie / Raza <span style="color:#dc2626;">*</span></label>
@@ -232,7 +209,7 @@ select.form-control.is-invalid {
                     </a>
 
                     <button type="submit" class="btn btn-purple">
-                        <i class="fas fa-save mr-1"></i> Guardar cambios
+                        <i class="fas fa-save mr-1"></i> Guardar
                     </button>
                 </div>
 
@@ -247,3 +224,4 @@ select.form-control.is-invalid {
 
 </body>
 </html>
+

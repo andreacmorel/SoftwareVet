@@ -1,8 +1,6 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 
-
-// Mensaje de éxito cuando se registra un turno
 if(isset($_GET['success'])) { ?>
     <div class="vet-alert-success">
         <div class="vet-alert-icon">
@@ -17,7 +15,6 @@ if(isset($_GET['success'])) { ?>
 <?php } ?>
 
 <?php
-// Mensaje de éxito cuando se actualiza un turno
 if(isset($_GET['updated'])) { ?>
     <div class="vet-alert-success">
         <div class="vet-alert-icon">
@@ -32,7 +29,6 @@ if(isset($_GET['updated'])) { ?>
 <?php } ?>
 
 <?php
-// Mensaje de éxito cuando se actualiza el estado de un turno
 if(isset($_GET['status'])) { ?>
     <div class="vet-alert-success">
         <div class="vet-alert-icon">
@@ -47,7 +43,6 @@ if(isset($_GET['status'])) { ?>
 <?php } ?>
 
 <?php
-// Mensaje de éxito cuando se elimina un turno
 if(isset($_GET['deleted'])) { ?>
     <div class="vet-alert-success">
         <div class="vet-alert-icon">
@@ -86,263 +81,7 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-
-<style>
-.page-title {
-    font-weight: 800;
-    color: #1f2937;
-    margin-bottom: 2px;
-}
-
-.page-title i {
-    color: #52266E;
-}
-
-.page-subtitle {
-    color: #9ca3af;
-    font-size: 14px;
-}
-
-.btn-purple {
-    background: #52266E;
-    color: white;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.btn-purple:hover {
-    background: #3f1d55;
-    color: white;
-}
-
-.filter-card {
-    background: white;
-    border-radius: 15px;
-    padding: 18px 20px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-    margin-top: 25px;
-    margin-bottom: 25px;
-}
-
-.filter-card label {
-    color: #52266E;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.filter-card .form-control {
-    border-radius: 8px;
-    border: 1px solid #d8c2e8;
-    font-size: 14px;
-}
-
-.table-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-    overflow: hidden;
-}
-
-.table {
-    margin-bottom: 0;
-}
-
-thead th {
-    background: #fbf7ff !important;
-    color: #52266E !important;
-    font-size: 12px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #eee1f6 !important;
-    font-weight: 800;
-}
-
-tbody td {
-    vertical-align: middle !important;
-    font-size: 14px;
-    color: #374151;
-}
-
-tbody tr:hover {
-    background: #fcf8ff;
-}
-
-.turno-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    background: #f0e6f6;
-    color: #52266E;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-}
-
-.turno-date {
-    font-weight: 800;
-    color: #111827;
-}
-
-.turno-hour {
-    color: #9ca3af;
-    font-size: 12px;
-}
-
-.dato-muted {
-    color: #6b7280;
-}
-
-.btn-action {
-    width: 31px;
-    height: 31px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    margin: 0 2px;
-    text-decoration: none;
-}
-
-.btn-action:hover {
-    text-decoration: none;
-    transform: scale(1.08);
-}
-
-.btn-edit {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.btn-delete {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-
-.estado-select {
-    width: 140px;
-    border: none;
-    border-radius: 50px;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    text-align: center;
-    box-shadow: none;
-    transition: all .2s ease;
-}
-
-.estado-select:hover {
-    filter: brightness(0.95);
-}
-
-.estado-pendiente {
-    background: #fff4cc;
-    color: #9a6a00;
-}
-
-.estado-confirmado {
-    background: #dff8ff;
-    color: #087990;
-}
-
-.estado-en_atencion {
-    background: #e7ecff;
-    color: #2944a3;
-}
-
-.estado-completado {
-    background: #dcfce7;
-    color: #15803d;
-}
-
-.estado-cancelado {
-    background: #ffe4e6;
-    color: #be123c;
-}
-
-.vet-alert-success,
-.vet-alert-error {
-    width:100%;
-    border-radius:16px;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    margin-bottom:25px;
-    animation:fadeIn .35s ease;
-}
-
-.vet-alert-success {
-    background:linear-gradient(135deg,#f6fffa,#eefcf4);
-    border:1px solid #d7f3e3;
-    box-shadow:0 6px 18px rgba(25,135,84,.08);
-}
-
-.vet-alert-error {
-    background:linear-gradient(135deg,#fff5f5,#fef2f2);
-    border:1px solid #fecaca;
-    box-shadow:0 6px 18px rgba(220,38,38,.08);
-}
-
-.vet-alert-icon,
-.vet-alert-error-icon {
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-}
-
-.vet-alert-icon {
-    background:#198754;
-    box-shadow:0 4px 10px rgba(25,135,84,.25);
-}
-
-.vet-alert-error-icon {
-    background:#dc2626;
-    box-shadow:0 4px 10px rgba(220,38,38,.25);
-}
-
-.vet-alert-content h5 {
-    margin:0;
-    font-size:15px;
-    font-weight:800;
-}
-
-.vet-alert-success .vet-alert-content h5 {
-    color:#166534;
-}
-
-.vet-alert-error .vet-alert-content h5 {
-    color:#991b1b;
-}
-
-.vet-alert-content p {
-    margin:3px 0 0;
-    color:#4b5563;
-    font-size:14px;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity:0;
-        transform:translateY(-8px);
-    }
-    to {
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-</style>
+<link href="/SoftwareVet/css/index_style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -391,7 +130,7 @@ tbody tr:hover {
                     <option value="">Todos</option>
                     <option value="pendiente" <?= $filtro_estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
                     <option value="confirmado" <?= $filtro_estado === 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
-                    <option value="en_atencion" <?= $filtro_estado === 'en_atencion' ? 'selected' : '' ?>>En atención</option>
+                    <option value="en_atencion" <?= $filtro_estado === 'en_atencion' ? 'selected' : '' ?>>En atenciÃ³n</option>
                     <option value="completado" <?= $filtro_estado === 'completado' ? 'selected' : '' ?>>Completado</option>
                     <option value="cancelado" <?= $filtro_estado === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
                 </select>
@@ -421,10 +160,6 @@ tbody tr:hover {
                 <button type="submit" class="btn btn-purple">
                     <i class="fas fa-filter"></i>
                 </button>
-
-                <a href="index.php" class="btn btn-secondary ml-2">
-                    <i class="fas fa-times"></i>
-                </a>
             </div>
 
         </div>
@@ -440,7 +175,7 @@ tbody tr:hover {
                         <th>Dueño</th>
                         <th>Profesional</th>
                         <th>Motivo</th>
-                        <th>Estado</th>
+                        <th class="text-center">Estado</th>
                         <th class="text-center" style="width:130px;">Acciones</th>
                     </tr>
                 </thead>
@@ -480,36 +215,69 @@ tbody tr:hover {
                                 </td>
 
                                 <td class="dato-muted">
-                                    <?= !empty($t->motivo) ? htmlspecialchars($t->motivo) : '—' ?>
+                                    <?= !empty($t->motivo) ? htmlspecialchars($t->motivo) : 'â€”' ?>
                                 </td>
 
-                                <td>
-                                    <?php if ($t->estado === 'completado' || $t->estado === 'cancelado') { ?>
+                            <td class="text-center">
 
-                                        <span class="estado-select estado-<?= htmlspecialchars($t->estado) ?>">
-                                            <?= $t->estado === 'completado' ? 'Completado' : 'Cancelado' ?>
-                                        </span>
+                            <?php
+                                $estadosTexto = [
+                                    'pendiente' => 'Pendiente',
+                                    'confirmado' => 'Confirmado',
+                                    'en_atencion' => 'En atención',
+                                    'completado' => 'Completado',
+                                    'cancelado' => 'Cancelado'
+                                ];
 
-                                    <?php } else { ?>
+                                $estadoActual = $t->estado;
+                            ?>
 
-                                        <form action="change_status.php" method="POST" style="margin:0;">
-                                            <input type="hidden" name="id_turno" value="<?= $t->id_turno ?>">
+                            <?php if ($estadoActual === 'completado' || $estadoActual === 'cancelado') { ?>
 
-                                            <select 
-                                                name="estado"
-                                                class="form-control form-control-sm estado-select estado-<?= htmlspecialchars($t->estado) ?>"
-                                                onchange="this.form.submit()"
-                                            >
-                                                <option value="pendiente" <?= $t->estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
-                                                <option value="confirmado" <?= $t->estado === 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
-                                                <option value="en_atencion" <?= $t->estado === 'en_atencion' ? 'selected' : '' ?>>En atención</option>
-                                                <option value="completado" <?= $t->estado === 'completado' ? 'selected' : '' ?>>Completado</option>
-                                                <option value="cancelado" <?= $t->estado === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
-                                            </select>
-                                        </form>
+                                <span class="estado-pill estado-<?= htmlspecialchars($estadoActual) ?>">
+                                    <?= $estadosTexto[$estadoActual] ?>
+                                </span>
 
-                                    <?php } ?>
-                                </td>
+                            <?php } else { ?>
+
+                        <div class="estado-dropdown">
+
+                            <button
+                                type="button"
+                                class="estado-pill estado-<?= htmlspecialchars($estadoActual) ?>"
+                                onclick="toggleEstadoMenu(this)">
+                                <?= $estadosTexto[$estadoActual] ?>
+
+                                <i class="fas fa-chevron-down ml-1"></i>
+                            </button>
+
+                            <div class="estado-menu">
+
+                                <?php foreach ($estadosTexto as $valor => $texto) { ?>
+
+                                    <form action="change_status.php" method="POST" class="m-0">
+
+                                        <input type="hidden" name="id_turno" value="<?= $t->id_turno ?>">
+                                        <input type="hidden" name="estado" value="<?= $valor ?>">
+
+                                        <button
+                                            type="submit"
+                                            class="estado-option estado-<?= $valor ?>"
+                                        >
+                                            <?= $texto ?>
+                                        </button>
+
+                                    </form>
+
+                                <?php } ?>
+
+                            </div>
+
+                        </div>
+
+                            <?php } ?>
+
+                        </td>
 
                                 <td class="text-center">
 
@@ -586,7 +354,7 @@ tbody tr:hover {
                 </button>
 
                 <a href="#" id="btnConfirmarEliminarTurno" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Sí, eliminar
+                    <i class="fas fa-trash"></i> Sí­, eliminar
                 </a>
             </div>
 
@@ -599,6 +367,39 @@ tbody tr:hover {
 <script src="../../js/sb-admin-2.min.js"></script>
 
 <script>
+
+
+function toggleEstadoMenu(button){
+
+    const menu = button.nextElementSibling;
+
+    document.querySelectorAll('.estado-menu').forEach(function(item){
+
+        if(item !== menu){
+            item.classList.remove('show');
+        }
+
+    });
+
+    menu.classList.toggle('show');
+
+}
+
+document.addEventListener('click',function(e){
+
+    if(!e.target.closest('.estado-dropdown')){
+
+        document.querySelectorAll('.estado-menu').forEach(function(item){
+
+            item.classList.remove('show');
+
+        });
+
+    }
+
+});
+
+
 $('#modalEliminarTurno').on('show.bs.modal', function (event) {
     var boton = $(event.relatedTarget);
     var id = boton.data('id');
@@ -628,3 +429,5 @@ setTimeout(() => {
 
 </body>
 </html>
+
+

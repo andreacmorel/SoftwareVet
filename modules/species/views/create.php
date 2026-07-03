@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
@@ -8,87 +8,9 @@ require_once '../../app/menu.php';
 <head>
 <meta charset="UTF-8">
 <title>Alta Especie</title>
-
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-
-<style>
-.page-title {
-    font-weight: 800;
-    color: #1f2937;
-}
-
-.page-title i {
-    color: #52266E;
-}
-
-.page-subtitle {
-    color: #9ca3af;
-    font-size: 14px;
-}
-
-.form-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 4px 18px rgba(0,0,0,.06);
-    margin-top: 25px;
-}
-
-.form-group label {
-    color: #52266E;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.form-control {
-    border-radius: 8px;
-    border: 1px solid #d8c2e8;
-}
-
-.form-control:focus {
-    border-color: #52266E;
-    box-shadow: 0 0 0 .2rem rgba(82,38,110,.15);
-}
-
-.form-control.is-invalid {
-    border-color: #dc2626 !important;
-    box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
-}
-
-.invalid-feedback {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.btn-purple {
-    background: #52266E;
-    color: white;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.btn-purple:hover {
-    background: #3f1d55;
-    color: white;
-}
-
-.btn-cancelar {
-    background: #e5e7eb;
-    color: #374151;
-    border-radius: 8px;
-    font-weight: 700;
-    padding: 8px 22px;
-}
-
-.btn-cancelar:hover {
-    background: #d1d5db;
-    color: #111827;
-}
-
-</style>
+<link href="../../css/createspe.css" rel="stylesheet">
 
 </head>
 
@@ -158,7 +80,7 @@ require_once '../../app/menu.php';
                 </a>
 
                 <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-save"></i> Guardar Especie
+                    <i class="fas fa-save"></i> Guardar
                 </button>
             </div>
 
@@ -177,8 +99,8 @@ require_once '../../app/menu.php';
 // Detecta cuando se intenta enviar el formulario de especie.
 document.getElementById('frmEspecie').addEventListener('submit', function(e) {
 
-    // Expresión regular que permite letras, acentos, espacios y guiones.
-    const solo_letras = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s\-]+$/;
+    // ExpresiÃ³n regular que permite letras, acentos, espacios y guiones.
+    const solo_letras = /^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ¼ÃœÃ±Ã‘\s\-]+$/;
 
     // Variable que indica si el formulario está correcto.
     let ok = true;
@@ -195,10 +117,10 @@ document.getElementById('frmEspecie').addEventListener('submit', function(e) {
         // Obtiene el valor del campo sin espacios al inicio ni al final.
         const val = campo.value.trim();
 
-        // Variable donde se guardará el mensaje de error.
+        // Variable donde se guardara el mensaje de error.
         let msg = '';
 
-        // Valida que el campo no esté vacío.
+        // Valida que el campo no estÃ© vacÃ­o.
         if (val === '') {
             msg = 'El campo es obligatorio.';
 
@@ -215,7 +137,7 @@ document.getElementById('frmEspecie').addEventListener('submit', function(e) {
             msg = 'Solo se permiten letras, espacios y guiones.';
         }
 
-        // Si existe algún mensaje de error.
+        // Si existe algun mensaje de error.
         if (msg) {
 
             // Agrega la clase is-invalid para marcar el campo en rojo.
@@ -239,7 +161,7 @@ document.getElementById('frmEspecie').addEventListener('submit', function(e) {
 
         } else {
 
-            // Si no hay error, quita la clase de campo inválido.
+            // Si no hay error, quita la clase de campo invÃ¡lido.
             campo.classList.remove('is-invalid');
 
             // Busca el contenedor de error existente.
@@ -252,7 +174,7 @@ document.getElementById('frmEspecie').addEventListener('submit', function(e) {
         }
     });
 
-    // Si hay algún error, evita que el formulario se envíe.
+    // Si hay algún error, evita que el formulario se envÃ­e.
     if (!ok) e.preventDefault();
 });
 
@@ -260,3 +182,4 @@ document.getElementById('frmEspecie').addEventListener('submit', function(e) {
 
 </body>
 </html>
+

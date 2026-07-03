@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
@@ -10,126 +10,8 @@ require_once '../../app/menu.php';
     <title>Ficha Mascota</title>
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/pet_record_style.css" rel="stylesheet">
 
-    <style>
-        .titulo-pagina {
-            font-weight: 800;
-            color: #1f2937;
-        }
-
-        .titulo-pagina i {
-            color: #52266E;
-        }
-
-        .subtitulo-pagina {
-            color: #9ca3af;
-            font-size: 14px;
-            margin-top: -8px;
-            margin-bottom: 25px;
-        }
-
-        .card-ficha {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            overflow: hidden;
-        }
-
-        .card-header-ficha {
-            background: #fbf7ff;
-            border-bottom: 1px solid #eee1f6;
-            padding: 18px 22px;
-        }
-
-        .card-header-ficha h6 {
-            color: #52266E;
-            font-weight: 800;
-            margin: 0;
-        }
-
-        .dato-item {
-            padding: 14px 0;
-            border-bottom: 1px solid #f1f1f1;
-        }
-
-        .dato-item:last-child {
-            border-bottom: none;
-        }
-
-        .dato-label {
-            color: #52266E;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            letter-spacing: .3px;
-        }
-
-        .dato-valor {
-            color: #374151;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .badge-vet {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .badge-macho {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
-
-        .badge-hembra {
-            background: #fce7f3;
-            color: #be185d;
-        }
-
-        .badge-peso {
-            background: #ecfdf5;
-            color: #15803d;
-        }
-
-        .badge-especie {
-            background: #ead7f7;
-            color: #52266E;
-        }
-
-        .text-muted-vet {
-            color: #9ca3af;
-            font-weight: 600;
-        }
-
-        .btn-purple {
-            background: #52266E;
-            color: white;
-            border-radius: 8px;
-            font-weight: 700;
-            padding: 8px 18px;
-        }
-
-        .btn-purple:hover {
-            background: #3f1d55;
-            color: white;
-        }
-
-        .btn-volver {
-            background: #e5e7eb;
-            color: #374151;
-            border-radius: 8px;
-            font-weight: 700;
-            padding: 8px 18px;
-        }
-
-        .btn-volver:hover {
-            background: #d1d5db;
-            color: #111827;
-        }
-    </style>
 </head>
 
 <body>
@@ -295,3 +177,5 @@ require_once '../../app/menu.php';
 
 </body>
 </html>
+
+

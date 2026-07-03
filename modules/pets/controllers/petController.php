@@ -47,6 +47,7 @@ class PetController{
         $peso = trim($_POST['peso'] ?? '');
         $color = trim($_POST['color'] ?? '');
         $edad = trim($_POST['edad'] ?? '');
+        $unidad_edad = trim($_POST['unidad_edad'] ?? '');
 
         $id_especie = (int)($_POST['id_especie'] ?? 0);
         $id_cliente = (int)($_POST['id_cliente'] ?? 0);
@@ -68,7 +69,21 @@ class PetController{
         }
 
         if (!empty($edad) && $edad < 0) {
-            $erroresCampos['edad'] = "La edad no puede ser negativa.";
+        $erroresCampos['edad'] = "La edad no puede ser negativa.";
+        }
+
+        $unidadesValidas = ['dias', 'meses', 'años'];
+
+        if (empty($edad) && !empty($unidad_edad)) {
+            $erroresCampos['edad'] = "Debe ingresar la edad.";
+        }
+
+        if (!empty($edad) && empty($unidad_edad)) {
+            $erroresCampos['unidad_edad'] = "Seleccione la unidad de edad.";
+        }
+
+        if (!empty($unidad_edad) && !in_array($unidad_edad, $unidadesValidas)) {
+            $erroresCampos['unidad_edad'] = "La unidad de edad no es válida.";
         }
 
         if (!empty($fecha_nacimiento) && $fecha_nacimiento > date('Y-m-d')) {
@@ -92,7 +107,7 @@ class PetController{
         if (empty($erroresCampos)) {
             if ($this->model->create(
                 $nombre,$fecha_nacimiento,$sexo,$peso,$color,
-                $edad,$id_especie,$id_cliente
+                $edad,$unidad_edad,$id_especie,$id_cliente
             )) {
                 header("Location: index.php?success=1");
                 exit;
@@ -132,6 +147,7 @@ class PetController{
         $peso = trim($_POST['peso'] ?? '');
         $color = trim($_POST['color'] ?? '');
         $edad = trim($_POST['edad'] ?? '');
+        $unidad_edad = trim($_POST['unidad_edad'] ?? '');
         $id_especie = (int)($_POST['id_especie'] ?? 0);
         $id_cliente = (int)($_POST['id_cliente'] ?? 0);
 
@@ -155,6 +171,20 @@ class PetController{
             $erroresCampos['edad'] = "La edad no puede ser negativa.";
         }
 
+        $unidadesValidas = ['dias', 'meses', 'años'];
+
+        if (empty($edad) && !empty($unidad_edad)) {
+            $erroresCampos['edad'] = "Debe ingresar la edad.";
+        }
+
+        if (!empty($edad) && empty($unidad_edad)) {
+            $erroresCampos['unidad_edad'] = "Seleccione la unidad de edad.";
+        }
+
+        if (!empty($unidad_edad) && !in_array($unidad_edad, $unidadesValidas)) {
+            $erroresCampos['unidad_edad'] = "La unidad de edad no es válida.";
+        }
+
         if (!empty($fecha_nacimiento) && $fecha_nacimiento > date('Y-m-d')) {
             $erroresCampos['fecha_nacimiento'] = "La fecha no puede ser futura.";
         }
@@ -176,7 +206,8 @@ class PetController{
         if (empty($erroresCampos)) {
             if ($this->model->update(
                 $id,$nombre,$fecha_nacimiento,$sexo,
-                $peso,$color,$edad,$id_especie,$id_cliente
+                $peso,$color,$edad,$unidad_edad,$id_especie,$id_cliente
+
             )) {
                 header("Location: index.php?updated=1");
                 exit;
@@ -214,8 +245,8 @@ class PetController{
         : 'Sin especificar';
 
     $edad = (!empty($mascota['edad']) && $mascota['edad'] > 0)
-        ? htmlspecialchars($mascota['edad']) . ' años'
-        : 'No registrada';
+        ? htmlspecialchars($mascota['edad']) . ' ' . htmlspecialchars($mascota['unidad_edad'] ?? '')
+    : 'No registrada';
 
     $peso = (!empty($mascota['peso']) && $mascota['peso'] > 0)
         ? htmlspecialchars($mascota['peso']) . ' kg'

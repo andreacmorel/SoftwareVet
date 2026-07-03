@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 <!DOCTYPE html>
@@ -11,6 +11,7 @@ require_once '../../app/menu.php';
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/style_system.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -56,8 +57,7 @@ require_once '../../app/menu.php';
                             id="fecha" 
                             name="fecha"  
                             min="<?= date('Y-m-d') ?>"
-                            value="<?= htmlspecialchars($fecha) ?>"
-                        >
+                            value="<?= htmlspecialchars($fecha) ?>">
 
                         <?php if (isset($erroresCampos['fecha'])) { ?>
                             <div class="invalid-feedback">
@@ -69,7 +69,8 @@ require_once '../../app/menu.php';
                     <div class="form-group col-md-6">
                         <label for="hora">Hora <span style="color:#dc2626;">*</span></label>
 
-                        <input type="time" 
+                        <input 
+                            type="time" 
                             class="form-control <?= isset($erroresCampos['hora']) ? 'is-invalid' : '' ?>" 
                             id="hora" 
                             name="hora"
@@ -195,3 +196,4 @@ require_once '../../app/menu.php';
 
 </body>
 </html>
+

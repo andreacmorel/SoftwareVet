@@ -1,0 +1,55 @@
+        body {
+            background: #f8f9fc;
+        }
+
+        .dato {
+            font-size: 15px;
+            margin-bottom: 7px;
+            color: #000;
+        }
+
+        .dato b {
+            color: #52266E;
+        }
+
+        h4 {
+            color: #52266E;
+            font-weight: 700;
+        }
+
+        .linea-principal {
+            border-top: 3px solid #52266E;
+        }
+
+        .linea-seccion {
+            border-top: 2px solid #eee;
+        }
+
+        .fecha-impresion {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+            }
+
+            .acciones {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            .container {
+                margin-top: 0 !important;
+            }
+
+            img {
+                max-width: 60px;
+            }
+        }

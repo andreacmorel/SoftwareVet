@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
@@ -22,7 +22,7 @@ require_once '../../app/menu.php';
     </h1>
 
     <div class="subtitulo-pagina">
-        Completá los datos para registrar un nuevo cliente.
+        Completa los datos para registrar un nuevo cliente.
     </div>
 
     <div class="card card-form mb-4">
@@ -299,6 +299,6 @@ document.getElementById('frmCliente').addEventListener('submit', function (e) {
     }
 });// Fin recorrido de campos
 </script>
-
 </body>
 </html>
+

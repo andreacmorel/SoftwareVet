@@ -1,70 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8">
     <title>Imprimir Ficha Mascota</title>
-
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #f8f9fc;
-        }
-
-        .dato {
-            font-size: 15px;
-            margin-bottom: 7px;
-            color: #000;
-        }
-
-        .dato b {
-            color: #52266E;
-        }
-
-        h4 {
-            color: #52266E;
-            font-weight: 700;
-        }
-
-        .linea-principal {
-            border-top: 3px solid #52266E;
-        }
-
-        .linea-seccion {
-            border-top: 2px solid #eee;
-        }
-
-        .fecha-impresion {
-            font-size: 12px;
-            color: #999;
-            margin-top: 4px;
-        }
-
-        @media print {
-            body {
-                background: white !important;
-            }
-
-            .acciones {
-                display: none !important;
-            }
-
-            .card {
-                box-shadow: none !important;
-                border: none !important;
-            }
-
-            .container {
-                margin-top: 0 !important;
-            }
-
-            img {
-                max-width: 60px;
-            }
-        }
-    </style>
+    <link href="../../css/print_record_style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -95,7 +37,7 @@
                 <div class="col-md-6">
                     <p class="dato">
                         <b>Nombre:</b>
-                        <?= htmlspecialchars($mascota['nombre_mascota'] ?? '—') ?>
+                        <?= htmlspecialchars($mascota['nombre_mascota'] ?? 'â€”') ?>
                     </p>
 
                     <p class="dato">
@@ -104,7 +46,7 @@
                         if (!empty($mascota['fecha_nacimiento']) && $mascota['fecha_nacimiento'] != '0000-00-00') {
                             echo date("d/m/Y", strtotime($mascota['fecha_nacimiento']));
                         } else {
-                            echo '—';
+                            echo 'â€”';
                         }
                         ?>
                     </p>
@@ -117,36 +59,40 @@
                         } elseif ($mascota['sexo'] == 'H') {
                             echo 'Hembra';
                         } else {
-                            echo htmlspecialchars($mascota['sexo'] ?? '—');
+                            echo htmlspecialchars($mascota['sexo'] ?? 'â€”');
                         }
                         ?>
                     </p>
 
                     <p class="dato">
                         <b>Peso:</b>
-                        <?= !empty($mascota['peso']) ? htmlspecialchars($mascota['peso']) . ' kg' : '—' ?>
+                        <?= !empty($mascota['peso']) ? htmlspecialchars($mascota['peso']) . ' kg' : 'â€”' ?>
                     </p>
                 </div>
 
                 <div class="col-md-6">
                     <p class="dato">
                         <b>Color:</b>
-                        <?= !empty($mascota['color']) ? htmlspecialchars($mascota['color']) : '—' ?>
+                        <?= !empty($mascota['color']) ? htmlspecialchars($mascota['color']) : 'â€”' ?>
                     </p>
 
                     <p class="dato">
                         <b>Edad:</b>
-                        <?= !empty($mascota['edad']) ? htmlspecialchars($mascota['edad']) : '—' ?>
+                            <?php if (!empty($mascota['edad'])) { ?>
+                            <?= htmlspecialchars($mascota['edad']) . ' ' . htmlspecialchars($mascota['unidad_edad'] ?? '') ?>
+                        <?php } else { ?>
+                        —
+                        <?php } ?>
                     </p>
 
                     <p class="dato">
                         <b>Especie:</b>
-                        <?= htmlspecialchars($mascota['nombre_especie'] ?? '—') ?>
+                        <?= htmlspecialchars($mascota['nombre_especie'] ?? 'â€”') ?>
                     </p>
 
                     <p class="dato">
                         <b>Raza:</b>
-                        <?= !empty($mascota['raza']) ? htmlspecialchars($mascota['raza']) : '—' ?>
+                        <?= !empty($mascota['raza']) ? htmlspecialchars($mascota['raza']) : 'â€”' ?>
                     </p>
                 </div>
             </div>
@@ -165,14 +111,14 @@
 
                     <p class="dato">
                         <b>Teléfono:</b>
-                        <?= !empty($mascota['telefono']) ? htmlspecialchars($mascota['telefono']) : '—' ?>
+                        <?= !empty($mascota['telefono']) ? htmlspecialchars($mascota['telefono']) : 'â€”' ?>
                     </p>
                 </div>
 
                 <div class="col-md-6">
                     <p class="dato">
                         <b>Email:</b>
-                        <?= !empty($mascota['email']) ? htmlspecialchars($mascota['email']) : '—' ?>
+                        <?= !empty($mascota['email']) ? htmlspecialchars($mascota['email']) : 'â€”' ?>
                     </p>
                 </div>
             </div>
@@ -194,3 +140,5 @@
 
 </body>
 </html>
+
+

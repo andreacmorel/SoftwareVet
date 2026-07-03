@@ -1,117 +1,19 @@
-<?php
+﻿<?php
 
 require_once '../../app/menu.php';
 ?>
+<!DOCTYPE html>
+<html lang="es">
 
-<style>
-.titulo-pagina {
-    font-weight: 800;
-    color: #1f2937;
-}
+<head>
+    <meta charset="utf-8">
+    <title>Modificar Usuario</title>
+    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/edit_user.css" rel="stylesheet">
+</head>
 
-.titulo-pagina i {
-    color: #52266E;
-}
-
-.subtitulo {
-    color: #9ca3af;
-    font-size: 14px;
-    margin-bottom: 25px;
-}
-
-.card-form {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 4px 18px rgba(0,0,0,.06);
-}
-
-.card-header-form {
-    background: #fbf7ff;
-    border-bottom: 1px solid #eee1f6;
-    padding: 18px;
-}
-
-.card-header-form h5 {
-    color: #52266E;
-    font-weight: 800;
-}
-
-label {
-    color: #52266E;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.form-control {
-    border-radius: 8px;
-    border: 1px solid #d8c2e8;
-}
-
-.form-control:focus {
-    border-color: #52266E;
-    box-shadow: 0 0 0 3px rgba(82,38,110,.1);
-}
-
-.form-control.is-invalid {
-    border-color: #dc2626 !important;
-    box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
-}
-
-.invalid-feedback {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.btn-purple {
-    background: #52266E;
-    color: white;
-    border-radius: 8px;
-    font-weight: 700;
-    padding: 8px 22px;
-}
-
-.btn-purple:hover {
-    background: #3f1d55;
-    color: white;
-}
-
-.btn-cancelar {
-    background: #e5e7eb;
-    color: #374151;
-    border-radius: 8px;
-    font-weight: 700;
-    padding: 8px 22px;
-}
-
-.btn-cancelar:hover {
-    background: #d1d5db;
-    color: #111827;
-}
-
-select.form-control.is-invalid {
-    background-image: none !important;
-}
-
-.help-text {
-    color: #9ca3af;
-    font-size: 13px;
-    margin-top: 5px;
-}
-
-/* Estilo para mostrar una aclaración cuando el perfil está bloqueado. */
-.alert-info-vet {
-    background: #eef6ff;
-    color: #2563eb;
-    border: 1px solid #bfdbfe;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 8px;
-}
-</style>
+<body>
 
 <div class="container-fluid">
 
@@ -143,6 +45,31 @@ select.form-control.is-invalid {
             <form method="POST" novalidate>
 
                 <div class="row">
+
+                    <div class="form-group col-md-6">
+                        <label>Nombre <span style="color:#dc2626;">*</span></label>
+
+                        <input type="text" name="nombre"
+                            class="form-control <?= isset($erroresCampos['nombre']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($usuarioEditar->nombre ?? '') ?>">
+
+                            <?php if(isset($erroresCampos['nombre'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['nombre']) ?></div>
+                        <?php } ?>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Apellido <span style="color:#dc2626;">*</span></label>
+
+                        <input type="text" name="apellido"
+                            class="form-control <?= isset($erroresCampos['apellido']) ? 'is-invalid' : '' ?>"
+                            value="<?= htmlspecialchars($usuarioEditar->apellido ?? '') ?>">
+
+                        <?php if(isset($erroresCampos['apellido'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['apellido']) ?></div>
+                        <?php } ?>
+                    </div>
+
                     <div class="form-group col-md-6">
                         <label>Usuario <span style="color:#dc2626;">*</span></label>
 
@@ -220,9 +147,9 @@ select.form-control.is-invalid {
                     </select>
 
                     <!--
-                    | Como el select disabled no se envía por POST,
+                    | Como el select disabled no se envia por POST,
                     | el PHP conserva el perfil original desde la base de datos.
-                    | Este mensaje explica al usuario por qué no puede modificarlo.
+                    | Este mensaje explica al usuario por quÃ© no puede modificarlo.
                     -->
                     <?php if ($esMiUsuario) { ?>
                         <div class="alert-info-vet">
@@ -246,7 +173,7 @@ select.form-control.is-invalid {
 
                     <button type="submit" name="btnActualizar" value="1" class="btn btn-purple">
                         <i class="fas fa-save mr-1"></i>
-                        Guardar cambios
+                        Guardar 
                     </button>
                 </div>
 
@@ -262,3 +189,4 @@ select.form-control.is-invalid {
 
 </body>
 </html>
+

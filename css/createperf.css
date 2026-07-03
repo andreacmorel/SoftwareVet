@@ -1,0 +1,37 @@
+﻿  /* Título principal de la pantalla */
+        .page-title { font-weight:800; color:#1f2937; margin-bottom:2px; }
+        .page-title i { color:#52266E; }
+
+        /* Subtítulo descriptivo bajo el título */
+        .page-subtitle { color:#9ca3af; font-size:14px; }
+
+        /* Tarjeta blanca contenedora del formulario */
+        .form-card {
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            box-shadow:0 4px 18px rgba(0,0,0,.06);
+            margin-top:20px;
+        }
+
+        /* Etiquetas de los campos en mayúsculas y color corporativo */
+        label { color:#52266E; font-size:12px; font-weight:800; text-transform:uppercase; }
+
+        /* Input con borde redondeado en tono lila */
+        .form-control { border-radius:8px; border:1px solid #d8c2e8; font-size:14px; }
+        .form-control:focus { border-color:#52266E; box-shadow:0 0 0 3px rgba(82,38,110,.12); }
+
+        /* Estado de error: borde rojo con sombra roja suave */
+        .form-control.is-invalid { border-color:#dc2626 !important; box-shadow:0 0 0 3px rgba(220,38,38,.12) !important; }
+        .invalid-feedback { display:block; font-size:13px; font-weight:600; }
+
+        /* Botón principal de guardado */
+        .btn-purple { background:#52266E; color:white; border-radius:8px; font-weight:700; padding:8px 20px; }
+        .btn-purple:hover { background:#3f1d55; color:white; }
+
+        /* Botón secundario de cancelación */
+        .btn-cancel { background:#e5e7eb; color:#374151; border-radius:8px; font-weight:700; padding:8px 20px; }
+        .btn-cancel:hover { background:#d1d5db; color:#111827; }
+
+        /* Título de sección dentro del formulario */
+        .section-title { color:#52266E; font-weight:800; margin-bottom:15px; }

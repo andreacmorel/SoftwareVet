@@ -28,25 +28,28 @@ class AppointmentModel{
     }
 
     public function existsForEdit($fecha, $hora, $id_profesional, $id_turno){
-        $validarTurno = $this->conexion->prepare("
-            SELECT id_turno
-            FROM turnos
-            WHERE fecha = ?
-            AND hora = ?
-            AND id_profesional = ?
-            AND id_turno != ?
-            LIMIT 1
-        ");
 
-        $validarTurno->bind_param("ssii", $fecha, $hora, $id_profesional, $id_turno);
-        $validarTurno->execute();
+    $validarTurno = $this->conexion->prepare("
+        SELECT id_turno
+        FROM turnos
+        WHERE fecha = ?
+        AND hora = ?
+        AND id_profesional = ?
+        AND id_turno != ?
+        AND activo = 1
+        AND estado NOT IN ('cancelado', 'completado')
+        LIMIT 1
+    ");
 
-        $resTurno = $validarTurno->get_result();
-        $existe = $resTurno->num_rows > 0;
+    $validarTurno->bind_param("ssii", $fecha, $hora, $id_profesional, $id_turno);
+    $validarTurno->execute();
 
-        $validarTurno->close();
+    $resTurno = $validarTurno->get_result();
+    $existe = $resTurno->num_rows > 0;
 
-        return $existe;
+    $validarTurno->close();
+
+    return $existe;
     }
 
     public function update($id_turno, $fecha, $hora, $motivo, $id_profesional, $id_mascota){
@@ -219,25 +222,26 @@ class AppointmentModel{
     }
 
     public function existsAppointment($fecha, $hora, $id_profesional){
-
         $validarTurno = $this->conexion->prepare("
             SELECT id_turno
             FROM turnos
             WHERE fecha = ?
             AND hora = ?
             AND id_profesional = ?
+            AND activo = 1
+            AND estado NOT IN ('cancelado', 'completado')
             LIMIT 1
         ");
 
-        $validarTurno->bind_param("ssi", $fecha, $hora, $id_profesional);
-        $validarTurno->execute();
+            $validarTurno->bind_param("ssi", $fecha, $hora, $id_profesional);
+            $validarTurno->execute();
 
-        $resTurno = $validarTurno->get_result();
-        $existe = $resTurno->num_rows > 0;
+            $resTurno = $validarTurno->get_result();
+            $existe = $resTurno->num_rows > 0;
 
-        $validarTurno->close();
+            $validarTurno->close();
 
-        return $existe;
+            return $existe;
     }
 
     public function create($fecha, $hora, $motivo, $id_profesional, $id_mascota){

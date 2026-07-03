@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 <!DOCTYPE html>
@@ -6,91 +6,11 @@ require_once '../../app/menu.php';
 
 <head>
     <meta charset="utf-8">
-    <title>Modificar Historia Clínica</title>
+    <title>Modificar Historia Clí­nica</title>
 
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-
-    <style>
-        .page-title {
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 2px;
-        }
-
-        .page-title i {
-            color: #52266E;
-        }
-
-        .page-subtitle {
-            color: #9ca3af;
-            font-size: 14px;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            margin-top: 25px;
-        }
-
-        .section-title {
-            color: #52266E;
-            font-weight: 800;
-            font-size: 13px;
-            text-transform: uppercase;
-            margin-bottom: 18px;
-            border-bottom: 1px solid #eee1f6;
-            padding-bottom: 8px;
-        }
-
-        .form-group label {
-            color: #52266E;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            border: 1px solid #d8c2e8;
-            font-size: 14px;
-        }
-
-        .form-control:focus {
-            border-color: #52266E;
-            box-shadow: 0 0 0 .2rem rgba(82, 38, 110, .15);
-        }
-
-        .btn-purple {
-            background: #52266E;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .btn-purple:hover {
-            background: #3f1d55;
-            color: white;
-        }
-
-        .btn-light-pro {
-            background: #f8f9fc;
-            color: #6b7280;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .alert-pro {
-            background: #fee2e2;
-            color: #991b1b;
-            border-radius: 10px;
-            padding: 12px 15px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link href="../../css/style_system1.css" rel="stylesheet">
 </head>
 
 <body>
@@ -99,7 +19,7 @@ require_once '../../app/menu.php';
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
         <div>
             <h1 class="h3 page-title">
-                <i class="fas fa-notes-medical mr-2"></i> Modificar Historia Clínica
+                <i class="fas fa-notes-medical mr-2"></i> Modificar Historia Clí­nica
             </h1>
             <div class="page-subtitle">Editar datos clínicos registrados</div>
         </div>
@@ -173,7 +93,7 @@ require_once '../../app/menu.php';
                 </a>
 
                 <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-save"></i> Guardar cambios
+                    <i class="fas fa-save"></i> Guardar
                 </button>
             </div>
 
@@ -189,3 +109,4 @@ require_once '../../app/menu.php';
 
 </body>
 </html>
+

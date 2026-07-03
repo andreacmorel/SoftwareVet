@@ -90,9 +90,10 @@ class MedicalRecordController{
                 }
             }
         }
-
+        
         if (empty($erroresCampos)) {
-            $this->model->create(
+
+            $resultado = $this->model->create(
                 $fecha,
                 $descripcion,
                 $observacion,
@@ -102,8 +103,12 @@ class MedicalRecordController{
                 $tDescs
             );
 
-            header("Location: index.php?success=1");
-            exit;
+            if ($resultado) {
+                header("Location: index.php?success=1");
+                exit;
+            } else {
+                $erroresCampos['general'] = "Error al registrar la historia clínica. No se guardaron cambios.";
+            }
         }
 
         $postMascota = $idMascota;

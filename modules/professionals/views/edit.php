@@ -1,109 +1,17 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
-<style>
-    .titulo-pagina {
-        font-weight: 800;
-        color: #1f2937;
-    }
+<!DOCTYPE html>
+<html lang="es">
 
-    .titulo-pagina i {
-        color: #52266E;
-    }
-
-    .subtitulo-pagina {
-        color: #9ca3af;
-        font-size: 14px;
-        margin-top: -8px;
-        margin-bottom: 25px;
-    }
-
-    .card-form {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 4px 18px rgba(0,0,0,.06);
-        overflow: hidden;
-    }
-
-    .card-header-form {
-        background: #fbf7ff;
-        border-bottom: 1px solid #eee1f6;
-        padding: 18px 22px;
-    }
-
-    .card-header-form h5 {
-        color: #52266E;
-        font-weight: 800;
-        margin: 0;
-    }
-
-    .card-body {
-        padding: 25px;
-    }
-
-    label {
-        color: #52266E;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-    }
-
-    .form-control {
-        border-radius: 8px;
-        border: 1px solid #d8c2e8;
-        font-size: 14px;
-    }
-
-    .form-control:focus {
-        border-color: #52266E;
-        box-shadow: 0 0 0 3px rgba(82,38,110,.12);
-    }
-
-    .form-control.is-invalid {
-        border-color: #dc2626 !important;
-        box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
-    }
-
-    .invalid-feedback {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .section-title {
-        color: #52266E;
-        font-weight: 800;
-        font-size: 15px;
-        margin-bottom: 18px;
-    }
-
-    .btn-purple {
-        background: #52266E;
-        color: white;
-        border-radius: 8px;
-        font-weight: 700;
-        padding: 8px 22px;
-    }
-
-    .btn-purple:hover {
-        background: #3f1d55;
-        color: white;
-    }
-
-    .btn-cancelar {
-        background: #e5e7eb;
-        color: #374151;
-        border-radius: 8px;
-        font-weight: 700;
-        padding: 8px 22px;
-    }
-
-    .btn-cancelar:hover {
-        background: #d1d5db;
-        color: #111827;
-    }
-</style>
+<head>
+    <meta charset="utf-8">
+    <title>Modificación de Profesional</title>
+    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/editprof.css" rel="stylesheet">
+</head>
 
 <div class="container-fluid">
 
@@ -262,7 +170,7 @@ require_once '../../app/menu.php';
 
                     <button type="submit" class="btn btn-purple">
                         <i class="fas fa-save mr-1"></i>
-                        Guardar cambios
+                        Guardar
                     </button>
                 </div>
 
@@ -275,6 +183,7 @@ require_once '../../app/menu.php';
 <script src="/SoftwareVet/vendor/jquery/jquery.min.js"></script>
 <script src="/SoftwareVet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/SoftwareVet/js/sb-admin-2.min.js"></script>
+
 
 <script>
 // Escucha el envío del formulario
@@ -505,3 +414,4 @@ document.getElementById('frmEditar').addEventListener('submit', function (e) {
 </script>
 </body>
 </html>
+

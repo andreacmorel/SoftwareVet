@@ -56,6 +56,7 @@ class PetModel{
                 m.sexo,
                 m.peso,
                 m.edad,
+                m.unidad_edad,
                 m.color,
                 e.nombre_especie,
                 e.raza,
@@ -110,11 +111,11 @@ class PetModel{
     return $resExiste && mysqli_num_rows($resExiste) > 0;
     }
 
-    public function create($nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $id_especie, $id_cliente){
-
+    public function create($nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente){
     $nombreSeguro = $this->conexion->real_escape_string($nombre);
     $sexoSeguro = $this->conexion->real_escape_string($sexo);
     $colorSeguro = $this->conexion->real_escape_string($color);
+    $unidadSeguro = $this->conexion->real_escape_string($unidad_edad);
 
     $fechaSQL = empty($fecha_nacimiento)
         ? "NULL"
@@ -124,23 +125,27 @@ class PetModel{
         ? "NULL"
         : "'" . $this->conexion->real_escape_string($edad) . "'";
 
-    $sqlInsert = "INSERT INTO mascota (nombre_mascota,fecha_nacimiento,sexo,peso,
-            color,edad,id_especie,id_cliente)
-            VALUES (
+    $unidadSQL = empty($unidad_edad)
+        ? "NULL"
+        : "'$unidadSeguro'";
+
+    $sqlInsert = "INSERT INTO mascota (nombre_mascota,fecha_nacimiento,sexo,
+            peso,color,edad,unidad_edad,id_especie,id_cliente)
+        VALUES (
             '$nombreSeguro',
             $fechaSQL,
             '$sexoSeguro',
             '$peso',
             '$colorSeguro',
             $edadSQL,
+            $unidadSQL,
             $id_especie,
             $id_cliente
         )
     ";
 
     return mysqli_query($this->conexion, $sqlInsert);
-    }
-
+}
     public function getById($id){
 
     $sqlMascota = "SELECT * FROM mascota WHERE id_mascota = $id";
@@ -166,10 +171,12 @@ class PetModel{
     return $resExiste && mysqli_num_rows($resExiste) > 0;
     }
 
-    public function update($id, $nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $id_especie, $id_cliente){
+    public function update($id, $nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente){
+
     $nombreSeguro = $this->conexion->real_escape_string($nombre);
     $sexoSeguro = $this->conexion->real_escape_string($sexo);
     $colorSeguro = $this->conexion->real_escape_string($color);
+    $unidadSeguro = $this->conexion->real_escape_string($unidad_edad);
 
     $fechaSQL = empty($fecha_nacimiento)
         ? "NULL"
@@ -179,21 +186,21 @@ class PetModel{
         ? "NULL"
         : "'" . $this->conexion->real_escape_string($edad) . "'";
 
-    $sqlUpdate = "
-        UPDATE mascota SET
-            nombre_mascota = '$nombreSeguro',
-            fecha_nacimiento = $fechaSQL,
-            sexo = '$sexoSeguro',
-            peso = '$peso',
-            color = '$colorSeguro',
+    $unidadSQL = empty($unidad_edad)
+        ? "NULL"
+        : "'$unidadSeguro'";
+
+    $sqlUpdate = "UPDATE mascota SET nombre_mascota = '$nombreSeguro',
+            fecha_nacimiento = $fechaSQL,sexo = '$sexoSeguro',peso = '$peso',color = '$colorSeguro',
             edad = $edadSQL,
+            unidad_edad = $unidadSQL,
             id_especie = $id_especie,
             id_cliente = $id_cliente
         WHERE id_mascota = $id
     ";
 
     return mysqli_query($this->conexion, $sqlUpdate);
-    }
+}
 
     public function getPetRecord($id){
     $sql = "SELECT 

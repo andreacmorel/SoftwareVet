@@ -1,33 +1,35 @@
 <?php
 require_once __DIR__ . '/../settings/conexion.php';
 
-// Obtiene la URL actual para identificar qué módulo está abierto.
+/*
+| Obtiene la URL actual para identificar qué módulo está abierto.
+*/
 $uri = $_SERVER['REQUEST_URI'] ?? '';
+
 /*
 | Función isActive()
 | Verifica si la ruta actual contiene la ruta recibida.
 | Si coincide, devuelve la clase CSS 'nav-active'.
 | Se utiliza para resaltar la opción activa del menú.
+| Ahora recibe $uri como parámetro en vez de usar global.
 */
-function isActive(string $path): string {
-    global $uri;
-    return (strpos($uri ?? '', $path) !== false) ? 'nav-active' : '';
+function isActive(string $path, string $uri): string {
+    return (str_contains($uri, $path)) ? 'nav-active' : '';
 }
+
 /*
 | Función isOpen()
 | Recorre un conjunto de rutas y verifica si alguna coincide
 | con la URL actual. Si coincide devuelve 'show' para abrir
 | automáticamente el menú desplegable.
+| Ahora recibe $uri como parámetro en vez de usar global.
 */
-function isOpen(array $paths): string {
-    global $uri;
-
+function isOpen(array $paths, string $uri): string {
     foreach ($paths as $p) {
-        if (strpos($uri ?? '', $p) !== false) {
+        if (str_contains($uri, $p)) {
             return 'show';
         }
     }
-
     return '';
 }
 
@@ -42,29 +44,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 /*
 | Obtención del perfil del usuario
-| Inicializa el nombre del perfil y luego consulta la base
-| de datos para obtener el perfil correspondiente al usuario
-| que inició sesión.
+| Recupera el nombre del perfil almacenado en la sesión.
+| Si por algún motivo no existe, muestra "Sin perfil"
+| como valor predeterminado.
 */
-$nombrePerfil = 'Sin perfil';
-
-if (isset($_SESSION['id_perfil'])) {
-
-    $id_perfil = (int) $_SESSION['id_perfil'];
-
-    if (isset($conexion)) {
-
-        $resPerfil = $conexion->query("
-            SELECT nombre_perfil
-            FROM perfil
-            WHERE id_perfil = $id_perfil
-        ");
-
-        if ($resPerfil && $perfilMenu = $resPerfil->fetch_object()) {
-            $nombrePerfil = $perfilMenu->nombre_perfil;
-        }
-    }
-}
+$nombrePerfil = $_SESSION['nombre_perfil'] ?? 'Sin perfil';
 
 /*
 | Seguridad de salida
@@ -73,25 +57,48 @@ if (isset($_SESSION['id_perfil'])) {
 */
 $nombrePerfilSeguro = htmlspecialchars($nombrePerfil);
 
+
 /*
 | Contador de turnos del día
 | Obtiene la cantidad de turnos registrados para la fecha actual.
 | Se utiliza para mostrar la notificación en el menú lateral.
+| Usa prepared statement como buena práctica.
 */
 $turnosHoyCount = 0;
 
 if (isset($conexion)) {
 
-    $resTurnos = $conexion->query("
+    $stmtCount = $conexion->prepare("
         SELECT COUNT(*) AS total
         FROM turnos
         WHERE fecha = CURDATE()
     ");
 
-    if ($resTurnos && $rowTurnos = $resTurnos->fetch_object()) {
-        $turnosHoyCount = (int) $rowTurnos->total;
+    if ($stmtCount && $stmtCount->execute()) {
+        $resCount = $stmtCount->get_result();
+        if ($rowTurnos = $resCount->fetch_object()) {
+            $turnosHoyCount = (int) $rowTurnos->total;
+        }
+        $stmtCount->close();
     }
 }
+
+/*
+| Definición centralizada de subitems de menús desplegables.
+| Centraliza los ítems para evitar duplicación entre collapse y flyout.
+| Si se agrega o modifica un ítem, solo se cambia en un lugar.
+*/
+$menuTurnos = [
+    ['path' => '/modules/appointments/index.php',     'icon' => 'fa-list-ul',      'label' => 'Listado'],
+    ['path' => '/modules/appointments/calendario.php','icon' => 'fa-calendar-alt', 'label' => 'Calendario'],
+    ['path' => '/modules/appointments/create.php',    'icon' => 'fa-plus-circle',  'label' => 'Nuevo Turno'],
+];
+
+$menuAdmin = [
+    ['path' => '/modules/users/index.php',          'icon' => 'fa-users',       'label' => 'Usuarios'],
+    ['path' => '/modules/profiles/index.php',       'icon' => 'fa-user-shield', 'label' => 'Perfiles'],
+    ['path' => '/modules/system_modules/index.php', 'icon' => 'fa-layer-group', 'label' => 'Módulos'],
+];
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +128,7 @@ if (isset($conexion)) {
 
     <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/SoftwareVet/php/inicio.php">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/SoftwareVet/app/inicio.php">
             <div class="sidebar-brand-icon mr-2">
                 <i class="fas fa-paw"></i>
             </div>
@@ -134,7 +141,7 @@ if (isset($conexion)) {
         <hr class="sidebar-divider">
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/php/inicio') ?>" href="/SoftwareVet/app/inicio.php" data-label="Dashboard">
+            <a class="nav-link <?= isActive('/php/inicio', $uri) ?>" href="/SoftwareVet/app/inicio.php" data-label="Dashboard">
                 <i class="fas fa-fw fa-th-large nav-icon"></i>
                 <span>Dashboard</span>
             </a>
@@ -144,21 +151,21 @@ if (isset($conexion)) {
         <div class="sidebar-heading">Gestión</div>
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/pets/') ?>" href="/SoftwareVet/modules/pets/index.php" data-label="Mascotas">
+            <a class="nav-link <?= isActive('/modules/pets/', $uri) ?>" href="/SoftwareVet/modules/pets/index.php" data-label="Mascotas">
                 <i class="fas fa-fw fa-paw nav-icon"></i>
                 <span>Mascotas</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/clients/') ?>" href="/SoftwareVet/modules/clients/index.php" data-label="Clientes">
+            <a class="nav-link <?= isActive('/modules/clients/', $uri) ?>" href="/SoftwareVet/modules/clients/index.php" data-label="Clientes">
                 <i class="fas fa-fw fa-users nav-icon"></i>
                 <span>Clientes</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/professionals/') ?>" href="/SoftwareVet/modules/professionals/index.php" data-label="Profesionales">
+            <a class="nav-link <?= isActive('/modules/professionals/', $uri) ?>" href="/SoftwareVet/modules/professionals/index.php" data-label="Profesionales">
                 <i class="fas fa-fw fa-user-md nav-icon"></i>
                 <span>Profesionales</span>
             </a>
@@ -167,8 +174,12 @@ if (isset($conexion)) {
         <hr class="sidebar-divider">
         <div class="sidebar-heading">Agenda</div>
 
+        <?php
+        $turnosOpen = isOpen(['/modules/appointments/'], $uri);
+        $turnosPaths = array_column($menuTurnos, 'path');
+        ?>
+
         <li class="nav-item has-sub">
-            <?php $turnosOpen = isOpen(['/modules/appointments/']); ?>
 
             <a class="nav-link <?= $turnosOpen ? '' : 'collapsed' ?>"
                 href="#"
@@ -188,36 +199,21 @@ if (isset($conexion)) {
 
             <div id="collapseTurnos" class="collapse <?= $turnosOpen ?>" data-parent="#accordionSidebar">
                 <div class="collapse-inner">
-
-                    <a class="collapse-item <?= isActive('/modules/appointments/index.php') ?>" href="/SoftwareVet/modules/appointments/index.php">
-                        <i class="fas fa-fw fa-list-ul"></i> Listado
-                    </a>
-
-                    <a class="collapse-item <?= isActive('/modules/appointments/calendario.php') ?>" href="/SoftwareVet/modules/appointments/calendario.php">
-                        <i class="fas fa-fw fa-calendar-alt"></i> Calendario
-                    </a>
-
-                    <a class="collapse-item <?= isActive('/modules/appointments/create.php') ?>" href="/SoftwareVet/modules/appointments/create.php">
-                        <i class="fas fa-fw fa-plus-circle"></i> Nuevo Turno
-                    </a>
-
+                    <?php foreach ($menuTurnos as $item): ?>
+                        <a class="collapse-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
+                            <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="icons-flyout">
                 <div class="flyout-title">Turnos</div>
-
-                <a class="flyout-item <?= isActive('/modules/appointments/index.php') ?>" href="/SoftwareVet/modules/appointments/index.php">
-                    <i class="fas fa-fw fa-list-ul"></i> Listado
-                </a>
-
-                <a class="flyout-item <?= isActive('/modules/appointments/calendario.php') ?>" href="/SoftwareVet/modules/appointments/calendario.php">
-                    <i class="fas fa-fw fa-calendar-alt"></i> Calendario
-                </a>
-
-                <a class="flyout-item <?= isActive('/modules/appointments/create.php') ?>" href="/SoftwareVet/modules/appointments/create.php">
-                    <i class="fas fa-fw fa-plus-circle"></i> Nuevo Turno
-                </a>
+                <?php foreach ($menuTurnos as $item): ?>
+                    <a class="flyout-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
+                        <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </li>
 
@@ -225,14 +221,14 @@ if (isset($conexion)) {
         <div class="sidebar-heading">Clínica</div>
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/medical_records/') ?>" href="/SoftwareVet/modules/medical_records/index.php" data-label="Historia Clínica">
+            <a class="nav-link <?= isActive('/modules/medical_records/', $uri) ?>" href="/SoftwareVet/modules/medical_records/index.php" data-label="Historia Clínica">
                 <i class="fas fa-fw fa-stethoscope nav-icon"></i>
                 <span>Historia Clínica</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/species/') ?>" href="/SoftwareVet/modules/species/index.php" data-label="Especies">
+            <a class="nav-link <?= isActive('/modules/species/', $uri) ?>" href="/SoftwareVet/modules/species/index.php" data-label="Especies">
                 <i class="fas fa-fw fa-dna nav-icon"></i>
                 <span>Especies</span>
             </a>
@@ -241,12 +237,15 @@ if (isset($conexion)) {
         <hr class="sidebar-divider">
         <div class="sidebar-heading">Administración</div>
 
+        <?php
+        $adminOpen = isOpen([
+            '/modules/users/',
+            '/modules/profiles/',
+            '/modules/system_modules/'
+        ], $uri);
+        ?>
+
         <li class="nav-item has-sub">
-            <?php $adminOpen = isOpen([
-                '/modules/users/',
-                '/modules/profiles/',
-                '/modules/system_modules/'
-            ]); ?>
 
             <a class="nav-link <?= $adminOpen ? '' : 'collapsed' ?>"
                 href="#"
@@ -262,20 +261,22 @@ if (isset($conexion)) {
 
             <div id="collapseAdministracion" class="collapse <?= $adminOpen ?>" data-parent="#accordionSidebar">
                 <div class="collapse-inner">
-
-                    <a class="collapse-item <?= isActive('/modules/users/') ?>" href="/SoftwareVet/modules/users/index.php">
-                        <i class="fas fa-users"></i> Usuario
-                    </a>
-
-                    <a class="collapse-item <?= isActive('/modules/profiles/') ?>" href="/SoftwareVet/modules/profiles/index.php">
-                        <i class="fas fa-user-shield"></i> Perfil
-                    </a>
-
-                    <a class="collapse-item <?= isActive('/modules/system_modules/') ?>" href="/SoftwareVet/modules/system_modules/index.php">
-                        <i class="fas fa-layer-group"></i> Módulos
-                    </a>
-
+                    <?php foreach ($menuAdmin as $item): ?>
+                        <a class="collapse-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
+                            <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
+            </div>
+
+            <!-- Flyout para el modo solo íconos (antes faltaba) -->
+            <div class="icons-flyout">
+                <div class="flyout-title">Administración</div>
+                <?php foreach ($menuAdmin as $item): ?>
+                    <a class="flyout-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
+                        <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </li>
 
@@ -288,8 +289,11 @@ if (isset($conexion)) {
 
             <?php
             $usuarioNombre = htmlspecialchars($_SESSION['usuario'] ?? 'Usuario');
-            $inicialesArr  = array_filter(array_map(fn($p) => strtoupper($p[0] ?? ''), explode(' ', $usuarioNombre)));
-            $iniciales     = implode('', array_slice(array_values($inicialesArr), 0, 2));
+
+            // Filtra partes vacías (espacios dobles, etc.) antes de obtener iniciales.
+            $partes = array_filter(explode(' ', $usuarioNombre), fn($p) => $p !== '');
+            $inicialesArr = array_map(fn($p) => strtoupper($p[0]), array_values($partes));
+            $iniciales = implode('', array_slice($inicialesArr, 0, 2));
 
             if (!$iniciales) {
                 $iniciales = strtoupper(substr($usuarioNombre, 0, 2));
@@ -298,7 +302,7 @@ if (isset($conexion)) {
             $notifTurnos = [];
 
             if (isset($conexion)) {
-                $resNotif = $conexion->query("
+                $stmtNotif = $conexion->prepare("
                     SELECT t.hora, t.motivo, t.estado, m.nombre_mascota,
                     CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional
                     FROM turnos t
@@ -311,10 +315,12 @@ if (isset($conexion)) {
                     LIMIT 8
                 ");
 
-                if ($resNotif) {
+                if ($stmtNotif && $stmtNotif->execute()) {
+                    $resNotif = $stmtNotif->get_result();
                     while ($n = $resNotif->fetch_object()) {
                         $notifTurnos[] = $n;
                     }
+                    $stmtNotif->close();
                 }
             }
 
@@ -361,7 +367,7 @@ if (isset($conexion)) {
 
                             <div class="d-none d-lg-block text-left mr-1">
                                 <div style="font-size:.85rem; font-weight:700; color:#52266E; line-height:1.2;">
-                                    <?= $usuarioNombre ?>
+                                    <span id="usuarioLogueadoTop"></span>
                                 </div>
                                 <div style="font-size:.7rem; color:#aaa; line-height:1;">
                                     <?= $nombrePerfilSeguro ?>
@@ -380,9 +386,9 @@ if (isset($conexion)) {
                                         <?= $iniciales ?>
                                     </div>
                                     <div>
-                                        <div class="user-nombre"><?= $usuarioNombre ?></div>
+                                        <div class="user-nombre"><span id="usuarioLogueado"></span></div>
                                         <div class="user-rol">
-                                            <i class="fas fa-shield-alt mr-1"></i><?= $nombrePerfilSeguro ?>
+                                            <?= $nombrePerfilSeguro ?>
                                         </div>
                                     </div>
                                 </div>
@@ -390,7 +396,11 @@ if (isset($conexion)) {
 
                             <div class="dropdown-divider"></div>
 
-                            <a class="dropdown-item py-2" href="/SoftwareVet/php/logout.php">
+                            <a class="dropdown-item py-2" href="/SoftwareVet/app/logout.php"
+                            onclick="
+                                localStorage.removeItem('nombre');
+                                localStorage.removeItem('apellido');
+                            ">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-danger"></i>
                                 <span class="text-danger">Cerrar Sesión</span>
                             </a>
@@ -406,31 +416,18 @@ if (isset($conexion)) {
                 | del sistema cada segundo.
                 */
                 (function tickClock() {
-                    // Obtiene la fecha y hora actual.
-                    var now = new Date();
+                    var now   = new Date();
+                    var hh    = now.getHours().toString().padStart(2, '0');
+                    var mm    = now.getMinutes().toString().padStart(2, '0');
+                    var ss    = now.getSeconds().toString().padStart(2, '0');
+                    var dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+                    var meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+                    var eH    = document.getElementById('topbar-hora');
+                    var eF    = document.getElementById('topbar-fecha');
 
-                    // Obtiene horas, minutos y segundos con dos dígitos.
-                    var hh = now.getHours().toString().padStart(2, '0');
-                    var mm = now.getMinutes().toString().padStart(2, '0');
-                    var ss = now.getSeconds().toString().padStart(2, '0');
-
-                    // Array con los nombres de los días.
-                    var dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-
-                    // Array con los nombres abreviados de los meses.
-                    var meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-
-                    // Obtiene los elementos donde se mostrará la hora y la fecha.
-                    var eH = document.getElementById('topbar-hora');
-                    var eF = document.getElementById('topbar-fecha');
-
-                    // Muestra la hora actual.
                     if (eH) eH.textContent = hh + ':' + mm + ':' + ss;
-
-                    // Muestra la fecha actual.
                     if (eF) eF.textContent = dias[now.getDay()] + ' ' + now.getDate() + ' ' + meses[now.getMonth()] + ' ' + now.getFullYear();
 
-                    // Vuelve a ejecutar la función cada segundo.
                     setTimeout(tickClock, 1000);
                 })();
 
@@ -440,55 +437,30 @@ if (isset($conexion)) {
                 | - Menú completo
                 | - Solo íconos
                 | - Menú oculto
-                | Además guarda la preferencia en localStorage.
+                | Guarda la preferencia en localStorage.
                 */
                 (function() {
-                    // Modos disponibles del menú.
-                    var MODES = ['full', 'icons', 'hidden'];
-
-                    // Descripción de cada modo.
+                    var MODES  = ['full', 'icons', 'hidden'];
                     var LABELS = ['Menú completo', 'Solo íconos', 'Menú oculto'];
+                    var body   = document.body;
+                    var btn    = document.getElementById('sidebarModeBtn');
 
-                    // Obtiene el body y el botón que cambia el modo.
-                    var body = document.body;
-                    var btn = document.getElementById('sidebarModeBtn');
-
-                    // Recupera el último modo guardado.
                     var currentMode = localStorage.getItem('sidebarMode') || 'full';
-
-                    // Aplica el modo inicial.
                     applyMode(currentMode);
 
-                    // Verifica que exista el botón.
                     if (btn) {
                         btn.addEventListener('click', function() {
-                            // Escucha el clic para cambiar entre modos.
-
-                            // Obtiene la posición actual dentro del array.
-                            var idx = MODES.indexOf(currentMode);
-
-                            // Calcula el siguiente modo.
+                            var idx  = MODES.indexOf(currentMode);
                             var next = MODES[(idx + 1) % MODES.length];
-
-                            // Aplica el nuevo modo.
                             applyMode(next);
-
-                            // Guarda la preferencia en el navegador.
                             localStorage.setItem('sidebarMode', next);
                         });
                     }
 
-                    // Función que aplica el modo seleccionado.
                     function applyMode(mode) {
                         currentMode = mode;
-
-                        // Actualiza el atributo data-sidebar.
                         body.setAttribute('data-sidebar', mode);
-
-                        // Obtiene el índice del modo actual.
                         var idx = MODES.indexOf(mode);
-
-                        // Actualiza el tooltip del botón.
                         if (btn) btn.setAttribute('title', 'Modo actual: ' + LABELS[idx] + ' → click para cambiar');
                     }
                 })();
@@ -499,8 +471,8 @@ if (isset($conexion)) {
                 */
                 (function() {
                     var toggleTop = document.getElementById('sidebarToggleTop');
-                    var overlay = document.getElementById('sidebarOverlay');
-                    var body = document.body;
+                    var overlay   = document.getElementById('sidebarOverlay');
+                    var body      = document.body;
 
                     if (toggleTop) {
                         toggleTop.addEventListener('click', function(e) {
@@ -515,5 +487,40 @@ if (isset($conexion)) {
                         });
                     }
                 })();
+
+                /*
+                | Nombre del usuario logueado
+                | Recupera nombre y apellido desde localStorage o desde session.php
+                | y los muestra en la topbar y en el dropdown.
+                */
+                document.addEventListener('DOMContentLoaded', function() {
+                    //Espera a que la página termine de cargar antes de ejecutar el código.
+                    var nombreGuardado   = localStorage.getItem('nombre');
+                    var apellidoGuardado = localStorage.getItem('apellido');
+                    //Busca en el localStorage si el navegador ya tiene guardados el nombre y el apellido del usuario.
+                    if (nombreGuardado && apellidoGuardado) {
+                        mostrarUsuario(nombreGuardado, apellidoGuardado);
+                        //Si esos datos ya existen, los muestra directamente sin hacer ninguna consulta al servidor.
+                    } else {
+                        fetch('/SoftwareVet/app/session.php')
+                        //Si el navegador todavía no tiene esos datos, hace una petición a session.php, 
+                        // que devuelve la información del usuario que está en la sesión de PHP.
+                            .then(function(response) { return response.json(); })
+                            .then(function(data) {
+                                localStorage.setItem('nombre',   data.nombre);
+                                localStorage.setItem('apellido', data.apellido);
+                                mostrarUsuario(data.nombre, data.apellido);
+                                //Guarda el nombre y el apellido en el navegador para reutilizarlos en las próximas páginas.
+                            });
+                    }
+
+                    function mostrarUsuario(nombre, apellido) {
+                        //Muestra el nombre completo.
+                        var nombreCompleto = nombre + ' ' + apellido;
+                        var top  = document.getElementById('usuarioLogueadoTop');
+                        var drop = document.getElementById('usuarioLogueado');
+                        if (top)  top.textContent  = nombreCompleto;
+                        if (drop) drop.textContent = nombreCompleto;
+                    }
+                });
             </script>
-        

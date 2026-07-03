@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once '../../app/menu.php';
 
@@ -65,166 +65,9 @@ if(isset($_GET['success'])) { ?>
 <head>
 <meta charset="utf-8">
 <title>Listado de Especies</title>
-
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-
-<style>
-
-.page-title { font-weight:800; color:#1f2937; }
-.page-title i { color:#52266E; }
-.page-subtitle { color:#9ca3af; font-size:14px; }
-
-.btn-purple {
-    background:#52266E;
-    color:white;
-    border-radius:8px;
-    font-weight:600;
-}
-
-.btn-purple:hover {
-    background:#3f1d55;
-    color:white;
-}
-
-.filter-card {
-    background:white;
-    border-radius:15px;
-    padding:18px 20px;
-    box-shadow:0 4px 18px rgba(0,0,0,.06);
-    margin-top:25px;
-    margin-bottom:25px;
-}
-
-.filter-card label {
-    color:#52266E;
-    font-size:12px;
-    font-weight:800;
-    text-transform:uppercase;
-}
-
-.form-control {
-    border-radius:8px;
-    border:1px solid #d8c2e8;
-}
-
-.table-card {
-    background:white;
-    border-radius:15px;
-    box-shadow:0 4px 18px rgba(0,0,0,.06);
-    overflow:hidden;
-}
-
-thead th {
-    background:#fbf7ff !important;
-    color:#52266E !important;
-    font-size:12px;
-    text-transform:uppercase;
-    font-weight:800;
-}
-
-tbody td {
-    vertical-align:middle !important;
-}
-
-tbody tr:hover {
-    background:#fcf8ff;
-}
-
-.especie-icon {
-    width:34px;
-    height:34px;
-    border-radius:8px;
-    background:#f0e6f6;
-    color:#52266E;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    margin-right:10px;
-}
-
-.especie-name {
-    font-weight:800;
-    color:#111827;
-}
-
-.dato-muted {
-    color:#6b7280;
-}
-
-.btn-action {
-    width:31px;
-    height:31px;
-    border-radius:8px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border:none;
-    margin:0 2px;
-}
-
-.btn-edit {
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.btn-delete {
-    background:#fee2e2;
-    color:#b91c1c;
-}
-.vet-alert-success{
-    width:100%;
-    background:linear-gradient(135deg,#f6fffa,#eefcf4);
-    border:1px solid #d7f3e3;
-    border-radius:16px;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    box-shadow:0 6px 18px rgba(25,135,84,.08);
-    margin-bottom:25px;
-    animation:fadeIn .35s ease;
-}
-
-.vet-alert-icon{
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    background:#198754;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    box-shadow:0 4px 10px rgba(25,135,84,.25);
-}
-
-.vet-alert-content h5{
-    margin:0;
-    font-size:15px;
-    font-weight:800;
-    color:#166534;
-}
-
-.vet-alert-content p{
-    margin:3px 0 0;
-    color:#4b5563;
-    font-size:14px;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(-8px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-</style>
+<link href="../../css/indexspe.css" rel="stylesheet">
 </head>
 
 <body>
@@ -367,18 +210,18 @@ if ($especies->num_rows > 0) {
 
 <script>
 
-// Se ejecuta cuando se está por abrir el modal de eliminación.
+// Se ejecuta cuando se está por abrir el modal de eliminaciÃ³n.
 $('#modalEliminar').on('show.bs.modal', function (event) {
 
-    // Obtiene el botón que activó o abrió el modal.
+    // Obtiene el botón que activá o abrirá el modal.
     var boton = $(event.relatedTarget);
 
     // Coloca dentro del modal el nombre del registro que se quiere eliminar.
     // Ese nombre viene desde el atributo data-nombre del botón.
     $('#nombreEliminar').text(boton.data('nombre'));
 
-    // Arma dinámicamente el enlace de eliminación.
-    // Toma el ID desde data-id y lo envía por URL al archivo delete.php.
+    // Arma dinámicamente el enlace de eliminaciÃ³n.
+    // Toma el ID desde data-id y lo enviá por URL al archivo delete.php.
     $('#btnEliminar').attr('href', 'delete.php?id=' + boton.data('id'));
 });
 
@@ -395,7 +238,7 @@ setTimeout(() => {
     // Verifica que la alerta exista.
     if(alerta){
 
-        // Aplica una transición suave para la animación.
+        // Aplica una transiciÃ³n suave para la animación.
         alerta.style.transition = '.4s';
 
         // Hace que la alerta se vuelva transparente.
@@ -418,3 +261,4 @@ setTimeout(() => {
 </script>
 </body>
 </html>
+

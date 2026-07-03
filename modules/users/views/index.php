@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
@@ -33,251 +33,8 @@ require_once '../../app/menu.php';
 <title>Listado Usuarios</title>
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+<link href="../../css/index_user.css" rel="stylesheet">
 
-<style>
-
-.page-title { font-weight:800; color:#1f2937; margin-bottom:2px; }
-.page-title i { color:#52266E; }
-.page-subtitle { color:#9ca3af; font-size:14px; }
-
-.btn-purple {
-    background:#52266E;
-    color:white;
-    border-radius:8px;
-    font-weight:600;
-}
-
-.btn-purple:hover {
-    background:#3f1d55;
-    color:white;
-}
-
-.filter-card {
-    background:white;
-    border-radius:15px;
-    padding:18px 20px;
-    box-shadow:0 4px 18px rgba(0,0,0,.06);
-    margin-top:25px;
-    margin-bottom:25px;
-}
-
-.filter-card label {
-    color:#52266E;
-    font-size:12px;
-    font-weight:800;
-    text-transform:uppercase;
-}
-
-.filter-card .form-control {
-    border-radius:8px;
-    border:1px solid #d8c2e8;
-    font-size:14px;
-}
-
-.table-card {
-    background:white;
-    border-radius:15px;
-    box-shadow:0 4px 18px rgba(0,0,0,.06);
-    overflow:hidden;
-}
-
-.table { margin-bottom:0; }
-
-thead th {
-    background:#fbf7ff !important;
-    color:#52266E !important;
-    font-size:12px;
-    text-transform:uppercase;
-    border-bottom:2px solid #eee1f6 !important;
-    font-weight:800;
-}
-
-tbody td {
-    vertical-align:middle !important;
-    font-size:14px;
-    color:#374151;
-}
-
-tbody tr:hover { background:#fcf8ff; }
-
-.user-icon {
-    width:34px;
-    height:34px;
-    border-radius:8px;
-    background:#f0e6f6;
-    color:#52266E;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    margin-right:10px;
-}
-
-.user-name {
-    font-weight:800;
-    color:#111827;
-}
-
-.user-id {
-    color:#9ca3af;
-    font-size:12px;
-}
-
-.dato-muted { color:#6b7280; }
-
-.perfil-badge {
-    background:#eef2ff;
-    color:#4338ca;
-    padding:6px 10px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:800;
-}
-
-.badge-estado {
-    padding:5px 12px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:800;
-    display:inline-block;
-    min-width:75px;
-    text-align:center;
-}
-
-.badge-estado.activo {
-    background:#dcfce7;
-    color:#166534;
-}
-
-.badge-estado.inactivo {
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.inactivo-row {
-    opacity:.55;
-    background:#fafafa;
-}
-
-.acciones-th,
-.acciones-td {
-    width:120px !important;
-    min-width:120px !important;
-    max-width:120px !important;
-    text-align:center !important;
-    vertical-align:middle !important;
-}
-
-.acciones-wrap {
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-}
-
-.btn-action {
-    width:32px;
-    height:32px;
-    min-width:32px;
-    border-radius:8px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border:none;
-    margin:0;
-    text-decoration:none;
-    line-height:1;
-    transition:.2s;
-}
-
-.btn-action:hover {
-    transform:scale(1.08);
-    text-decoration:none;
-}
-
-.btn-edit {
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.btn-edit:hover {
-    background:#fde68a;
-    color:#78350f;
-}
-
-.btn-desactivar {
-    background:#fee2e2;
-    color:#b91c1c;
-}
-
-.btn-desactivar:hover {
-    background:#fecaca;
-    color:#991b1b;
-}
-
-.btn-activar {
-    background:#dcfce7;
-    color:#166534;
-}
-
-.btn-activar:hover {
-    background:#bbf7d0;
-    color:#14532d;
-}
-
-.vet-alert-success{
-    width:100%;
-    background:linear-gradient(135deg,#f6fffa,#eefcf4);
-    border:1px solid #d7f3e3;
-    border-radius:16px;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    box-shadow:0 6px 18px rgba(25,135,84,.08);
-    margin-bottom:25px;
-    animation:fadeIn .35s ease;
-}
-
-.vet-alert-icon{
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    background:#198754;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    box-shadow:0 4px 10px rgba(25,135,84,.25);
-}
-
-.vet-alert-content h5{
-    margin:0;
-    font-size:15px;
-    font-weight:800;
-    color:#166534;
-}
-
-.vet-alert-content p{
-    margin:3px 0 0;
-    color:#4b5563;
-    font-size:14px;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(-8px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-</style>
 </head>
 
 <body>
@@ -361,6 +118,8 @@ tbody tr:hover { background:#fcf8ff; }
 
 <thead>
 <tr>
+    <th>Nombre</th>
+    <th>Apellido</th>
     <th>Usuario</th>
     <th>Email</th>
     <th class="text-center">Perfil</th>
@@ -379,14 +138,15 @@ tbody tr:hover { background:#fcf8ff; }
 <!-- Datos del usuario -->
 <td>
     <div class="d-flex align-items-center">
-        <span class="user-icon">
+        <span class="user-icon mr-2">
             <i class="fas fa-user"></i>
         </span>
 
         <div>
             <div class="user-name">
-                <?= htmlspecialchars($user->usuario) ?>
+                <?= htmlspecialchars($user->nombre ?? '') ?>
             </div>
+
             <div class="user-id">
                 #<?= $user->id_usuario ?>
             </div>
@@ -394,15 +154,24 @@ tbody tr:hover { background:#fcf8ff; }
     </div>
 </td>
 
+<td>
+    <?= htmlspecialchars($user->apellido ?? '') ?>
+</td>
+
+<td>
+    <?= htmlspecialchars($user->usuario ?? '') ?>
+</td>
+
 <td class="dato-muted">
-    <?= htmlspecialchars($user->email) ?>
+    <?= htmlspecialchars($user->email ?? '') ?>
 </td>
 
 <td class="text-center">
     <span class="perfil-badge">
-        <?= htmlspecialchars($user->nombre_perfil) ?>
+        <?= htmlspecialchars($user->nombre_perfil ?? '') ?>
     </span>
 </td>
+
 <!-- Columna que muestra el estado actual del usuario -->
 <td class="text-center">
     <!-- Verifica si el usuario se encuentra activo -->
@@ -496,9 +265,7 @@ tbody tr:hover { background:#fcf8ff; }
                     style="color:#52266E;font-weight:800;">
                 </h5>
 
-    <div id="boxEstadoUsuario"
-    style="
-        border-radius:10px;
+    <div id="boxEstadoUsuario" style="border-radius:10px;
         padding:11px 14px;
         display:flex;
         align-items:flex-start;
@@ -508,17 +275,10 @@ tbody tr:hover { background:#fcf8ff; }
         width:100%;
 ">
 
-    <i id="iconoInfoEstado"
-    class="fas fa-info-circle"
-    style="font-size:14px;margin-top:2px;flex-shrink:0;">
+    <i id="iconoInfoEstado" class="fas fa-info-circle" style="font-size:14px;margin-top:2px;flex-shrink:0;">
     </i>
 
-    <p id="mensajeInfoEstado"
-    style="
-            font-size:12.5px;
-            line-height:1.55;
-            margin:0;
-    ">
+    <p id="mensajeInfoEstado" style="font-size:12.5px; line-height:1.55; margin:0;">
     </p>
 
 </div>
@@ -562,7 +322,7 @@ tbody tr:hover { background:#fcf8ff; }
 <script>
     // Se ejecuta cuando se abre el modal de cambio de estado.
 $('#modalEstadoUsuario').on('show.bs.modal', function (event) {
-    // Obtiene el botón que abrió el modal.
+    // Obtiene el botón que abre el modal.
     var button = $(event.relatedTarget);
     // Obtiene los datos del usuario.
     var id = button.data('id');
@@ -676,3 +436,4 @@ setTimeout(() => {
 
 </body>
 </html>
+

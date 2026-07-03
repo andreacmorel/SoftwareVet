@@ -70,7 +70,7 @@ $tratamientos = $stmtTrat->get_result();
 $stmtTrat->close();
 
 // Incluye el menú principal del sistema
-require_once '../../php/menu.php';
+require_once '../../app/menu.php';
 ?>
 
 <!DOCTYPE html>

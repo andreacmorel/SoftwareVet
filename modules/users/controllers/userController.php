@@ -34,7 +34,21 @@ class UserController{
         $email = trim($_POST['email'] ?? '');
         $clave = $_POST['clave'] ?? '';
         $confirmar_clave = $_POST['confirmar_clave'] ?? '';
+        $nombre = trim($_POST['nombre'] ?? '');
+        $apellido = trim($_POST['apellido'] ?? ''); 
         $id_perfil = (int)($_POST['id_perfil'] ?? 0);
+
+        if (empty($nombre)) {
+            $erroresCampos['nombre'] = "El nombre es obligatorio.";
+        } elseif (strlen($nombre) < 3) {
+        $erroresCampos['nombre'] = "Debe tener al menos 3 caracteres.";
+        }
+
+        if (empty($apellido)) {
+            $erroresCampos['apellido'] = "El apellido es obligatorio.";
+        } elseif (strlen($apellido) < 3) {
+            $erroresCampos['apellido'] = "Debe tener al menos 3 caracteres.";
+        }
 
         if (empty($usuario)) {
             $erroresCampos['usuario'] = "El usuario es obligatorio.";
@@ -85,7 +99,7 @@ class UserController{
 
         if (empty($erroresCampos)) {
 
-            if ($this->model->create($usuario, $email, $clave, $id_perfil)) {
+            if ($this->model->create($nombre, $apellido, $usuario, $email, $clave, $id_perfil)) {
                 header("Location: index.php?success=1");
                 exit;
             } else {
@@ -119,6 +133,8 @@ class UserController{
 
     if (!empty($_POST['btnActualizar'])) {
 
+        $nombre = trim($_POST['nombre'] ?? '');
+        $apellido = trim($_POST['apellido'] ?? '');
         $usuario = trim($_POST['usuario'] ?? '');
         $email = trim($_POST['email'] ?? '');
 
@@ -130,6 +146,18 @@ class UserController{
 
         $clave = $_POST['clave'] ?? '';
         $confirmar_clave = $_POST['confirmar_clave'] ?? '';
+
+        if (empty($nombre)) {
+            $erroresCampos['nombre'] = "El nombre es obligatorio.";
+        } elseif (strlen($nombre) < 3) {
+            $erroresCampos['nombre'] = "Debe tener al menos 3 caracteres.";
+        }
+
+        if (empty($apellido)) {
+            $erroresCampos['apellido'] = "El apellido es obligatorio.";
+        } elseif (strlen($apellido) < 3) {
+            $erroresCampos['apellido'] = "Debe tener al menos 3 caracteres.";
+        }
 
         if (empty($usuario)) {
             $erroresCampos['usuario'] = "El usuario es obligatorio.";
@@ -170,17 +198,21 @@ class UserController{
             $claveActualizar = !empty($clave) ? $clave : null;
 
             $this->model->update(
-                $id_usuario,
-                $usuario,
-                $email,
-                $id_perfil,
-                $claveActualizar
-            );
+            $id_usuario,
+            $nombre,
+            $apellido,
+            $usuario,
+            $email,
+            $id_perfil,
+            $claveActualizar
+        );
 
             header("Location: index.php?updated=1");
             exit;
         }
-
+        
+        $usuarioEditar->nombre = $nombre;
+        $usuarioEditar->apellido = $apellido;
         $usuarioEditar->usuario = $usuario;
         $usuarioEditar->email = $email;
         $usuarioEditar->id_perfil = $id_perfil;

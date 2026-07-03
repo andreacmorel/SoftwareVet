@@ -1,109 +1,19 @@
-<?php
+﻿<?php
 require_once '../../app/menu.php';
 ?>
 
-<style>
-    .titulo-pagina {
-        font-weight: 800;
-        color: #1f2937;
-    }
+<!DOCTYPE html>
+<html lang="es">
 
-    .titulo-pagina i {
-        color: #52266E;
-    }
+<head>
+    <meta charset="utf-8">
+    <title>Registro de Profesional</title>
+    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/createprof.css" rel="stylesheet">
+</head>
 
-    .subtitulo-pagina {
-        color: #9ca3af;
-        font-size: 14px;
-        margin-top: -8px;
-        margin-bottom: 25px;
-    }
-
-    .card-form {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 4px 18px rgba(0,0,0,.06);
-        overflow: hidden;
-    }
-
-    .card-header-form {
-        background: #fbf7ff;
-        border-bottom: 1px solid #eee1f6;
-        padding: 18px 22px;
-    }
-
-    .card-header-form h5 {
-        color: #52266E;
-        font-weight: 800;
-        margin: 0;
-    }
-
-    .card-body {
-        padding: 25px;
-    }
-
-    label {
-        color: #52266E;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-    }
-
-    .form-control {
-        border-radius: 8px;
-        border: 1px solid #d8c2e8;
-        font-size: 14px;
-    }
-
-    .form-control:focus {
-        border-color: #52266E;
-        box-shadow: 0 0 0 3px rgba(82,38,110,.12);
-    }
-
-    .form-control.is-invalid {
-        border-color: #dc2626 !important;
-        box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
-    }
-
-    .invalid-feedback {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .section-title {
-        color: #52266E;
-        font-weight: 800;
-        font-size: 15px;
-        margin-bottom: 18px;
-    }
-
-    .btn-purple {
-        background: #52266E;
-        color: white;
-        border-radius: 8px;
-        font-weight: 700;
-        padding: 8px 22px;
-    }
-
-    .btn-purple:hover {
-        background: #3f1d55;
-        color: white;
-    }
-
-    .btn-cancelar {
-        background: #e5e7eb;
-        color: #374151;
-        border-radius: 8px;
-        font-weight: 700;
-        padding: 8px 22px;
-    }
-
-    .btn-cancelar:hover {
-        background: #d1d5db;
-        color: #111827;
-    }
-</style>
+<body>
 
 <div class="container-fluid">
 
@@ -127,7 +37,7 @@ require_once '../../app/menu.php';
 
     <div class="card-body">
 
-    <!-- Muestra un mensaje de error general si ocurrió algún problema al guardar -->
+    <!-- Muestra un mensaje de error general si ocurria algun problema al guardar -->
     <?php if (isset($erroresCampos['general'])) { ?>
         <div class="alert alert-danger">
             <?php echo htmlspecialchars($erroresCampos['general']); ?>
@@ -137,7 +47,7 @@ require_once '../../app/menu.php';
     <!-- Formulario para registrar un profesional -->
     <form method="POST" id="frmProfesional" novalidate>
 
-        <!-- Título de la sección de datos personales -->
+
         <h5 class="section-title">
             <i class="fas fa-user-md mr-2"></i>
             Datos personales
@@ -211,7 +121,7 @@ require_once '../../app/menu.php';
                 <?php } ?>
             </div>
 
-            <!-- Campo Correo Electrónico -->
+            <!-- Campo Correo -->
             <div class="form-group col-md-6">
                 <label>Correo <span style="color:#dc2626;">*</span></label>
 
@@ -233,10 +143,8 @@ require_once '../../app/menu.php';
             </div>
         </div>
 
-        <!-- Separador visual entre secciones -->
         <hr>
 
-        <!-- Título de la sección domicilio -->
         <h5 class="section-title">
             <i class="fas fa-map-marker-alt mr-2"></i>
             Domicilio
@@ -370,7 +278,7 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
         valid = false;
     }
 
-    // Función para quitar el estado de error de un campo
+    // FunciÃ³n para quitar el estado de error de un campo
     function clearError(inputId) {
 
         // Obtiene el input
@@ -416,9 +324,9 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
         var telefono = document.getElementById('inputTelefono').value.trim();
 
         if (telefono === '') {
-            setError('inputTelefono', 'err-telefono', 'El teléfono es obligatorio.');
+            setError('inputTelefono', 'err-telefono', 'El telÃ©fono es obligatorio.');
         } else if (!/^[0-9]+$/.test(telefono)) {
-            setError('inputTelefono', 'err-telefono', 'Ingrese solo números.');
+            setError('inputTelefono', 'err-telefono', 'Ingrese solo nÃºmeros.');
         } else {
             clearError('inputTelefono');
         }
@@ -429,7 +337,7 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
         if (email === '') {
             setError('inputEmail', 'err-email', 'El correo es obligatorio.');
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            setError('inputEmail', 'err-email', 'Ingrese un correo válido.');
+            setError('inputEmail', 'err-email', 'Ingrese un correo vÃ¡lido.');
         } else {
             clearError('inputEmail');
         }
@@ -448,9 +356,9 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
         var numeroCalle = document.getElementById('inputNumeroCalle').value.trim();
 
         if (numeroCalle === '') {
-            setError('inputNumeroCalle', 'err-numero_calle', 'El número es obligatorio.');
+            setError('inputNumeroCalle', 'err-numero_calle', 'El nÃºmero es obligatorio.');
         } else if (!/^[0-9]+$/.test(numeroCalle)) {
-            setError('inputNumeroCalle', 'err-numero_calle', 'Ingrese solo números.');
+            setError('inputNumeroCalle', 'err-numero_calle', 'Ingrese solo nÃºmeros.');
         } else {
             clearError('inputNumeroCalle');
         }
@@ -466,13 +374,13 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
         }
     }
 
-    // Si existe algún error, se cancela el envío del formulario
+    // Si existe algun error, se cancela el envio del formulario
     if (!valid) {
 
-        // Evita que el formulario se envíe al servidor
+        // Evita que el formulario se envie al servidor
         e.preventDefault();
 
-        // Busca el primer campo inválido
+        // Busca el primer campo invÃ¡lido
         var firstInvalid = document.querySelector('.is-invalid');
 
         // Hace scroll hasta el primer error y le da foco
@@ -490,7 +398,7 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
 
 // LIMPIAR ERRORES AL MODIFICAR CAMPOS
 
-// Recorre todos los campos que tienen validación
+// Recorre todos los campos que tienen validacion
 ['inputNombre','inputApellido','inputTelefono','inputEmail',
 'inputCalle','inputNumeroCalle','inputBarrio'].forEach(function (id) {
 
@@ -517,3 +425,5 @@ document.getElementById('frmProfesional').addEventListener('submit', function (e
 </body>
 </body>
 </html>
+
+

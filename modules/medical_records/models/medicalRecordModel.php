@@ -72,55 +72,79 @@ class MedicalRecordModel{
     }
 
     public function create($fecha, $descripcion, $observacion, $idMascota, $tDuraciones, $tDosis, $tDescs){
-    $stmt = $this->conexion->prepare("
-        INSERT INTO historia_clinica 
-        (fecha, descripcion, observacion, id_mascota)
-        VALUES (?, ?, ?, ?)
-    ");
+    // Inicia la transacción
+    $this->conexion->begin_transaction();
 
-    $stmt->bind_param("sssi", $fecha, $descripcion, $observacion, $idMascota);
-    $stmt->execute();
+    try {
 
-    $idHC = $stmt->insert_id;
+        $stmt = $this->conexion->prepare("
+            INSERT INTO historia_clinica
+            (fecha, descripcion, observacion, id_mascota)
+            VALUES (?, ?, ?, ?)
+        ");
 
-    $stmt->close();
+        $stmt->bind_param("sssi", $fecha, $descripcion, $observacion, $idMascota);
 
-    foreach ($tDuraciones as $i => $duracion) {
-
-        $duracion = trim($duracion);
-        $dosis = trim($tDosis[$i] ?? '');
-        $desc = trim($tDescs[$i] ?? '');
-
-        if ($duracion !== '' || $dosis !== '' || $desc !== '') {
-
-            $stmtTrat = $this->conexion->prepare("
-                INSERT INTO tratamientos 
-                (duracion, dosis, descripcion)
-                VALUES (?, ?, ?)
-            ");
-
-            $stmtTrat->bind_param("sss", $duracion, $dosis, $desc);
-            $stmtTrat->execute();
-
-            $idTrat = $stmtTrat->insert_id;
-
-            $stmtTrat->close();
-
-            $stmtDet = $this->conexion->prepare("
-                INSERT INTO detalle_historia_clinica 
-                (id_historia_clinica, id_tratamiento)
-                VALUES (?, ?)
-            ");
-
-            $stmtDet->bind_param("ii", $idHC, $idTrat);
-            $stmtDet->execute();
-            $stmtDet->close();
+        if (!$stmt->execute()) {
+            throw new Exception("Error al registrar la historia clínica.");
+            //Si algún INSERT falla, se lanza una excepción y se deja de ejecutar el resto del código.
         }
-    }
 
-    return true;
-    }
+        $idHC = $stmt->insert_id;
+        $stmt->close();
 
+        foreach ($tDuraciones as $i => $duracion) {
+
+            $duracion = trim($duracion);
+            $dosis = trim($tDosis[$i] ?? '');
+            $desc = trim($tDescs[$i] ?? '');
+
+            if ($duracion !== '' || $dosis !== '' || $desc !== '') {
+
+                $stmtTrat = $this->conexion->prepare("
+                    INSERT INTO tratamientos
+                    (duracion, dosis, descripcion)
+                    VALUES (?, ?, ?)
+                ");
+
+                $stmtTrat->bind_param("sss", $duracion, $dosis, $desc);
+
+                if (!$stmtTrat->execute()) {
+                    throw new Exception("Error al registrar el tratamiento.");
+                }
+
+                $idTrat = $stmtTrat->insert_id;
+                $stmtTrat->close();
+
+                $stmtDet = $this->conexion->prepare("
+                    INSERT INTO detalle_historia_clinica
+                    (id_historia_clinica, id_tratamiento)
+                    VALUES (?, ?)
+                ");
+
+                $stmtDet->bind_param("ii", $idHC, $idTrat);
+
+                if (!$stmtDet->execute()) {
+                    throw new Exception("Error al registrar el detalle.");
+                }
+
+                $stmtDet->close();
+            }
+        }
+
+        // Confirma todos los cambios
+        $this->conexion->commit();
+
+        return true;
+
+    } catch (Exception $e) {
+
+        // Si algo falló, deshace todos los INSERT realizados desde que comenzó la transacción.
+        $this->conexion->rollback();
+
+        return false;
+    }
+}
     public function getPets(){
 
     $rMas = $this->conexion->query("
