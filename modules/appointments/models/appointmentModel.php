@@ -52,33 +52,165 @@ class AppointmentModel{
     return $existe;
     }
 
-    public function update($id_turno, $fecha, $hora, $motivo, $id_profesional, $id_mascota){
-        $stmt = $this->conexion->prepare("
-            UPDATE turnos 
-            SET fecha = ?,
-                hora = ?,
-                motivo = ?,
-                id_profesional = ?,
-                id_mascota = ?
-            WHERE id_turno = ?
-        ");
+    public function update(
+    $id_turno,
+    $fecha,
+    $hora,
+    $motivo,
+    $id_profesional,
+    $id_mascota,
+    $id_usuario
+){
 
-        $stmt->bind_param(
-            "sssiii",
-            $fecha,
-            $hora,
-            $motivo,
-            $id_profesional,
-            $id_mascota,
-            $id_turno
-        );
+    // Obtener cómo estaba el turno ANTES
+    $sqlAntes = "
+        SELECT 
+            t.fecha,
+            t.hora,
+            t.motivo,
+            t.estado,
+            CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional,
+            m.nombre_mascota AS mascota
+        FROM turnos t
+        INNER JOIN profesional p 
+            ON t.id_profesional = p.id_profesional
+        INNER JOIN persona per 
+            ON p.id_persona = per.id_persona
+        INNER JOIN mascota m 
+            ON t.id_mascota = m.id_mascota
+        WHERE t.id_turno = $id_turno
+    ";
 
-        $resultado = $stmt->execute();
+    $resultadoAntes = mysqli_query($this->conexion, $sqlAntes);
+    $datosAntes = mysqli_fetch_assoc($resultadoAntes);
 
-        $stmt->close();
+    $textoAntes =
+        "Fecha: " . $datosAntes['fecha'] .
+        " | Hora: " . $datosAntes['hora'] .
+        " | Motivo: " . $datosAntes['motivo'] .
+        " | Profesional: " . $datosAntes['profesional'] .
+        " | Mascota: " . $datosAntes['mascota'] .
+        " | Estado: " . $datosAntes['estado'];
 
-        return $resultado;
+
+    // Modificar el turno
+    $stmt = $this->conexion->prepare("
+        UPDATE turnos 
+        SET fecha = ?,
+            hora = ?,
+            motivo = ?,
+            id_profesional = ?,
+            id_mascota = ?
+        WHERE id_turno = ?
+    ");
+
+    $stmt->bind_param(
+        "sssiii",
+        $fecha,
+        $hora,
+        $motivo,
+        $id_profesional,
+        $id_mascota,
+        $id_turno
+    );
+
+    $resultado = $stmt->execute();
+
+    $stmt->close();
+
+
+    // Si se modifico correctamente
+    if ($resultado) {
+
+        // Obtener cómo quedó DESPUÉS
+        $sqlDespues = "
+            SELECT 
+                t.fecha,
+                t.hora,
+                t.motivo,
+                t.estado,
+                CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional,
+                m.nombre_mascota AS mascota
+            FROM turnos t
+            INNER JOIN profesional p 
+                ON t.id_profesional = p.id_profesional
+            INNER JOIN persona per 
+                ON p.id_persona = per.id_persona
+            INNER JOIN mascota m 
+                ON t.id_mascota = m.id_mascota
+            WHERE t.id_turno = $id_turno
+        ";
+
+        $resultadoDespues = mysqli_query($this->conexion, $sqlDespues);
+        $datosDespues = mysqli_fetch_assoc($resultadoDespues);
+
+        $textoDespues =
+            "Fecha: " . $datosDespues['fecha'] .
+            " | Hora: " . $datosDespues['hora'] .
+            " | Motivo: " . $datosDespues['motivo'] .
+            " | Profesional: " . $datosDespues['profesional'] .
+            " | Mascota: " . $datosDespues['mascota'] .
+            " | Estado: " . $datosDespues['estado'];
+
+        $antesSeguro = $this->conexion->real_escape_string($textoAntes);
+        $despuesSeguro = $this->conexion->real_escape_string($textoDespues);
+
+
+        // Guarda la auditoría
+        $sqlAuditoria = "
+            INSERT INTO auditoria
+            (
+                id_usuario,
+                modulo,
+                accion,
+                id_registro,
+                datos_anteriores,
+                datos_nuevos
+            )
+            VALUES
+            (
+                $id_usuario,
+                'Turnos',
+                'Modificación',
+                $id_turno,
+                '$antesSeguro',
+                '$despuesSeguro'
+            )
+        ";
+
+        mysqli_query($this->conexion, $sqlAuditoria);
     }
+
+    return $resultado;
+}
+
+   // public function update($id_turno, $fecha, $hora, $motivo, $id_profesional, $id_mascota){
+   //     $stmt = $this->conexion->prepare("
+   //         UPDATE turnos 
+   //         SET fecha = ?,
+   //             hora = ?,
+   //             motivo = ?,
+   //             id_profesional = ?,
+   //             id_mascota = ?
+   //         WHERE id_turno = ?
+   //     ");
+
+   //     $stmt->bind_param(
+   //         "sssiii",
+   //         $fecha,
+   //         $hora,
+   //         $motivo,
+   //         $id_profesional,
+   //         $id_mascota,
+   //         $id_turno
+   //     );
+
+   //     $resultado = $stmt->execute();
+
+    //    $stmt->close();
+
+    //    return $resultado;
+   // }
 
     public function getProfessionals(){
 
@@ -267,7 +399,38 @@ class AppointmentModel{
         return $resultado;
     }
     
-    public function updateStatus($id_turno, $estado){
+   // public function updateStatus($id_turno, $estado){
+   // $stmt = $this->conexion->prepare("
+   //     UPDATE turnos 
+   //     SET estado = ? 
+   //     WHERE id_turno = ? 
+   //     AND estado NOT IN ('completado', 'cancelado')
+   // ");
+
+    //$stmt->bind_param("si", $estado, $id_turno);
+    //$resultado = $stmt->execute();
+
+    //$stmt->close();
+
+    //return $resultado;
+    //}
+
+    public function updateStatus($id_turno, $estado, $id_usuario){
+
+    // Obtiene el estado ANTES
+    $sqlAntes = "
+        SELECT estado
+        FROM turnos
+        WHERE id_turno = $id_turno
+    ";
+
+    $resultadoAntes = mysqli_query($this->conexion, $sqlAntes);
+    $datosAntes = mysqli_fetch_assoc($resultadoAntes);
+
+    $estadoAntes = $datosAntes['estado'];
+
+
+    // Modifica el estado
     $stmt = $this->conexion->prepare("
         UPDATE turnos 
         SET estado = ? 
@@ -276,9 +439,55 @@ class AppointmentModel{
     ");
 
     $stmt->bind_param("si", $estado, $id_turno);
+
     $resultado = $stmt->execute();
 
     $stmt->close();
+
+
+    // Si se modificó correctamente
+    if ($resultado) {
+
+    $nombresEstados = [
+    'pendiente' => 'Pendiente',
+    'confirmado' => 'Confirmado',
+    'en_atencion' => 'En atención',
+    'completado' => 'Completado',
+    'cancelado' => 'Cancelado'
+    ];
+
+    $estadoAntesMostrar = ucfirst(str_replace('_', ' ', $estadoAntes));
+    $estadoDespuesMostrar = ucfirst(str_replace('_', ' ', $estado));
+
+    $textoAntes = "Estado: " . $estadoAntesMostrar;
+    $textoDespues = "Estado: " . $estadoDespuesMostrar;
+
+    $antesSeguro = $this->conexion->real_escape_string($textoAntes);
+    $despuesSeguro = $this->conexion->real_escape_string($textoDespues);
+
+        $sqlAuditoria = "
+            INSERT INTO auditoria
+            (
+                id_usuario,
+                modulo,
+                accion,
+                id_registro,
+                datos_anteriores,
+                datos_nuevos
+            )
+            VALUES
+            (
+                $id_usuario,
+                'Turnos',
+                'Cambio de estado',
+                $id_turno,
+                '$antesSeguro',
+                '$despuesSeguro'
+            )
+        ";
+
+        mysqli_query($this->conexion, $sqlAuditoria);
+    }
 
     return $resultado;
     }

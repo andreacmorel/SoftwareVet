@@ -98,7 +98,9 @@ $menuAdmin = [
     ['path' => '/modules/users/index.php',          'icon' => 'fa-users',       'label' => 'Usuarios'],
     ['path' => '/modules/profiles/index.php',       'icon' => 'fa-user-shield', 'label' => 'Perfiles'],
     ['path' => '/modules/system_modules/index.php', 'icon' => 'fa-layer-group', 'label' => 'Módulos'],
+    ['path' => '/modules/audit/index.php',          'icon' => 'fa-clipboard-list', 'label' => 'Auditoría'],
 ];
+
 ?>
 
 <!DOCTYPE html>

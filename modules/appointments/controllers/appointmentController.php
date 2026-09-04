@@ -184,7 +184,8 @@ class AppointmentController{
                 $hora,
                 $motivo,
                 $id_profesional,
-                $id_mascota
+                $id_mascota,
+                $_SESSION['id_usuario']
             )) {
                 header("Location: index.php?updated=1");
                 exit;
@@ -208,7 +209,7 @@ class AppointmentController{
     $estado = $_POST['estado'] ?? '';
 
     if ($id_turno > 0 && in_array($estado, $estados_validos)) {
-        $this->model->updateStatus($id_turno, $estado);
+        $this->model->updateStatus($id_turno, $estado, $_SESSION['id_usuario']);
     }
 
     header("Location: index.php?status=1");

@@ -205,8 +205,9 @@ class PetController{
 
         if (empty($erroresCampos)) {
             if ($this->model->update(
-                $id,$nombre,$fecha_nacimiento,$sexo,
-                $peso,$color,$edad,$unidad_edad,$id_especie,$id_cliente
+                $id,$nombre,$fecha_nacimiento,$sexo,$peso,$color,$edad,
+                $unidad_edad,$id_especie,$id_cliente,
+                $_SESSION['id_usuario']
 
             )) {
                 header("Location: index.php?updated=1");

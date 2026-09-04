@@ -171,8 +171,39 @@ class PetModel{
     return $resExiste && mysqli_num_rows($resExiste) > 0;
     }
 
-    public function update($id, $nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente){
+    public function update(
+    $id,
+    $nombre,
+    $fecha_nacimiento,
+    $sexo,
+    $peso,
+    $color,
+    $edad,
+    $unidad_edad,
+    $id_especie,
+    $id_cliente,
+    $id_usuario
+){
 
+    //Obtener cómo estaba la mascota ANTES de modificarla
+    $sqlAntes = "SELECT * FROM mascota WHERE id_mascota = $id";
+    $resultadoAntes = mysqli_query($this->conexion, $sqlAntes);
+    $datosAntes = mysqli_fetch_assoc($resultadoAntes);
+
+    // Guardar los datos anteriores como texto
+    $textoAntes =
+        "Nombre: " . $datosAntes['nombre_mascota'] .
+        " | Fecha nacimiento: " . $datosAntes['fecha_nacimiento'] .
+        " | Sexo: " . $datosAntes['sexo'] .
+        " | Peso: " . $datosAntes['peso'] .
+        " | Color: " . $datosAntes['color'] .
+        " | Edad: " . $datosAntes['edad'] .
+        " | Unidad edad: " . $datosAntes['unidad_edad'] .
+        " | Especie: " . $datosAntes['id_especie'] .
+        " | Cliente: " . $datosAntes['id_cliente'];
+
+
+    // Preparar los datos para modificar
     $nombreSeguro = $this->conexion->real_escape_string($nombre);
     $sexoSeguro = $this->conexion->real_escape_string($sexo);
     $colorSeguro = $this->conexion->real_escape_string($color);
@@ -190,8 +221,14 @@ class PetModel{
         ? "NULL"
         : "'$unidadSeguro'";
 
-    $sqlUpdate = "UPDATE mascota SET nombre_mascota = '$nombreSeguro',
-            fecha_nacimiento = $fechaSQL,sexo = '$sexoSeguro',peso = '$peso',color = '$colorSeguro',
+
+    // Hacer el UPDATE normal
+    $sqlUpdate = "UPDATE mascota SET 
+            nombre_mascota = '$nombreSeguro',
+            fecha_nacimiento = $fechaSQL,
+            sexo = '$sexoSeguro',
+            peso = '$peso',
+            color = '$colorSeguro',
             edad = $edadSQL,
             unidad_edad = $unidadSQL,
             id_especie = $id_especie,
@@ -199,8 +236,75 @@ class PetModel{
         WHERE id_mascota = $id
     ";
 
-    return mysqli_query($this->conexion, $sqlUpdate);
+    $resultadoUpdate = mysqli_query($this->conexion, $sqlUpdate);
+
+
+    // Si la modificación salió bien
+    if ($resultadoUpdate) {
+
+        // Obtener cómo quedó DESPUÉS
+        $sqlDespues = "SELECT * FROM mascota WHERE id_mascota = $id";
+        $resultadoDespues = mysqli_query($this->conexion, $sqlDespues);
+        $datosDespues = mysqli_fetch_assoc($resultadoDespues);
+
+        // Guardar los datos nuevos como texto
+        $textoDespues =
+            "Nombre: " . $datosDespues['nombre_mascota'] .
+            " | Fecha nacimiento: " . $datosDespues['fecha_nacimiento'] .
+            " | Sexo: " . $datosDespues['sexo'] .
+            " | Peso: " . $datosDespues['peso'] .
+            " | Color: " . $datosDespues['color'] .
+            " | Edad: " . $datosDespues['edad'] .
+            " | Unidad edad: " . $datosDespues['unidad_edad'] .
+            " | Especie: " . $datosDespues['id_especie'] .
+            " | Cliente: " . $datosDespues['id_cliente'];
+
+        // Preparar los textos para guardarlos
+        $antesSeguro = $this->conexion->real_escape_string($textoAntes);
+        $despuesSeguro = $this->conexion->real_escape_string($textoDespues);
+
+        // Registrar el cambio en auditoria
+        $sqlAuditoria = "INSERT INTO auditoria
+            (id_usuario, modulo, accion, id_registro, datos_anteriores, datos_nuevos)
+            VALUES
+            ($id_usuario, 'Mascotas', 'Modificación', $id, '$antesSeguro', '$despuesSeguro')
+        ";
+
+        mysqli_query($this->conexion, $sqlAuditoria);
+    }
+
+    return $resultadoUpdate;
 }
+//    public function update($id, $nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente){
+
+//    $nombreSeguro = $this->conexion->real_escape_string($nombre);
+//    $sexoSeguro = $this->conexion->real_escape_string($sexo);
+//    $colorSeguro = $this->conexion->real_escape_string($color);
+//    $unidadSeguro = $this->conexion->real_escape_string($unidad_edad);
+
+//    $fechaSQL = empty($fecha_nacimiento)
+//        ? "NULL"
+//        : "'" . $this->conexion->real_escape_string($fecha_nacimiento) . "'";
+
+//    $edadSQL = empty($edad)
+//        ? "NULL"
+//        : "'" . $this->conexion->real_escape_string($edad) . "'";
+
+//    $unidadSQL = empty($unidad_edad)
+//        ? "NULL"
+//        : "'$unidadSeguro'";
+
+//    $sqlUpdate = "UPDATE mascota SET nombre_mascota = '$nombreSeguro',
+//            fecha_nacimiento = $fechaSQL,sexo = '$sexoSeguro',peso = '$peso',color = '$colorSeguro',
+//            edad = $edadSQL,
+//            unidad_edad = $unidadSQL,
+//            id_especie = $id_especie,
+//            id_cliente = $id_cliente
+//        WHERE id_mascota = $id
+//    ";
+
+//    return mysqli_query($this->conexion, $sqlUpdate);
+//}
 
     public function getPetRecord($id){
     $sql = "SELECT 
