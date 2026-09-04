@@ -171,26 +171,19 @@ class PetModel{
     return $resExiste && mysqli_num_rows($resExiste) > 0;
     }
 
-    public function update(
-    $id,
-    $nombre,
-    $fecha_nacimiento,
-    $sexo,
-    $peso,
-    $color,
-    $edad,
-    $unidad_edad,
-    $id_especie,
-    $id_cliente,
-    $id_usuario
-){
+    public function update($id,$nombre,$fecha_nacimiento,$sexo,$peso,$color,$edad,$unidad_edad,
+    $id_especie,$id_cliente,$id_usuario
+    ){
 
-    //Obtener cómo estaba la mascota ANTES de modificarla
+    //Obtenemos como estaba la mascota ANTES de modificarla
     $sqlAntes = "SELECT * FROM mascota WHERE id_mascota = $id";
+
     $resultadoAntes = mysqli_query($this->conexion, $sqlAntes);
+    // aca se ejecuta la consulta anterior y el resultado queda guardado en $resultadoAntes
+
     $datosAntes = mysqli_fetch_assoc($resultadoAntes);
 
-    // Guardar los datos anteriores como texto
+    // Guarda los datos anteriores como texto
     $textoAntes =
         "Nombre: " . $datosAntes['nombre_mascota'] .
         " | Fecha nacimiento: " . $datosAntes['fecha_nacimiento'] .
@@ -203,7 +196,7 @@ class PetModel{
         " | Cliente: " . $datosAntes['id_cliente'];
 
 
-    // Preparar los datos para modificar
+    // Prepara los datos para modificar
     $nombreSeguro = $this->conexion->real_escape_string($nombre);
     $sexoSeguro = $this->conexion->real_escape_string($sexo);
     $colorSeguro = $this->conexion->real_escape_string($color);

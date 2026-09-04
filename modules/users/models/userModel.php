@@ -80,11 +80,15 @@ class UserModel{
     return $resultado && $resultado->num_rows > 0;
     }
 
-    public function update($id_usuario, $usuario,  $nombre, $apellido, $email, $id_perfil, $clave = null){
+    public function update($id_usuario,$nombre,$apellido,$usuario,
+    $email,
+    $id_perfil,
+    $clave = null
+    ){
 
-    $usuarioSeguro = $this->conexion->real_escape_string($usuario);
     $nombreSeguro = $this->conexion->real_escape_string($nombre);
     $apellidoSeguro = $this->conexion->real_escape_string($apellido);
+    $usuarioSeguro = $this->conexion->real_escape_string($usuario);
     $emailSeguro = $this->conexion->real_escape_string($email);
 
     if (!empty($clave)) {
@@ -93,9 +97,9 @@ class UserModel{
 
         return $this->conexion->query("
             UPDATE usuario
-            SET usuario = '$usuarioSeguro',
-                nombre = '$nombreSeguro',
+            SET nombre = '$nombreSeguro',
                 apellido = '$apellidoSeguro',
+                usuario = '$usuarioSeguro',
                 email = '$emailSeguro',
                 clave = '$clave_hash',
                 id_perfil = $id_perfil
@@ -106,9 +110,9 @@ class UserModel{
 
         return $this->conexion->query("
             UPDATE usuario
-            SET usuario = '$usuarioSeguro',
-                nombre = '$nombreSeguro',
+            SET nombre = '$nombreSeguro',
                 apellido = '$apellidoSeguro',
+                usuario = '$usuarioSeguro',
                 email = '$emailSeguro',
                 id_perfil = $id_perfil
             WHERE id_usuario = $id_usuario
@@ -142,10 +146,13 @@ public function existsEmail($email){
     ");
 
     return $resultado->num_rows > 0;
-}
+    }
 
-public function create($usuario,$nombre, $apellido, $email, $clave, $id_perfil){
+    public function create($nombre,$apellido,$usuario,$email,$clave,$id_perfil
+    ){
 
+    $nombreSeguro = $this->conexion->real_escape_string($nombre);
+    $apellidoSeguro = $this->conexion->real_escape_string($apellido);
     $usuarioSeguro = $this->conexion->real_escape_string($usuario);
     $emailSeguro = $this->conexion->real_escape_string($email);
 
@@ -153,9 +160,17 @@ public function create($usuario,$nombre, $apellido, $email, $clave, $id_perfil){
 
     return $this->conexion->query("
         INSERT INTO usuario
-        (usuario, clave,nombre, apellido, email, estado, id_perfil)
+        (nombre, apellido, usuario, email, clave, estado, id_perfil)
         VALUES
-        ('$usuarioSeguro', '$clave_hash','$nombreSeguro', '$apellidoSeguro', '$emailSeguro', 1, $id_perfil)
+        (
+            '$nombreSeguro',
+            '$apellidoSeguro',
+            '$usuarioSeguro',
+            '$emailSeguro',
+            '$clave_hash',
+            1,
+            $id_perfil
+        )
     ");
     }
 

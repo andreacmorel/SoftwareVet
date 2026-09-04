@@ -68,13 +68,8 @@ class UserController{
 
         if (empty($clave)) {
             $erroresCampos['clave'] = "La contraseña es obligatoria.";
-        } elseif (strlen($clave) < 8) {
-            $erroresCampos['clave'] = "Debe tener al menos 8 caracteres.";
-        } elseif (
-            !preg_match('/[A-Za-z]/', $clave) ||
-            !preg_match('/[0-9]/', $clave)
-        ) {
-            $erroresCampos['clave'] = "Debe contener al menos una letra y un número.";
+        } elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d).{8,}$/', $clave)) {
+            $erroresCampos['clave'] = "Debe contener al menos 8 caracteres, una mayuscula y un número.";
         }
 
         if (empty($confirmar_clave)) {
@@ -165,6 +160,8 @@ class UserController{
             $erroresCampos['usuario'] = "Debe tener al menos 3 caracteres.";
         } elseif (strlen($usuario) > 30) {
             $erroresCampos['usuario'] = "No puede superar los 30 caracteres.";
+        } elseif (!preg_match('/^[a-zA-Z0-9._]+$/', $usuario)) {
+            $erroresCampos['usuario'] = "Solo se permiten letras, números, punto y guion bajo.";
         }
 
         if (empty($email)) {
@@ -179,14 +176,14 @@ class UserController{
 
         if (!empty($clave) || !empty($confirmar_clave)) {
 
-            if (strlen($clave) < 6) {
-                $erroresCampos['clave'] = "La contraseña debe tener al menos 6 caracteres.";
-            }
-
-            if ($clave !== $confirmar_clave) {
-                $erroresCampos['confirmar_clave'] = "Las contraseñas no coinciden.";
-            }
+        if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d).{8,}$/', $clave)) {
+            $erroresCampos['clave'] = "Debe contener al menos 8 caracteres, una letra y un número.";
         }
+
+        if ($clave !== $confirmar_clave) {
+            $erroresCampos['confirmar_clave'] = "Las contraseñas no coinciden.";
+        }
+    }
 
         if (empty($erroresCampos)) {
             if ($this->model->existsForEdit($usuario, $email, $id_usuario)) {
