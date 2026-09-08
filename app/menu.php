@@ -57,32 +57,6 @@ $nombrePerfil = $_SESSION['nombre_perfil'] ?? 'Sin perfil';
 */
 $nombrePerfilSeguro = htmlspecialchars($nombrePerfil);
 
-
-/*
-| Contador de turnos del día
-| Obtiene la cantidad de turnos registrados para la fecha actual.
-| Se utiliza para mostrar la notificación en el menú lateral.
-| Usa prepared statement como buena práctica.
-*/
-$turnosHoyCount = 0;
-
-if (isset($conexion)) {
-
-    $stmtCount = $conexion->prepare("
-        SELECT COUNT(*) AS total
-        FROM turnos
-        WHERE fecha = CURDATE()
-    ");
-
-    if ($stmtCount && $stmtCount->execute()) {
-        $resCount = $stmtCount->get_result();
-        if ($rowTurnos = $resCount->fetch_object()) {
-            $turnosHoyCount = (int) $rowTurnos->total;
-        }
-        $stmtCount->close();
-    }
-}
-
 /*
 | Definición centralizada de subitems de menús desplegables.
 | Centraliza los ítems para evitar duplicación entre collapse y flyout.
@@ -193,10 +167,6 @@ $menuAdmin = [
 
                 <i class="fas fa-fw fa-calendar-check nav-icon"></i>
                 <span>Turnos</span>
-
-                <?php if ($turnosHoyCount > 0): ?>
-                    <span class="menu-badge"><?= $turnosHoyCount ?></span>
-                <?php endif; ?>
             </a>
 
             <div id="collapseTurnos" class="collapse <?= $turnosOpen ?>" data-parent="#accordionSidebar">

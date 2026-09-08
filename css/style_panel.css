@@ -1,0 +1,313 @@
+
+    :root {
+        --vet-primary: #52266E;
+        --vet-primary-soft: #F3EDF7;
+        --vet-dark: #2f2f38;
+        --vet-muted: #858796;
+    }
+
+
+    /* ====================================================== */
+    /* BIENVENIDA */
+    /* ====================================================== */
+
+    .dashboard-title {
+        font-weight: 800;
+        color: var(--vet-dark);
+    }
+
+    .welcome-card {
+        background: linear-gradient(135deg, #52266E, #7d3fa3);
+        color: white;
+        border-radius: 18px;
+        border: none;
+        overflow: hidden;
+    }
+
+    .welcome-card i {
+        font-size: 70px;
+        opacity: .18;
+    }
+
+
+    /* ====================================================== */
+    /* TARJETAS COLORIDAS */
+    /* ====================================================== */
+
+    .stat-card {
+        border: none;
+        border-radius: 18px;
+        color: white;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 8px 22px rgba(0,0,0,.10);
+        transition: .2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0,0,0,.14);
+    }
+
+    .stat-card .card-body {
+        min-height: 145px;
+        position: relative;
+        z-index: 2;
+        padding: 22px;
+    }
+
+
+    /* MASCOTAS */
+    .stat-purple {
+        background: linear-gradient(135deg, #7c3aed, #9b5cf6);
+    }
+
+
+    /* CLIENTES */
+    .stat-green {
+        background: linear-gradient(135deg, #16b89c, #24c6b0);
+    }
+
+
+    /* PROFESIONALES */
+    .stat-orange {
+        background: linear-gradient(135deg, #f29a2e, #f5ad3d);
+    }
+
+
+    /* TURNOS */
+    .stat-pink {
+        background: linear-gradient(135deg, #ec3f72, #f05a84);
+    }
+
+
+    .stat-icon-box {
+        width: 58px;
+        height: 58px;
+        border-radius: 17px;
+
+        background: rgba(255,255,255,.25);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 26px;
+
+        flex-shrink: 0;
+    }
+
+
+    .stat-label {
+        font-size: 14px;
+        font-weight: 700;
+        opacity: .95;
+    }
+
+
+    .stat-number {
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-top: 4px;
+    }
+
+
+    .stat-detail {
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 14px;
+        opacity: .95;
+    }
+
+
+    .stat-decoration {
+        position: absolute;
+
+        right: 18px;
+        bottom: 5px;
+
+        font-size: 70px;
+
+        opacity: .13;
+    }
+
+
+    /* ====================================================== */
+    /* RESTO DEL DASHBOARD */
+    /* ====================================================== */
+
+    .card-pro {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 8px 22px rgba(0,0,0,.07);
+        overflow: hidden;
+    }
+
+
+    .card-pro .card-header {
+        background: #fff;
+        border-bottom: 1px solid #eee;
+        color: var(--vet-primary);
+        font-weight: 800;
+    }
+
+
+    thead th {
+        background-color: var(--vet-primary) !important;
+        color: white !important;
+        border: none !important;
+        font-size: 13px;
+    }
+
+
+    .table td {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+
+    .pet-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+
+        background: var(--vet-primary-soft);
+        color: var(--vet-primary);
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-right: 8px;
+    }
+
+
+    .badge-soft-success {
+        background: #e6f8f1;
+        color: #1cc88a;
+        padding: 7px 11px;
+        border-radius: 20px;
+        font-weight: 700;
+    }
+
+
+    .badge-soft-warning {
+        background: #fff5d6;
+        color: #b8860b;
+        padding: 7px 11px;
+        border-radius: 20px;
+        font-weight: 700;
+    }
+
+
+    .badge-soft-info {
+        background: #e8f7fb;
+        color: #36b9cc;
+        padding: 7px 11px;
+        border-radius: 20px;
+        font-weight: 700;
+    }
+
+
+    .badge-soft-danger {
+        background: #fde8e8;
+        color: #e74a3b;
+        padding: 7px 11px;
+        border-radius: 20px;
+        font-weight: 700;
+    }
+
+
+    .quick-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background: var(--vet-primary-soft);
+        color: var(--vet-primary);
+
+        border-radius: 14px;
+
+        padding: 13px 15px;
+        margin-bottom: 10px;
+
+        text-decoration: none;
+        font-weight: 800;
+
+        transition: .2s;
+    }
+
+
+    .quick-link:hover {
+        background: var(--vet-primary);
+        color: #fff;
+        text-decoration: none;
+    }
+
+
+    .mini-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 11px 0;
+
+        border-bottom: 1px solid #eee;
+    }
+
+
+    .mini-item:last-child {
+        border-bottom: none;
+    }
+
+
+    .progress {
+        height: 9px;
+        border-radius: 20px;
+    }
+
+
+    .progress-bar {
+        background-color: var(--vet-primary);
+    }
+
+
+    .vet-alert-danger {
+        display:flex;
+        align-items:flex-start;
+        gap:12px;
+
+        background:#fdecec;
+        border:1px solid #f5c6cb;
+
+        color:#c0392b;
+
+        border-radius:12px;
+
+        padding:15px 18px;
+        margin-bottom:20px;
+
+        animation:fade .3s ease;
+    }
+
+
+    .vet-alert-icon {
+        font-size:22px;
+        margin-top:2px;
+    }
+
+
+    .vet-alert-content h5 {
+        margin:0;
+        font-size:15px;
+        font-weight:800;
+    }
+
+
+    .vet-alert-content p {
+        margin:4px 0 0;
+        font-size:14px;
+    }
+
+
