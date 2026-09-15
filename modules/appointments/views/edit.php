@@ -13,16 +13,37 @@ require_once '../../app/menu.php';
 </head>
 
 <body>
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/appointments/index.php">
+                Turnos
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Editar turno
+        </li>
+
+    </ol>
+</div>
 
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
-        <i class="fas fa-calendar-edit mr-2"></i>
-        Modificar Turno
+        <i class="fas fa-calendar-check"></i></i>
+        Editar Turno
     </h1>
 
     <div class="subtitulo-pagina">
-        Actualizá los datos del turno seleccionado.
+        Modifica los datos del turno seleccionado.
     </div>
 
 <div class="card card-form mb-4">
@@ -30,7 +51,7 @@ require_once '../../app/menu.php';
     <div class="card-header-form">
         <h5>
             <i class="fas fa-edit mr-2"></i>
-            Editar Turno
+            Datos del Turno
         </h5>
     </div>
 
@@ -43,12 +64,6 @@ require_once '../../app/menu.php';
     <?php } ?>
 
 <form method="POST" novalidate>
-
-    <h5 class="section-title">
-        <i class="fas fa-calendar-check mr-2"></i>
-        Datos del turno
-    </h5>
-
 <div class="row">
 
     <div class="form-group col-md-6">

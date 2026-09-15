@@ -76,10 +76,6 @@
         .btn-guardar { background: #52266E; color: white; border-radius: 8px; font-weight: 700; padding: 10px 24px; border: none; }
         .btn-guardar:hover { background: #3f1d55; color: white; }
 
-        /* Botón secundario de cancelación */
-        .btn-cancelar { border-radius: 8px; font-weight: 600; padding: 10px 20px; color: #6b7280; border: 1px solid #e5e7eb; background: white; }
-        .btn-cancelar:hover { background: #f9fafb; color: #374151; }
-
         /* Barra inferior con los botones de acción, separada por línea */
         .actions-bar { display: flex; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #f3f4f6; }
 
@@ -95,3 +91,103 @@
             margin-top: 12px;
             margin-bottom: 15px;
         }
+
+.modulos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.modulo-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 16px;
+
+    background: #fff;
+
+    border: 1.5px solid #e8e2ec;
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+
+    margin: 0;
+}
+
+.modulo-item:hover {
+    border-color: #cdb7dc;
+    box-shadow: 0 5px 14px rgba(82, 38, 110, .08);
+    transform: translateY(-1px);
+}
+
+.modulo-item input {
+    display: none;
+}
+
+.modulo-item.checked {
+    background: #f8f3fb;
+    border-color: #52266E;
+}
+
+.modulo-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 11px;
+
+    background: #f1e8f7;
+
+    color: #52266E;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.modulo-content {
+    flex: 1;
+}
+
+.modulo-nombre {
+    font-weight: 800;
+    color: #374151;
+    font-size: 14px;
+}
+
+.modulo-estado {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+.modulo-check {
+    color: #52266E;
+    font-size: 18px;
+    opacity: 0;
+}
+
+.modulo-item.checked .modulo-check {
+    opacity: 1;
+}
+
+.perfil-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 9px 14px;
+
+    background: #f1e8f7;
+    color: #52266E;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 800;
+}

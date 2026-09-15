@@ -229,6 +229,7 @@ while (
     <link href="/SoftwareVet/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/style_panel.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </head>
 
@@ -494,22 +495,34 @@ while (
 
     <!-- TURNOS POR ESTADO -->
 
-    <div class="col-lg-6 mb-4">
+<div class="col-lg-6 mb-4">
 
-        <div class="card card-pro h-100">
+    <div class="card card-pro h-100">
 
-            <div class="card-header">
+        <div class="card-header">
 
-                <i class="fas fa-chart-pie mr-2"></i>
-                Turnos por estado
+            <div class="d-flex justify-content-between align-items-center w-100">
 
-            </div>
+                <!-- Título -->
+                <div>
+                    <i class="fas fa-chart-pie mr-2"></i>
+                    Turnos por estado
+                </div>
 
-            <div class="card-body">
+                <!-- Botones -->
+                <div class="d-flex align-items-center">
 
-                <div style="height: 320px;">
+                    <button type="button" class="btn btn-sm btn-outline-danger mr-2"
+                        title="Exportar PDF"
+                        onclick="exportarTurnosEstadoPDF()">
+                        <i class="fas fa-file-pdf"></i>
+                    </button>
 
-                    <canvas id="graficoTurnosEstado"></canvas>
+                    <button type="button" class="btn btn-sm btn-outline-success"
+                        title="Exportar Excel"
+                        onclick="exportarTurnosEstadoExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
 
                 </div>
 
@@ -517,7 +530,20 @@ while (
 
         </div>
 
+
+        <div class="card-body">
+
+            <div style="height: 320px;">
+
+                <canvas id="graficoTurnosEstado"></canvas>
+
+            </div>
+
+        </div>
+
     </div>
+
+</div>
 
 
     <!-- TURNOS POR MES -->
@@ -611,11 +637,14 @@ while (
 
 </div>
 
-<script src="/SoftwareVet/vendor/jquery/jquery.min.js"></script>
-<script src="/SoftwareVet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/SoftwareVet/vendor/jquery-easing/jquery.easing.min.js"></script>
-<script src="/SoftwareVet/js/sb-admin-2.min.js"></script>
+<script src="../../vendor/jquery/jquery.min.js"></script>
+<script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/sb-admin-2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 
 
 <!-- GRÁFICO TURNOS POR ESTADO -->
@@ -939,5 +968,390 @@ new Chart(ctxMascotasHistorias, {
     }
 
 });
+
+</script>
+
+<script>
+
+/* =========================================================
+EXPORTAR TURNOS POR ESTADO A PDF
+========================================================= */
+
+function exportarTurnosEstadoPDF() {
+
+    // Busca el canvas donde está dibujado el gráfico
+    const canvas = document.getElementById('graficoTurnosEstado');
+
+    // Convierte el gráfico en una imagen
+    const imagen = canvas.toDataURL('image/png', 1.0);
+
+    // Obtiene jsPDF
+    const { jsPDF } = window.jspdf;
+
+    // Crea el documento PDF
+    const pdf = new jsPDF();
+
+
+    /* ==========================================
+    ENCABEZADO VETSYS
+    ========================================== */
+
+    pdf.setFillColor(82, 38, 110);
+
+    pdf.rect(
+        0,
+        0,
+        210,
+        28,
+        'F'
+    );
+
+
+    // Nombre del sistema
+
+    pdf.setTextColor(255, 255, 255);
+
+    pdf.setFontSize(18);
+
+    pdf.setFont(undefined, 'bold');
+
+    pdf.text(
+        'VetSys',
+        15,
+        12
+    );
+
+
+    // Subtítulo del sistema
+
+    pdf.setFontSize(9);
+
+    pdf.setFont(undefined, 'normal');
+
+    pdf.text(
+        'Software Veterinario',
+        15,
+        19
+    );
+
+
+    // Texto REPORTE
+
+    pdf.setFontSize(10);
+
+    pdf.setFont(undefined, 'bold');
+
+    pdf.text(
+        'REPORTE',
+        195,
+        14,
+        {
+            align: 'right'
+        }
+    );
+
+
+    /* ==========================================
+    TÍTULO DEL REPORTE
+    ========================================== */
+
+    pdf.setTextColor(82, 38, 110);
+
+    pdf.setFontSize(16);
+
+    pdf.setFont(undefined, 'bold');
+
+    pdf.text(
+        'Turnos por estado',
+        15,
+        42
+    );
+
+
+    // Descripción
+
+    pdf.setTextColor(110, 110, 110);
+
+    pdf.setFontSize(9);
+
+    pdf.setFont(undefined, 'normal');
+
+    pdf.text(
+        'Resumen estadístico de los turnos registrados en el sistema.',
+        15,
+        49
+    );
+
+
+    /* ==========================================
+    FECHA
+    ========================================== */
+
+    const fechaActual =
+        new Date().toLocaleDateString('es-AR');
+
+
+    pdf.setFontSize(8);
+
+    pdf.text(
+        'Generado: ' + fechaActual,
+        195,
+        42,
+        {
+            align: 'right'
+        }
+    );
+
+
+    /* ==========================================
+    GRÁFICO
+    ========================================== */
+
+    pdf.addImage(
+        imagen,
+        'PNG',
+        40,
+        57,
+        130,
+        85
+    );
+
+
+    /* ==========================================
+    TABLA
+    ========================================== */
+
+    pdf.autoTable({
+
+        startY: 150,
+
+        head: [
+
+            [
+                'Estado',
+                'Cantidad'
+            ]
+
+        ],
+
+        body: [
+
+            [
+                'Pendiente',
+                <?= $pendientes ?>
+            ],
+
+            [
+                'Confirmado',
+                <?= $confirmados ?>
+            ],
+
+            [
+                'En atención',
+                <?= $enAtencion ?>
+            ],
+
+            [
+                'Completado',
+                <?= $completados ?>
+            ],
+
+            [
+                'Cancelado',
+                <?= $cancelados ?>
+            ]
+
+        ],
+
+        theme: 'grid',
+
+        headStyles: {
+
+            fillColor: [82, 38, 110],
+
+            textColor: [255, 255, 255],
+
+            fontStyle: 'bold'
+
+        },
+
+        styles: {
+
+            fontSize: 9,
+
+            cellPadding: 3
+
+        },
+
+        columnStyles: {
+
+            1: {
+
+                halign: 'center'
+
+            }
+
+        },
+
+        margin: {
+
+            left: 25,
+
+            right: 25
+
+        }
+
+    });
+
+
+    /* ==========================================
+    FOOTER
+    ========================================== */
+
+    pdf.setDrawColor(
+        220,
+        220,
+        220
+    );
+
+
+    pdf.line(
+        15,
+        280,
+        195,
+        280
+    );
+
+
+    pdf.setTextColor(
+        130,
+        130,
+        130
+    );
+
+
+    pdf.setFontSize(8);
+
+    pdf.setFont(
+        undefined,
+        'normal'
+    );
+
+
+    pdf.text(
+        '© 2026 VetSys - Software Veterinario',
+        15,
+        287
+    );
+
+
+    /* ==========================================
+    DESCARGA
+    ========================================== */
+
+    pdf.save(
+        'VetSys_Turnos_por_estado.pdf'
+    );
+
+}
+
+
+function exportarTurnosEstadoExcel() {
+
+    /* ==========================================
+       DATOS DEL REPORTE
+    ========================================== */
+
+    const datos = [
+
+        ['VETSYS - SOFTWARE VETERINARIO', ''],
+        ['Reporte: Turnos por estado', ''],
+        ['Fecha de generación:', new Date().toLocaleDateString('es-AR')],
+        ['', ''],
+
+        ['Estado', 'Cantidad'],
+
+        ['Pendiente', <?= $pendientes ?>],
+        ['Confirmado', <?= $confirmados ?>],
+        ['En atención', <?= $enAtencion ?>],
+        ['Completado', <?= $completados ?>],
+        ['Cancelado', <?= $cancelados ?>]
+
+    ];
+
+
+    /* ==========================================
+       CREAR HOJA
+    ========================================== */
+
+    const hoja = XLSX.utils.aoa_to_sheet(datos);
+
+
+    /* ==========================================
+       ANCHO DE COLUMNAS
+    ========================================== */
+
+    hoja['!cols'] = [
+
+        {
+            wch: 30
+        },
+
+        {
+            wch: 18
+        }
+
+    ];
+
+
+    /* ==========================================
+       COMBINAR TÍTULOS
+    ========================================== */
+
+    hoja['!merges'] = [
+
+        // VetSys
+        {
+            s: { r: 0, c: 0 },
+            e: { r: 0, c: 1 }
+        },
+
+        // Reporte
+        {
+            s: { r: 1, c: 0 },
+            e: { r: 1, c: 1 }
+        }
+
+    ];
+
+
+    /* ==========================================
+       CREAR LIBRO EXCEL
+    ========================================== */
+
+    const libro = XLSX.utils.book_new();
+
+
+    /* ==========================================
+       AGREGAR HOJA
+    ========================================== */
+
+    XLSX.utils.book_append_sheet(
+        libro,
+        hoja,
+        'Turnos por estado'
+    );
+
+
+    /* ==========================================
+       DESCARGAR ARCHIVO
+    ========================================== */
+
+    XLSX.writeFile(
+        libro,
+        'VetSys_Turnos_por_estado.xlsx'
+    );
+
+}
 
 </script>

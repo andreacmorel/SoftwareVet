@@ -4,26 +4,68 @@ require_once '../../app/menu.php';
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="utf-8">
 <title>Modificar Módulo</title>
+
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+<link href="../../css/style_system.css" rel="stylesheet">
 <link href="../../css/edit_modules.css" rel="stylesheet">
+
 </head>
 
 <body>
 
+
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/system_modules/index.php">
+                Módulos
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Editar módulo
+        </li>
+
+    </ol>
+</div>
+
+
 <div class="container-fluid">
 
-    <div class="mb-4">
-        <h1 class="h3 page-title">
-            <i class="fas fa-edit mr-2"></i> Modificar Módulo
-        </h1>
-        <div class="page-subtitle">Editar datos del módulo seleccionado</div>
+    <h1 class="h3 titulo-pagina">
+        <i class="fas fa-pen mr-2"></i>
+        Editar Módulo
+    </h1>
+
+    <div class="subtitulo-pagina">
+        Modifica datos del módulo seleccionado.
     </div>
 
-    <div class="form-card">
+
+    <div class="card card-form mb-4">
+
+
+        <div class="card-header-form">
+            <h5>
+                <i class="fas fa-edit mr-2"></i>
+                Datos del Módulo
+            </h5>
+        </div>
+
+        <div class="card-body">
 
         <?php if (isset($erroresCampos['general'])) { ?>
             <div class="alert alert-danger">
@@ -33,10 +75,6 @@ require_once '../../app/menu.php';
         <?php } ?>
 
         <form method="POST" novalidate>
-
-            <h5 class="section-title">
-                <i class="fas fa-cubes mr-2"></i> Datos del módulo
-            </h5>
 
             <div class="form-group">
                 <label>Nombre del módulo <span style="color:#dc2626;">*</span></label>

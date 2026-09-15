@@ -33,6 +33,7 @@ function isOpen(array $paths, string $uri): string {
     return '';
 }
 
+
 /*
 | Inicio de sesión
 | Verifica si existe una sesión activa. Si no existe,
@@ -496,3 +497,12 @@ $menuAdmin = [
                     }
                 });
             </script>
+
+<!-- FOOTER GENERAL DEL SISTEMA -->
+<footer class="footer-vetsys">
+    <span>© 2026 VetSys · Todos los derechos reservados</span>
+
+    <span class="footer-vetsys-right">
+        Software de Gestión Veterinaria
+    </span>
+</footer>

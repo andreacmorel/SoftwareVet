@@ -191,6 +191,29 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/medical_records/index.php">
+                Historia Clínica
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Tratamientos
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <!-- Encabezado de la página -->
@@ -203,11 +226,6 @@ require_once '../../app/menu.php';
                 Detalle de tratamientos asociados a la historia clínica
             </div>
         </div>
-
-        <!-- Botón para volver al listado de historias clínicas -->
-        <a href="index.php" class="btn btn-purple">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
     </div>
 
     <!-- Tarjeta con datos principales de la historia clínica -->

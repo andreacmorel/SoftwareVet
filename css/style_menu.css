@@ -393,3 +393,129 @@
 
         .topbar-divider { width: 1px; height: 28px; background: #e3e6f0; margin: 0 10px; }
 
+.footer-vetsys {
+    position: fixed;
+
+    bottom: 0;
+    right: 0;
+
+    left: 224px;
+
+    min-height: 45px;
+
+    padding: 0 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #ffffff;
+
+    border-top: 1px solid #eee8f2;
+
+    color: #858796;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    z-index: 900;
+}
+
+
+/* Cuando el menú queda solo con íconos */
+
+body[data-sidebar="icons"] .footer-vetsys {
+    left: 78px;
+}
+
+
+/* Cuando el menú está oculto */
+
+body[data-sidebar="hidden"] .footer-vetsys {
+    left: 0;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+    .footer-vetsys {
+        left: 0;
+
+        padding: 0 15px;
+
+        font-size: 11px;
+    }
+
+    .footer-vetsys-right {
+        display: none;
+    }
+
+}
+/* =========================================
+   BREADCRUMB VETSYS
+========================================= */
+
+.vetsys-breadcrumb-container {
+    padding: 0 24px;
+    margin-top: -8px;
+    margin-bottom: 18px;
+}
+
+.vetsys-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    padding: 10px 16px;
+    margin: 0;
+
+    list-style: none;
+
+    background: #ffffff;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    font-size: 13px;
+}
+
+
+/* LINKS */
+
+.vetsys-breadcrumb a {
+    color: #52266E;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.vetsys-breadcrumb a:hover {
+    color: #753b96;
+    text-decoration: none;
+}
+
+
+/* SEPARADOR > */
+
+.vetsys-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: #b7b7bd;
+    padding: 0 9px;
+}
+
+
+/* PÁGINA ACTUAL */
+
+.vetsys-breadcrumb .breadcrumb-item.active {
+    color: #858796;
+    font-weight: 600;
+}
+
+
+/* ICONO DE INICIO */
+
+.vetsys-breadcrumb .fa-home {
+    margin-right: 5px;
+    font-size: 12px;
+}

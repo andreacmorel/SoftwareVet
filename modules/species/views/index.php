@@ -72,6 +72,21 @@ if(isset($_GET['success'])) { ?>
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Especies
+        </li>
+
+    </ol>
+</div>
 <div class="container-fluid">
 
 <div class="d-flex justify-content-between align-items-center mb-4">

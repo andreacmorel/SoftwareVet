@@ -86,6 +86,22 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Turnos
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
@@ -100,6 +116,7 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nuevo Turno
             </a>
+            
 
             <a href="reporte_excel.php" class="btn btn-success ml-2" title="Exportar a Excel">
                 <i class="fas fa-file-excel"></i>

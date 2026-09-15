@@ -16,6 +16,28 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/appointments/index.php">
+                Turnos
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nuevo turno
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
@@ -42,10 +64,6 @@ require_once '../../app/menu.php';
             <?php } ?>
 
             <form method="POST" novalidate>
-
-                <h5 class="section-title">
-                    <i class="fas fa-calendar-check mr-2"></i>Datos del turno
-                </h5>
 
                 <div class="row">
 

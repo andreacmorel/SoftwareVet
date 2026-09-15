@@ -55,6 +55,18 @@
             justify-content:center;
             padding:50px;
         }
+        
+        .login-footer-left {
+            position: absolute;
+            bottom: 25px;
+            left: 35px;
+
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+
+            z-index: 3;
+        }
 
         .overlay-content{
             max-width:380px;
@@ -296,7 +308,9 @@
             .overlay-content h1{
                 font-size:2.8rem;
             }
+        
         }
+        
     </style>
 </head>
 
@@ -322,7 +336,9 @@
             </p>
 
         </div>
-
+            <div class="login-footer-left">
+                © 2026 VetSys
+            </div>
     </div>
 
     <div class="login-right">
@@ -405,7 +421,7 @@
                     ¿Olvidaste tu contraseña?
                 </a>
             </div>
-
+        
         </div>
 
     </div>

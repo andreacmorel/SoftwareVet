@@ -16,16 +16,50 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/system_modules/index.php">
+                Módulos
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nuevo módulo
+        </li>
+
+    </ol>
+</div>
+
+
+
 <div class="container-fluid">
 
-    <div class="mb-4">
-        <h1 class="h3 page-title">
-            <i class="fas fa-th-large mr-2"></i> Nuevo Módulo
-        </h1>
-        <div class="page-subtitle">Registrar un nuevo módulo del sistema</div>
+    <h1 class="h3 titulo-pagina">
+        <i class="fas fa-th-large mr-2"></i>
+        Registro de Módulo
+    </h1>
+
+    <div class="subtitulo-pagina">
+        Completa los datos para regitrar un nuevo módulo del sistema.
     </div>
 
-    <div class="form-card">
+    <div class="card card-form mb-4">
+        <div class="card-header-form">
+            <h5>
+                <i class="fas fa-plus-circle mr-2"></i>
+                Nuevo Módulo
+            </h5>
+        </div>
+
+        <div class="card-body">
 
         <?php if (isset($erroresCampos['general'])) { ?>
             <div class="alert alert-danger">
@@ -34,20 +68,12 @@ require_once '../../app/menu.php';
         <?php } ?>
 
         <form method="POST" novalidate>
-
-            <h5 class="section-title">
-                <i class="fas fa-cubes mr-2"></i> Datos del módulo
-            </h5>
-
             <div class="form-group">
                 <label>Nombre del módulo <span style="color:#dc2626;">*</span></label>
 
-                <input 
-                    type="text" 
-                    name="nombre_modulo" 
+                <input type="text" name="nombre_modulo" 
                     class="form-control <?= isset($erroresCampos['nombre_modulo']) ? 'is-invalid' : '' ?>"
-                    value="<?= htmlspecialchars($_POST['nombre_modulo'] ?? '') ?>"
-                >
+                    value="<?= htmlspecialchars($_POST['nombre_modulo'] ?? '') ?>">
 
                 <?php if(isset($erroresCampos['nombre_modulo'])) { ?>
                     <div class="invalid-feedback">
@@ -59,13 +85,10 @@ require_once '../../app/menu.php';
             <div class="form-group">
                 <label>Ruta <span style="color:#dc2626;">*</span></label>
 
-                <input 
-                    type="text" 
-                    name="ruta" 
+                <input type="text" name="ruta" 
                     class="form-control <?= isset($erroresCampos['ruta']) ? 'is-invalid' : '' ?>"
                     placeholder="Ej: modules/pets/index.php"
-                    value="<?= htmlspecialchars($_POST['ruta'] ?? '') ?>"
-                >
+                    value="<?= htmlspecialchars($_POST['ruta'] ?? '') ?>">
 
                 <?php if(isset($erroresCampos['ruta'])) { ?>
                     <div class="invalid-feedback">

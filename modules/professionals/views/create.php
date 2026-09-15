@@ -15,6 +15,29 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/professionals/index.php">
+                Profesionales
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nuevo profesional
+        </li>
+
+    </ol>
+</div>
+
+
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
@@ -46,12 +69,6 @@ require_once '../../app/menu.php';
 
     <!-- Formulario para registrar un profesional -->
     <form method="POST" id="frmProfesional" novalidate>
-
-
-        <h5 class="section-title">
-            <i class="fas fa-user-md mr-2"></i>
-            Datos personales
-        </h5>
 
         <div class="row">
 

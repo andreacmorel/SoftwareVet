@@ -7,45 +7,74 @@ require_once '../../app/menu.php';
 <head>
     <meta charset="utf-8">
     <title>Modificar Historia Clí­nica</title>
-
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="../../css/style_system1.css" rel="stylesheet">
+    <link href="../../css/edit.css" rel="stylesheet">
 </head>
 
 <body>
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+        <li class="breadcrumb-item">
+
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+        </li>
+
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/medical_records/index.php">
+                Historia Clínica
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Editar historia clínica
+        </li>
+    </ol>
+
+</div>
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-        <div>
-            <h1 class="h3 page-title">
-                <i class="fas fa-notes-medical mr-2"></i> Modificar Historia Clí­nica
-            </h1>
-            <div class="page-subtitle">Editar datos clínicos registrados</div>
-        </div>
-        <a href="index.php" class="btn btn-light-pro">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
+
+    <h1 class="h3 titulo-pagina">
+        <i class="fas fa-notes-medical mr-2"></i>
+        Editar Historia Clínica
+    </h1>
+
+    <div class="subtitulo-pagina">
+        Modifica los datos clínicos registrados.
     </div>
 
-    <div class="form-card">
-        <?php if (!empty($errors)) { ?>
-            <div class="alert-pro">
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                Revisá los siguientes campos:
-                <ul class="mb-0 mt-2">
-                    <?php foreach ($errors as $e) { ?>
-                        <li><?= htmlspecialchars($e) ?></li>
-                    <?php } ?>
-                </ul>
-            </div>
-        <?php } ?>
+    <div class="card card-form mb-4">
+
+        <div class="card-header-form">
+            <h5>
+                <i class="fas fa-edit mr-2"></i>
+                Datos de la Historia Clínica
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <?php if (!empty($errors)) { ?>
+                <div class="alert-pro">
+                        <i class="fas fa-exclamation-circle mr-1"></i>
+                        Revisá los siguientes campos:
+
+                        <ul class="mb-0 mt-2">
+                            <?php foreach ($errors as $e) { ?>
+                                <li><?= htmlspecialchars($e) ?></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+
 
         <form method="POST">
-            <div class="section-title">
-                <i class="fas fa-paw mr-1"></i> Datos de la consulta
-            </div>
-
             <div class="row">
                 <div class="col-md-7">
                     <div class="form-group">
@@ -87,20 +116,25 @@ require_once '../../app/menu.php';
                 ><?= htmlspecialchars($historia['observacion'] ?? '') ?></textarea>
             </div>
 
-            <div class="d-flex justify-content-end mt-4">
-                <a href="index.php" class="btn btn-light-pro mr-2">
-                    <i class="fas fa-times"></i> Cancelar
+            <div class="d-flex justify-content-between mt-4">
+
+                <a href="index.php" class="btn btn-cancelar">
+                    <i class="fas fa-times mr-1"></i>
+                    Cancelar
                 </a>
 
                 <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-save"></i> Guardar
+                    <i class="fas fa-save mr-1"></i>
+                    Guardar
                 </button>
+
             </div>
 
         </form>
 
     </div>
 
+    </div>
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>

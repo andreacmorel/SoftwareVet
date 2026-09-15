@@ -13,19 +13,43 @@ require_once '../../app/menu.php';
     <link href="../../css/editprof.css" rel="stylesheet">
 </head>
 
+
+<body>
+
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/professionals/index.php">
+                Profesionales
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Editar profesional
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
         <i class="fas fa-user-edit mr-2"></i>
-        Modificar Profesional
+        Editar Profesional
     </h1>
 
     <div class="subtitulo-pagina">
-        Actualizá los datos personales y el domicilio del profesional.
+        Modifica los datos personales y el domicilio del profesional.
     </div>
 
     <div class="card card-form mb-4">
-
         <div class="card-header-form">
             <h5>
                 <i class="fas fa-edit mr-2"></i>
@@ -42,11 +66,6 @@ require_once '../../app/menu.php';
             <?php } ?>
 
             <form method="POST" id="frmEditar" novalidate>
-
-                <h5 class="section-title">
-                    <i class="fas fa-user-md mr-2"></i>
-                    Datos personales
-                </h5>
 
                 <div class="row">
                     <div class="form-group col-md-6">

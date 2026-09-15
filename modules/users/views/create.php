@@ -14,6 +14,28 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/users/index.php">
+                Usuarios
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nuevo usuario
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <!-- Titulo e icono de la vista -->
@@ -24,15 +46,15 @@ require_once '../../app/menu.php';
 
     <!-- Descripción breve de la pantalla -->
     <div class="subtitulo-pagina">
-        Cargá los datos de acceso y asigná un perfil al usuario.
+        Completa los datos de acceso y asigná un perfil al usuario.
     </div>
 
     <div class="card card-form mb-4">
 
         <div class="card-header-form">
             <h5>
-                <i class="fas fa-id-card mr-2"></i>
-                Datos del Usuario
+                <i class="fas fa-plus-circle mr-2"></i>
+                Nuevo Usuario
             </h5>
         </div>
 
@@ -47,13 +69,6 @@ require_once '../../app/menu.php';
 
             <!-- novalidate desactiva la validación nativa del navegador para usar la del servidor -->
             <form method="POST" novalidate>
-
-                <!-- Sección: datos de acceso -->
-                <h5 class="section-title">
-                    <i class="fas fa-user mr-2"></i>
-                    Información de acceso
-                </h5>
-
                 <div class="row">
                     <div class="form-group col-md-6">
                     <label>Nombre<span style="color:#dc2626;">*</span></label>

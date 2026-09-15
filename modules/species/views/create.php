@@ -16,18 +16,49 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/species/index.php">
+                Especies
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nueva especie
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 class="page-title">
-                <i class="fas fa-dna mr-2"></i> Nueva Especie
-            </h3>
-            <div class="page-subtitle">Registro de especie y raza</div>
-        </div>
+        <h1 class="h3 titulo-pagina">
+        <i class="fas fa-dna mr-2"></i>
+        Registro de Especie
+    </h1>
+
+    <div class="subtitulo-pagina">
+        Completa los datos para registrar una nueva especie.
     </div>
 
-    <div class="form-card">
+    <div class="card card-form mb-4">
+
+    <div class="card-header-form">
+        <h5>
+            <i class="fas fa-plus-circle mr-2"></i>
+            Nueva Especie
+        </h5>
+    </div>
+
+    <div class="card-body">
 
         <?php if (isset($erroresCampos['general'])) { ?>
             <div class="alert alert-danger">
@@ -40,12 +71,9 @@ require_once '../../app/menu.php';
             <div class="form-group mb-3">
                 <label>Nombre de Especie <span style="color:#dc2626;">*</span></label>
 
-                <input
-                    type="text"
-                    name="nombre_especie"
+                <input type="text"name="nombre_especie"
                     class="form-control <?php echo isset($erroresCampos['nombre_especie']) ? 'is-invalid' : ''; ?>"
-                    value="<?php echo htmlspecialchars($_POST['nombre_especie'] ?? ''); ?>"
-                >
+                    value="<?php echo htmlspecialchars($_POST['nombre_especie'] ?? ''); ?>">
 
                 <?php if (isset($erroresCampos['nombre_especie'])) { ?>
                     <div class="invalid-feedback">
@@ -86,8 +114,9 @@ require_once '../../app/menu.php';
 
         </form>
 
-    </div>
+        </div>
 
+    </div>
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>

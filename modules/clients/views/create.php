@@ -14,6 +14,28 @@ require_once '../../app/menu.php';
 </head>
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/clients/index.php">
+                Clientes
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nuevo cliente
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
@@ -42,12 +64,7 @@ require_once '../../app/menu.php';
             <?php } ?>
 
             <form method="POST" id="frmCliente" novalidate>
-
-                <h5 class="section-title">
-                    <i class="fas fa-user mr-2"></i>
-                    Datos personales
-                </h5>
-
+                
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Nombre <span style="color:#dc2626;">*</span></label>

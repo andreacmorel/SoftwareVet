@@ -1,166 +1,233 @@
 ﻿<?php
 require_once '../../app/menu.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8">
-    <title>Alta Historia Clí­nica</title>
+    <title>Registro de Historia Clínica</title>
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../../css/style_system1.css" rel="stylesheet">
+    <link href="../../css/style_system.css" rel="stylesheet">
 </head>
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+        <li class="breadcrumb-item">
+
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+        </li>
+
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/medical_records/index.php">
+                Historia Clínica
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Nueva historia clínica
+        </li>
+    </ol>
+
+</div>
+
 <div class="container-fluid">
+    <h1 class="h3 titulo-pagina">
+        <i class="fas fa-notes-medical mr-2"></i>
+        Registro de Historia Clínica
+    </h1>
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-        <div>
-            <h1 class="h3 page-title ">
-                <i class="fas fa-notes-medical mr-2"></i> Nueva Historia Clí­nica
-            </h1>
-            <div class="page-title">Registro clínico y tratamientos asociados</div>
-        </div>
-
-        <a href="index.php" class="btn btn-light-pro">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
+    <div class="subtitulo-pagina">
+        Completa los datos para registrar una nueva historia clínica.
     </div>
 
-    <div class="form-card">
+    <div class="card card-form mb-4">
+        <div class="card-header-form">
+            <h5>
+                <i class="fas fa-plus-circle mr-2"></i>
+                Nueva Historia Clínica
+            </h5>
+        </div>
 
-        <form method="POST" id="frmAlta" novalidate>
+        <div class="card-body">
+            <?php if (isset($erroresCampos['general'])) { ?>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    <?= htmlspecialchars($erroresCampos['general']) ?>
+                </div>
+            <?php } ?>
 
-            <div class="section-title">
-                <i class="fas fa-paw mr-1"></i> Datos de la consulta
-            </div>
+            <form method="POST" id="frmAlta" novalidate>
+                <div class="row">
+                    <div class="form-group col-md-7">
+                        <label>Mascota
+                            <span style="color:#dc2626;">*</span>
+                        </label>
 
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="form-group">
-                        <label>Mascota <span style="color:#dc2626;">*</span></label>
+                        <select name="id_mascota" id="selMascota"
+                            class="form-control <?= isset($erroresCampos['id_mascota']) ? 'is-invalid' : '' ?>">
+                            <option value="">
+                                Seleccione una mascota
+                            </option>
 
-                        <select 
-                            name="id_mascota" 
-                            id="selMascota" 
-                            class="form-control <?= isset($erroresCampos['id_mascota']) ? 'is-invalid' : '' ?>"
-                        >
-                            <option value="">Seleccione una mascota</option>
 
                             <?php foreach ($mascotas as $m) { ?>
                                 <option value="<?= $m['id_mascota'] ?>"
                                     <?= $postMascota == $m['id_mascota'] ? 'selected' : '' ?>>
-                                    HC-<?= str_pad($m['id_mascota'], 4, '0', STR_PAD_LEFT) ?>
+                                    HC-<?= str_pad($m['id_mascota'],4,'0',STR_PAD_LEFT) ?>
                                     |
-                                    <?= htmlspecialchars($m['nombre_mascota'] . ' - ' . $m['apellido_persona'] . ', ' . $m['nombre_persona']) ?>
+                                    <?= htmlspecialchars($m['nombre_mascota']. ' - '. $m['apellido_persona']
+                                        . ', '. $m['nombre_persona']) ?>
+
                                 </option>
                             <?php } ?>
                         </select>
 
-                        <?php if(isset($erroresCampos['id_mascota'])) { ?>
-                            <div class="invalid-feedback">
-                                <?= htmlspecialchars($erroresCampos['id_mascota']) ?>
+                        <?php if (isset($erroresCampos['id_mascota'])) { ?>
+                            <div class="invalid-feedback"><?= htmlspecialchars(
+                                    $erroresCampos['id_mascota']) ?>
                             </div>
                         <?php } ?>
                     </div>
-                </div>
 
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label>Fecha <span style="color:#dc2626;">*</span></label>
-
-                        <input 
-                            type="date" 
-                            name="fecha" 
+                    <div class="form-group col-md-5">
+                        <label>Fecha
+                            <span style="color:#dc2626;">*</span>
+                        </label>
+                        
+                        <input type="date" name="fecha"id="inputFecha"
                             class="form-control <?= isset($erroresCampos['fecha']) ? 'is-invalid' : '' ?>"
-                            value="<?= htmlspecialchars($postFecha) ?>"
-                        >
+                            value="<?= htmlspecialchars($postFecha) ?>">
 
-                        <?php if(isset($erroresCampos['fecha'])) { ?>
+                        <?php if (isset($erroresCampos['fecha'])) { ?>
                             <div class="invalid-feedback">
                                 <?= htmlspecialchars($erroresCampos['fecha']) ?>
                             </div>
+
                         <?php } ?>
                     </div>
                 </div>
-            </div>
 
-            <div class="section-title mt-4">
-                <i class="fas fa-clipboard-list mr-1"></i> Notas clínicas
-            </div>
+                <hr>
 
-            <div class="form-group">
-                <label>Descripción <span style="color:#dc2626;">*</span></label>
+                <h5 class="section-title">
+                    <i class="fas fa-clipboard-list mr-2"></i>
+                    Notas clínicas
+                </h5>
 
-                <textarea 
-                    name="descripcion" 
-                    class="form-control <?= isset($erroresCampos['descripcion']) ? 'is-invalid' : '' ?>" 
-                    rows="3"
-                    placeholder="Ej: Control general, vacunación, revisión de herida..."
-                ><?= htmlspecialchars($postDesc) ?></textarea>
+                <div class="form-group">
+                    <label>Descripción
+                        <span style="color:#dc2626;">*</span>
+                    </label>
 
-                <?php if(isset($erroresCampos['descripcion'])) { ?>
-                    <div class="invalid-feedback">
-                        <?= htmlspecialchars($erroresCampos['descripcion']) ?>
-                    </div>
-                <?php } ?>
-            </div>
+                    <textarea name="descripcion" id="inputDescripcion"
+                        class="form-control <?= isset($erroresCampos['descripcion']) ? 'is-invalid' : '' ?>"
+                        rows="3"
+                        placeholder="Ej: Control general, vacunación, revisión de herida..."><?= htmlspecialchars($postDesc) ?></textarea>
 
-            <div class="form-group">
-                <label>Observación</label>
+                    <?php if (isset($erroresCampos['descripcion'])) { ?>
 
-                <textarea 
-                    name="observacion" 
-                    class="form-control <?= isset($erroresCampos['observacion']) ? 'is-invalid' : '' ?>" 
-                    rows="3"
-                    placeholder="Ej: El paciente se encuentra en buen estado general..."
-                ><?= htmlspecialchars($postObs) ?></textarea>
+                        <div class="invalid-feedback">
 
-                <?php if(isset($erroresCampos['observacion'])) { ?>
-                    <div class="invalid-feedback">
-                        <?= htmlspecialchars($erroresCampos['observacion']) ?>
-                    </div>
-                <?php } ?>
-            </div>
+                            <?= htmlspecialchars(
+                                $erroresCampos['descripcion']
+                            ) ?>
 
-            <div class="section-title mt-4">
-                <i class="fas fa-pills mr-1"></i> Tratamientos
-            </div>
+                        </div>
 
-            <?php if(isset($erroresCampos['tratamientos'])) { ?>
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle mr-1"></i>
-                    <?= htmlspecialchars($erroresCampos['tratamientos']) ?>
+                    <?php } ?>
+
                 </div>
-            <?php } ?>
 
-            <div id="tratList">
-                <div class="text-center text-muted py-3" id="emptyTrat">
-                    <i class="fas fa-pills fa-2x mb-2" style="color:#d8c2e8;"></i>
-                    <br>
-                    Ningún tratamiento agregado aún
+                <div class="form-group">
+                    <label>Observación
+                        <span style="color:#9ca3af;font-weight:400;text-transform:none;">
+                            (opcional)
+                        </span>
+
+                    </label>
+
+                    <textarea name="observacion" id="inputObservacion" class="form-control <?= isset($erroresCampos['observacion']) ? 'is-invalid' : '' ?>"
+                        rows="3" placeholder="Ej: El paciente se encuentra en buen estado general..."><?= htmlspecialchars($postObs) ?></textarea>
+
+                    <?php if (isset($erroresCampos['observacion'])) { ?>
+
+                        <div class="invalid-feedback">
+
+                            <?= htmlspecialchars(
+                                $erroresCampos['observacion']
+                            ) ?>
+
+                        </div>
+
+                    <?php } ?>
+
                 </div>
-            </div>
 
-            <button type="button" class="btn-add-trat mt-2" onclick="addTrat()">
-                <i class="fas fa-plus"></i> Agregar tratamiento
-            </button>
+                <hr>
 
-            <div class="d-flex justify-content-end mt-4">
-                <a href="index.php" class="btn btn-light-pro mr-2">
-                    <i class="fas fa-times"></i> Cancelar
-                </a>
+                <h5 class="section-title">
+                    <i class="fas fa-pills mr-2"></i>
+                    Tratamientos
+                    <span style="color:#9ca3af;font-size:12px;font-weight:400;text-transform:none;">
+                        (opcional)
+                    </span>
+                </h5>
 
-                <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-save"></i> Guardar
+                <?php if (isset($erroresCampos['tratamientos'])) { ?>
+
+                    <div class="alert alert-danger">
+
+                        <i class="fas fa-exclamation-circle mr-1"></i>
+
+                        <?= htmlspecialchars(
+                            $erroresCampos['tratamientos']
+                        ) ?>
+
+                    </div>
+
+                <?php } ?>
+
+                <div id="tratList">
+                    <div class="text-center text-muted py-3" id="emptyTrat">
+                        <i class="fas fa-pills fa-2x mb-2" style="color:#d8c2e8;"></i>
+
+                        <br>
+
+                        Ningún tratamiento agregado aún
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-light-pro mt-2" onclick="addTrat()">
+                    <i class="fas fa-plus mr-1"></i>
+                    Agregar tratamiento
                 </button>
-            </div>
 
-        </form>
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <a href="index.php" class="btn btn-cancelar">
+                        <i class="fas fa-times mr-1"></i>
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="btn btn-purple">
+                        <i class="fas fa-save mr-1"></i>
+                        Guardar
+                    </button>
+
+                </div>
+            </form>
+        </div>
     </div>
-
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
@@ -184,9 +251,8 @@ require_once '../../app/menu.php';
 // Variable que funciona como contador para identificar cada tratamiento agregado
 let tratIdx = 0;
 
-// =====================================================
+
 // FUNCIÓN PARA AGREGAR UN NUEVO TRATAMIENTO
-// =====================================================
 function addTrat() {
 
     // Busca el mensaje que aparece cuando no hay tratamientos cargados
@@ -268,9 +334,7 @@ function addTrat() {
     tratIdx++;
 }
 
-// =====================================================
 // FUNCIÓN PARA ELIMINAR UN TRATAMIENTO
-// =====================================================
 function removeTrat(id) {
 
     // Busca el tratamiento seleccionado por su ID

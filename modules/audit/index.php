@@ -44,6 +44,23 @@ $resultado = mysqli_query($conexion, $sql);
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/audit/index.php">
+                Auditoría
+            </a>
+        </li>
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <!-- ENCABEZADO -->

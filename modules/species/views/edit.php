@@ -16,15 +16,37 @@ require_once '../../app/menu.php';
 
 <body>
 
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/species/index.php">
+                Especies
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Editar especie
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
         <i class="fas fa-dna mr-2"></i>
-        Modificar Especie
+        Editar Especie
     </h1>
 
     <div class="subtitulo-pagina">
-        Actualizá los datos de la especie y su raza.
+        Modifica los datos de la especie y su raza
     </div>
 
     <div class="card card-form mb-4">
@@ -45,11 +67,6 @@ require_once '../../app/menu.php';
             <?php } ?>
 
             <form method="POST" novalidate>
-
-                <h5 class="section-title">
-                    <i class="fas fa-paw mr-2"></i>
-                    Información principal
-                </h5>
 
                 <div class="row">
                     <div class="form-group col-md-6">

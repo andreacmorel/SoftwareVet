@@ -14,15 +14,38 @@ require_once '../../app/menu.php';
 </head>
 
 <body>
+
+<div class="vetsys-breadcrumb-container">
+    <ol class="vetsys-breadcrumb">
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/app/inicio.php">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="/SoftwareVet/modules/clients/index.php">
+                Clientes
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active">
+            Editar cliente
+        </li>
+
+    </ol>
+</div>
+
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
         <i class="fas fa-user-edit mr-2"></i>
-        Modificar Cliente
+        Editar Cliente
     </h1>
 
     <div class="subtitulo-pagina">
-        Actualiza los datos personales y el domicilio del cliente.
+        Modifica los datos personales y el domicilio del cliente.
     </div>
 
     <div class="card card-form mb-4">
@@ -43,12 +66,7 @@ require_once '../../app/menu.php';
             <?php } ?>
 
             <form method="POST" id="frmEditar" novalidate>
-
-                <h5 class="section-title">
-                    <i class="fas fa-user mr-2"></i>
-                    Datos personales
-                </h5>
-
+                
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Nombre <span style="color:#dc2626;">*</span></label>
