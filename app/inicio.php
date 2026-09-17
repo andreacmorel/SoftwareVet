@@ -229,8 +229,6 @@ while (
     <link href="/SoftwareVet/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/style_panel.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 </head>
 
 <div class="container-fluid">
@@ -493,60 +491,9 @@ while (
 
 <div class="row">
 
-    <!-- TURNOS POR ESTADO -->
-
-<div class="col-lg-6 mb-4">
-
-    <div class="card card-pro h-100">
-
-        <div class="card-header">
-
-            <div class="d-flex justify-content-between align-items-center w-100">
-
-                <!-- Título -->
-                <div>
-                    <i class="fas fa-chart-pie mr-2"></i>
-                    Turnos por estado
-                </div>
-
-                <!-- Botones -->
-                <div class="d-flex align-items-center">
-
-                    <button type="button" class="btn btn-sm btn-outline-danger mr-2"
-                        title="Exportar PDF"
-                        onclick="exportarTurnosEstadoPDF()">
-                        <i class="fas fa-file-pdf"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-sm btn-outline-success"
-                        title="Exportar Excel"
-                        onclick="exportarTurnosEstadoExcel()">
-                        <i class="fas fa-file-excel"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card-body">
-
-            <div style="height: 320px;">
-
-                <canvas id="graficoTurnosEstado"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-    <!-- TURNOS POR MES -->
+    <!-- =====================================================
+        TURNOS POR ESTADO
+    ====================================================== -->
 
     <div class="col-lg-6 mb-4">
 
@@ -554,8 +501,86 @@ while (
 
             <div class="card-header">
 
-                <i class="fas fa-chart-line mr-2"></i>
-                Turnos por mes
+                <div class="d-flex justify-content-between align-items-center w-100">
+
+                    <!-- Título -->
+                    <div>
+                        <i class="fas fa-chart-pie mr-2"></i>
+                        Turnos por estado
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex align-items-center">
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mr-2"
+                            title="Exportar PDF"
+                            onclick="exportarTurnosEstadoPDF()">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+
+                        <button type="button"class="btn btn-sm btn-outline-success"
+                            title="Exportar Excel"
+                            onclick="exportarTurnosEstadoExcel()">
+                            <i class="fas fa-file-excel"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-body">
+
+                <div style="height: 320px;">
+
+                    <canvas id="graficoTurnosEstado"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+        TURNOS POR MES
+    ====================================================== -->
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card card-pro h-100">
+
+            <div class="card-header">
+
+                <div class="d-flex justify-content-between align-items-center w-100">
+
+                    <!-- Título -->
+                    <div>
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Turnos por mes
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex align-items-center">
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mr-2"
+                            title="Exportar PDF"
+                            onclick="exportarTurnosMesPDF()">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-outline-success"
+                            title="Exportar Excel"
+                            onclick="exportarTurnosMesExcel()">
+                            <i class="fas fa-file-excel"></i>
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -580,7 +605,9 @@ while (
 
 <div class="row">
 
-    <!-- HISTORIAS CLÍNICAS POR MES -->
+    <!-- =====================================================
+        HISTORIAS CLÍNICAS POR MES
+    ====================================================== -->
 
     <div class="col-lg-6 mb-4">
 
@@ -588,10 +615,37 @@ while (
 
             <div class="card-header">
 
-                <i class="fas fa-notes-medical mr-2"></i>
-                Historias clínicas por mes
+                <div class="d-flex justify-content-between align-items-center w-100">
+
+                    <!-- Título -->
+                    <div>
+                        <i class="fas fa-notes-medical mr-2"></i>
+                        Historias clínicas por mes
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex align-items-center">
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mr-2" title="Exportar PDF"
+                            onclick="exportarHistoriasMesPDF()">
+
+                            <i class="fas fa-file-pdf"></i>
+
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-outline-success" title="Exportar Excel"
+                            onclick="exportarHistoriasMesExcel()">
+
+                            <i class="fas fa-file-excel"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
+
 
             <div class="card-body">
 
@@ -608,7 +662,9 @@ while (
     </div>
 
 
-    <!-- MASCOTAS CON MÁS REGISTROS CLÍNICOS -->
+    <!-- =====================================================
+        MASCOTAS CON MÁS REGISTROS CLÍNICOS
+    ====================================================== -->
 
     <div class="col-lg-6 mb-4">
 
@@ -616,10 +672,37 @@ while (
 
             <div class="card-header">
 
-                <i class="fas fa-paw mr-2"></i>
-                Mascotas con más registros clínicos
+                <div class="d-flex justify-content-between align-items-center w-100">
+
+                    <!-- Título -->
+                    <div>
+                        <i class="fas fa-paw mr-2"></i>
+                        Mascotas con más registros clínicos
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex align-items-center">
+
+                        <button type="button" class="btn btn-sm btn-outline-danger mr-2" title="Exportar PDF"
+                            onclick="exportarMascotasHistoriasPDF()">
+
+                            <i class="fas fa-file-pdf"></i>
+
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-outline-success"title="Exportar Excel"
+                            onclick="exportarMascotasHistoriasExcel()">
+
+                            <i class="fas fa-file-excel"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
+
 
             <div class="card-body">
 
@@ -637,721 +720,106 @@ while (
 
 </div>
 
+<!-- jQuery -->
 <script src="../../vendor/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- SB Admin 2 -->
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- Gráficos -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Exportación PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Tablas dentro del PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<!-- Exportación Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-
-
-<!-- GRÁFICO TURNOS POR ESTADO -->
 <script>
-
-const ctxTurnosEstado = document.getElementById('graficoTurnosEstado'); 
-// busca un elemento del html que contenga id "graficoTurnosEstado"
-// que lo encontramos arriba  en el html donde dice canva id
-// y creamos una constante ctxTurnoEstado donde guardamos ese elemento
-// osea donde queremos colocar el grafico 
-
-new Chart(ctxTurnosEstado, { // creamos el grafico, aca comienza toda la config del grafico que queremos
-
-    type: 'doughnut', // doughnut es el tipo de grafico que queremos en este caso el circular
-                      // llamado DONA 
-
-    data: { // aca comienza la informacion osea los datos que va a representar el grafico
-
-        labels: [ //labels -> representa cada dato SON LAS ETIQUETAS
-            'Pendiente',
-            'Confirmado',
-            'En atención',
-            'Completado',
-            'Cancelado'
-        ],
-
-        datasets: [{ //dataset -> representa cuales son los valores
-                    // conjunto de datos que queremos representar
-
-            data: [
-                <?= $pendientes ?>, //muestra el valor de cada php
-                <?= $confirmados ?>,
-                <?= $enAtencion ?>,
-                <?= $completados ?>,
-                <?= $cancelados ?>
-            ],
-
-            backgroundColor: [ //representa el color de cada seccion 
-                '#f6c23e',
-                '#4e73df',
-                '#36b9cc',
-                '#1cc88a',
-                '#e74a3b'
-            ],
-
-            borderWidth: 3,// borde osea el grosor
-            borderColor: '#ffffff' //establece el color del borde
-
-        }]
-
+    /*
+     * ==========================================================
+     * DATOS DEL DASHBOARD
+     * ==========================================================
+     * Este objeto funciona como puente entre PHP y JavaScript.
+     *
+     * Los datos se obtienen previamente desde la base de datos
+     * mediante PHP y se convierten a un formato que JavaScript
+     * puede interpretar utilizando json_encode().
+     *
+     * Estos datos después son utilizados por:
+     *
+     * - charts.js       → para generar los gráficos.
+     * - export_pdf.js   → para generar los reportes PDF.
+     * - export_excel.js → para generar los archivos Excel.
+     * 
+     * json_encode() convierte los datos de PHP a un formato que JavaScript puede interpretar.
+     */
+const dashboardData = {
+        /*
+         * ------------------------------------------------------
+         * TURNOS POR ESTADO
+         * ------------------------------------------------------
+         *
+         * Guarda la cantidad de turnos correspondientes 
+         *  a cada uno de los estados disponibles en el sistema.
+         */
+    turnosEstado: {
+        pendientes: <?= json_encode($pendientes) ?>,
+        confirmados: <?= json_encode($confirmados) ?>,
+        enAtencion: <?= json_encode($enAtencion) ?>,
+        completados: <?= json_encode($completados) ?>,
+        cancelados: <?= json_encode($cancelados) ?>
     },
+    /*
+         * ------------------------------------------------------
+         * TURNOS POR MES
+         * ------------------------------------------------------
+         *
+         * mesesTurnos contiene los nombres de los meses.
+         *
+         * cantidadTurnosMes contiene la cantidad de turnos
+         * registrados en cada uno de esos meses.
+         */
 
-    options: { // aca mostramos como se comporta y se visualiza el grafico 
+        // Meses que aparecen en el gráfico
+    mesesTurnos: <?= json_encode($mesesTurnos) ?>,
+    // Cantidad de turnos correspondiente a cada mes
+    cantidadTurnosMes: <?= json_encode($cantidadTurnosMes) ?>,
+    /*
+         * ------------------------------------------------------
+         * HISTORIAS CLÍNICAS POR MES
+         * ------------------------------------------------------
+         *
+         * Contiene los meses y la cantidad de historias
+         * clínicas registradas durante cada mes.
+         */
 
-        responsive: true, // diseño responsive se adapta a la pantalla
+        // Meses que aparecen en el gráfico de historias clínicas
+    mesesHistorias: <?= json_encode($mesesHistorias) ?>,
+     // Cantidad de historias clínicas correspondiente a cada mes
+    cantidadHistoriasMes: <?= json_encode($cantidadHistoriasMes) ?>,
+    /*
+         * ------------------------------------------------------
+         * MASCOTAS CON MÁS REGISTROS CLÍNICOS
+         * ------------------------------------------------------
+         *
+         * Guarda los nombres de las mascotas y la cantidad
+         * de registros clínicos que posee cada una.
+         */
 
-        maintainAspectRatio: false, //adapta al alto y ancho del contenedor donde se encuentra
+        // Nombres de las mascotas
+    nombresMascotasHistorias: <?= json_encode($nombresMascotasHistorias) ?>,
+    // Cantidad de registros clínicos de cada mascota
+    cantidadHistoriasMascotas: <?= json_encode($cantidadHistoriasMascotas) ?>
 
-        cutout: '65%', // el tamaño del agujero del grafico el centro
-
-        plugins: { // son los distintos componentes del grafico
-
-            legend: { //leyenda
-
-                position: 'right', //posicion de la leyenda la leyenda son los estados que vemos 
-                                   // de los turnos
-
-                labels: {
-                    usePointStyle: true, // estilo compacto
-                    padding: 18 // separacion
-                }
-
-            }
-
-        }
-
-    }
-
-}); // cerramos todo
-
-</script>
-
-<script>
-
-const ctxTurnosMes = document.getElementById('graficoTurnosMes');
-// busca un elemento del html que contenga id "graficoTurnosMe"
-// que lo encontramos arriba  en el html donde dice canva id
-// y creamos una constante ctxTurnosMes donde guardamos ese elemento
-// osea donde queremos colocar el grafico 
-
-new Chart(ctxTurnosMes, { //creamos el grafico, aca comienza toda la config del grafico q queremos
-
-    type: 'line', //definimos tipo de grafico line: grafico de linea
-
-    data: { // informacion que muestra el grafico
-
-        labels: <?= json_encode($mesesTurnos) ?>,
-        //json_encode convierte una estructura PHP en un formato que javascript puede interpretar
-
-        datasets: [{
-
-            label: 'Cantidad de turnos',
-
-            data: <?= json_encode($cantidadTurnosMes) ?>,
-            //misma linea pero con las cantidades de turnos
-
-            borderColor: '#7c3aed', //color de la linea
-
-            backgroundColor: 'rgba(124, 58, 237, 0.12)', //color debajo de la linea
-
-            borderWidth: 3, // grosor del borde
-
-            tension: 0.4, // curvas suaves
-
-            fill: true, //rellená el espacio que queda debajo de la línea
-
-            pointRadius: 5, // tamaño de los puntos
-
-            pointHoverRadius: 7
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        plugins: {
-
-            legend: {
-                display: false
-            }
-
-        },
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true,
-
-                ticks: {
-                    precision: 0
-                }
-
-            },
-
-            x: {
-
-                grid: {
-                    display: false
-                }
-
-            }
-
-        }
-
-    }
-
-});
+};
 
 </script>
 
-<script>
 
-const ctxHistoriasMes =
-    document.getElementById('graficoHistoriasMes');
-
-new Chart(ctxHistoriasMes, {
-
-    type: 'line',
-
-    data: {
-
-        labels: <?= json_encode($mesesHistorias) ?>,
-
-        datasets: [{
-
-            label: 'Historias clínicas',
-
-            data: <?= json_encode($cantidadHistoriasMes) ?>,
-
-            borderColor: '#16b89c',
-
-            backgroundColor: 'rgba(22, 184, 156, 0.12)',
-
-            borderWidth: 3,
-
-            tension: 0.4,
-
-            fill: true,
-
-            pointRadius: 5,
-
-            pointHoverRadius: 7
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        plugins: {
-
-            legend: {
-                display: false
-            }
-
-        },
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true,
-
-                ticks: {
-                    precision: 0
-                }
-
-            },
-
-            x: {
-
-                grid: {
-                    display: false
-                }
-
-            }
-
-        }
-
-    }
-
-});
-
-</script>
-
-<script>
-
-const ctxMascotasHistorias =
-    document.getElementById('graficoMascotasHistorias');
-
-new Chart(ctxMascotasHistorias, {
-
-    type: 'bar',
-
-    data: {
-
-        labels:
-            <?= json_encode($nombresMascotasHistorias) ?>,
-
-        datasets: [{
-
-            label: 'Registros clínicos',
-
-            data:
-                <?= json_encode($cantidadHistoriasMascotas) ?>,
-
-            backgroundColor: [
-                '#7c3aed',
-                '#16b89c',
-                '#f29a2e',
-                '#ec3f72',
-                '#36b9cc'
-            ],
-
-            borderRadius: 8,
-
-            borderSkipped: false
-
-        }]
-
-    },
-
-    options: {
-
-        indexAxis: 'y',
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        plugins: {
-
-            legend: {
-                display: false
-            }
-
-        },
-
-        scales: {
-
-            x: {
-
-                beginAtZero: true,
-
-                ticks: {
-                    precision: 0
-                }
-
-            },
-
-            y: {
-
-                grid: {
-                    display: false
-                }
-
-            }
-
-        }
-
-    }
-
-});
-
-</script>
-
-<script>
-
-/* =========================================================
-EXPORTAR TURNOS POR ESTADO A PDF
-========================================================= */
-
-function exportarTurnosEstadoPDF() {
-
-    // Busca el canvas donde está dibujado el gráfico
-    const canvas = document.getElementById('graficoTurnosEstado');
-
-    // Convierte el gráfico en una imagen
-    const imagen = canvas.toDataURL('image/png', 1.0);
-
-    // Obtiene jsPDF
-    const { jsPDF } = window.jspdf;
-
-    // Crea el documento PDF
-    const pdf = new jsPDF();
-
-
-    /* ==========================================
-    ENCABEZADO VETSYS
-    ========================================== */
-
-    pdf.setFillColor(82, 38, 110);
-
-    pdf.rect(
-        0,
-        0,
-        210,
-        28,
-        'F'
-    );
-
-
-    // Nombre del sistema
-
-    pdf.setTextColor(255, 255, 255);
-
-    pdf.setFontSize(18);
-
-    pdf.setFont(undefined, 'bold');
-
-    pdf.text(
-        'VetSys',
-        15,
-        12
-    );
-
-
-    // Subtítulo del sistema
-
-    pdf.setFontSize(9);
-
-    pdf.setFont(undefined, 'normal');
-
-    pdf.text(
-        'Software Veterinario',
-        15,
-        19
-    );
-
-
-    // Texto REPORTE
-
-    pdf.setFontSize(10);
-
-    pdf.setFont(undefined, 'bold');
-
-    pdf.text(
-        'REPORTE',
-        195,
-        14,
-        {
-            align: 'right'
-        }
-    );
-
-
-    /* ==========================================
-    TÍTULO DEL REPORTE
-    ========================================== */
-
-    pdf.setTextColor(82, 38, 110);
-
-    pdf.setFontSize(16);
-
-    pdf.setFont(undefined, 'bold');
-
-    pdf.text(
-        'Turnos por estado',
-        15,
-        42
-    );
-
-
-    // Descripción
-
-    pdf.setTextColor(110, 110, 110);
-
-    pdf.setFontSize(9);
-
-    pdf.setFont(undefined, 'normal');
-
-    pdf.text(
-        'Resumen estadístico de los turnos registrados en el sistema.',
-        15,
-        49
-    );
-
-
-    /* ==========================================
-    FECHA
-    ========================================== */
-
-    const fechaActual =
-        new Date().toLocaleDateString('es-AR');
-
-
-    pdf.setFontSize(8);
-
-    pdf.text(
-        'Generado: ' + fechaActual,
-        195,
-        42,
-        {
-            align: 'right'
-        }
-    );
-
-
-    /* ==========================================
-    GRÁFICO
-    ========================================== */
-
-    pdf.addImage(
-        imagen,
-        'PNG',
-        40,
-        57,
-        130,
-        85
-    );
-
-
-    /* ==========================================
-    TABLA
-    ========================================== */
-
-    pdf.autoTable({
-
-        startY: 150,
-
-        head: [
-
-            [
-                'Estado',
-                'Cantidad'
-            ]
-
-        ],
-
-        body: [
-
-            [
-                'Pendiente',
-                <?= $pendientes ?>
-            ],
-
-            [
-                'Confirmado',
-                <?= $confirmados ?>
-            ],
-
-            [
-                'En atención',
-                <?= $enAtencion ?>
-            ],
-
-            [
-                'Completado',
-                <?= $completados ?>
-            ],
-
-            [
-                'Cancelado',
-                <?= $cancelados ?>
-            ]
-
-        ],
-
-        theme: 'grid',
-
-        headStyles: {
-
-            fillColor: [82, 38, 110],
-
-            textColor: [255, 255, 255],
-
-            fontStyle: 'bold'
-
-        },
-
-        styles: {
-
-            fontSize: 9,
-
-            cellPadding: 3
-
-        },
-
-        columnStyles: {
-
-            1: {
-
-                halign: 'center'
-
-            }
-
-        },
-
-        margin: {
-
-            left: 25,
-
-            right: 25
-
-        }
-
-    });
-
-
-    /* ==========================================
-    FOOTER
-    ========================================== */
-
-    pdf.setDrawColor(
-        220,
-        220,
-        220
-    );
-
-
-    pdf.line(
-        15,
-        280,
-        195,
-        280
-    );
-
-
-    pdf.setTextColor(
-        130,
-        130,
-        130
-    );
-
-
-    pdf.setFontSize(8);
-
-    pdf.setFont(
-        undefined,
-        'normal'
-    );
-
-
-    pdf.text(
-        '© 2026 VetSys - Software Veterinario',
-        15,
-        287
-    );
-
-
-    /* ==========================================
-    DESCARGA
-    ========================================== */
-
-    pdf.save(
-        'VetSys_Turnos_por_estado.pdf'
-    );
-
-}
-
-
-function exportarTurnosEstadoExcel() {
-
-    /* ==========================================
-       DATOS DEL REPORTE
-    ========================================== */
-
-    const datos = [
-
-        ['VETSYS - SOFTWARE VETERINARIO', ''],
-        ['Reporte: Turnos por estado', ''],
-        ['Fecha de generación:', new Date().toLocaleDateString('es-AR')],
-        ['', ''],
-
-        ['Estado', 'Cantidad'],
-
-        ['Pendiente', <?= $pendientes ?>],
-        ['Confirmado', <?= $confirmados ?>],
-        ['En atención', <?= $enAtencion ?>],
-        ['Completado', <?= $completados ?>],
-        ['Cancelado', <?= $cancelados ?>]
-
-    ];
-
-
-    /* ==========================================
-       CREAR HOJA
-    ========================================== */
-
-    const hoja = XLSX.utils.aoa_to_sheet(datos);
-
-
-    /* ==========================================
-       ANCHO DE COLUMNAS
-    ========================================== */
-
-    hoja['!cols'] = [
-
-        {
-            wch: 30
-        },
-
-        {
-            wch: 18
-        }
-
-    ];
-
-
-    /* ==========================================
-       COMBINAR TÍTULOS
-    ========================================== */
-
-    hoja['!merges'] = [
-
-        // VetSys
-        {
-            s: { r: 0, c: 0 },
-            e: { r: 0, c: 1 }
-        },
-
-        // Reporte
-        {
-            s: { r: 1, c: 0 },
-            e: { r: 1, c: 1 }
-        }
-
-    ];
-
-
-    /* ==========================================
-       CREAR LIBRO EXCEL
-    ========================================== */
-
-    const libro = XLSX.utils.book_new();
-
-
-    /* ==========================================
-       AGREGAR HOJA
-    ========================================== */
-
-    XLSX.utils.book_append_sheet(
-        libro,
-        hoja,
-        'Turnos por estado'
-    );
-
-
-    /* ==========================================
-       DESCARGAR ARCHIVO
-    ========================================== */
-
-    XLSX.writeFile(
-        libro,
-        'VetSys_Turnos_por_estado.xlsx'
-    );
-
-}
-
-</script>
+<!-- Donde estan los gráficos -->
+<script src="../js/dashboard/charts.js"></script>
+<!-- Funciones para exportar PDF -->
+<script src="../js/dashboard/export_pdf.js"></script>
+<!-- Funciones para exportar Excel -->
+<script src="../js/dashboard/export_excel.js"></script>

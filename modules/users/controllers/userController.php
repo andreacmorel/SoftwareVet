@@ -67,9 +67,9 @@ class UserController{
         }
 
         if (empty($clave)) {
-            $erroresCampos['clave'] = "La contraseña es obligatoria.";
-        } elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d).{8,}$/', $clave)) {
-            $erroresCampos['clave'] = "Debe contener al menos 8 caracteres, una mayuscula y un número.";
+        $erroresCampos['clave'] = "La contraseña es obligatoria.";
+        } elseif (!preg_match('/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/', $clave)) {
+            $erroresCampos['clave'] = "Debe contener al menos 8 caracteres, una mayúscula y un carácter especial.";
         }
 
         if (empty($confirmar_clave)) {
