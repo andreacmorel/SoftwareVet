@@ -59,8 +59,8 @@ class AppointmentController{
 
         if (empty($hora)) {
             $erroresCampos['hora'] = "La hora es obligatoria.";
-        } elseif ($hora < '08:00' || $hora > '21:00') {
-            $erroresCampos['hora'] = "El horario debe estar entre 08:00 y 21:00.";
+        } elseif ($hora < '08:00' || $hora > '20:00') {
+            $erroresCampos['hora'] = "El horario debe estar entre 08:00 y 20:00.";
         } elseif ($fecha == date('Y-m-d') && $hora < date('H:i')) {
             $erroresCampos['hora'] = "La hora no puede ser anterior a la actual.";
         }
@@ -132,6 +132,8 @@ class AppointmentController{
     $motivo = $datos->motivo;
     $id_profesional = (int)$datos->id_profesional;
     $id_mascota = (int)$datos->id_mascota;
+    $id_profesional_actual = $id_profesional;
+    $id_mascota_actual = $id_mascota;
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -164,11 +166,32 @@ class AppointmentController{
         }
 
         if ($id_profesional <= 0) {
-            $erroresCampos['id_profesional'] = "Debe seleccionar un profesional.";
+
+        $erroresCampos['id_profesional'] =
+            "Debe seleccionar un profesional.";
+
+        } elseif (!$this->model->professionalIsValidForEdit(
+            $id_profesional,
+            $id_profesional_actual
+        )) {
+
+            $erroresCampos['id_profesional'] =
+                "El profesional seleccionado no está disponible.";
         }
 
+
         if ($id_mascota <= 0) {
-            $erroresCampos['id_mascota'] = "Debe seleccionar una mascota.";
+
+            $erroresCampos['id_mascota'] =
+                "Debe seleccionar una mascota.";
+
+        } elseif (!$this->model->petIsValidForEdit(
+            $id_mascota,
+            $id_mascota_actual
+        )) {
+
+            $erroresCampos['id_mascota'] =
+                "La mascota seleccionada no está disponible.";
         }
 
         if (empty($erroresCampos)) {
@@ -195,8 +218,8 @@ class AppointmentController{
         }
     }
 
-    $profesionales = $this->model->getProfessionals();
-    $mascotas = $this->model->getPets();
+    $profesionales = $this->model->getProfessionals($id_profesional_actual);
+    $mascotas = $this->model->getPets($id_mascota_actual);
 
     require_once __DIR__ . '/../views/edit.php';
     }

@@ -62,8 +62,6 @@ $resultado = mysqli_query($conexion, $sql);
 </div>
 
 <div class="container-fluid">
-
-    <!-- ENCABEZADO -->
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
 
         <div>
@@ -79,8 +77,6 @@ $resultado = mysqli_query($conexion, $sql);
 
     </div>
 
-
-    <!-- FILTRO -->
     <form method="GET" class="filter-card">
 
         <div class="row align-items-end">
@@ -120,8 +116,6 @@ $resultado = mysqli_query($conexion, $sql);
 
     </form>
 
-
-    <!-- TABLA -->
     <div class="table-card">
 
         <div class="table-responsive">
@@ -149,8 +143,6 @@ $resultado = mysqli_query($conexion, $sql);
                     <?php while ($fila = mysqli_fetch_assoc($resultado)): ?>
 
                         <tr>
-
-                            <!-- FECHA -->
                             <td>
 
                                 <div class="d-flex align-items-center">
@@ -175,8 +167,6 @@ $resultado = mysqli_query($conexion, $sql);
 
                             </td>
 
-
-                            <!-- USUARIO -->
                             <td>
 
                                 <div class="user-name">
@@ -185,8 +175,6 @@ $resultado = mysqli_query($conexion, $sql);
 
                             </td>
 
-
-                            <!-- MODULO -->
                             <td>
 
                                 <span class="badge-total">
@@ -207,8 +195,6 @@ $resultado = mysqli_query($conexion, $sql);
 
                             </td>
 
-
-                            <!-- ACCION -->
                             <td>
 
                                 <strong>
@@ -217,8 +203,6 @@ $resultado = mysqli_query($conexion, $sql);
 
                             </td>
 
-
-                            <!-- REGISTRO -->
                             <td>
 
                                 <?php if ($fila['modulo'] == 'Mascotas'): ?>
@@ -237,14 +221,10 @@ $resultado = mysqli_query($conexion, $sql);
 
                             </td>
 
-
-                            <!-- ANTES -->
                             <td class="dato-muted">
                                 <?= htmlspecialchars($fila['datos_anteriores']) ?>
                             </td>
 
-
-                            <!-- DESPUES -->
                             <td class="dato-muted">
                                 <?= htmlspecialchars($fila['datos_nuevos']) ?>
                             </td>

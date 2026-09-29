@@ -12,25 +12,25 @@ class PetController{
     }
 
     public function index(){
-        
-    $buscar = trim($_GET['buscar'] ?? '');
-    $id_especie = (int)($_GET['id_especie'] ?? 0);
-    $sexo = trim($_GET['sexo'] ?? '');
 
-    $pagina = max(1, (int)($_GET['pagina'] ?? 1));
-    $porPagina = 10;
-    $desde = ($pagina - 1) * $porPagina;
+        $buscar = trim($_GET['buscar'] ?? '');
+        $id_especie = (int)($_GET['id_especie'] ?? 0);
+        $sexo = trim($_GET['sexo'] ?? '');
 
-    $where = $this->model->buildWhere($buscar, $id_especie, $sexo);
+        $where = $this->model->buildWhere(
+            $buscar,
+            $id_especie,
+            $sexo
+        );
 
-    $total = $this->model->countAll($where);
-    $totalPaginas = ceil($total / $porPagina);
+        // Traemos todas las mascotas que cumplen los filtros
+        $mascotas = $this->model->getAll($where);
 
-    $mascotas = $this->model->getAll($where, $desde, $porPagina);
-    $especies = $this->model->getSpecies();
+        // Especies para el filtro
+        $especies = $this->model->getSpecies();
 
-    require_once __DIR__ . '/../views/index.php';
-    }   
+        require_once __DIR__ . '/../views/index.php';
+    }
 
     public function create(){
         

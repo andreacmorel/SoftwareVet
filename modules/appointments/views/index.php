@@ -81,7 +81,9 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-<link href="/SoftwareVet/css/index_style.css" rel="stylesheet">
+<link href="../../css/indexappointment.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
 <body>
@@ -112,15 +114,15 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
             <div class="page-subtitle">Gestión del registro de turnos</div>
         </div>
 
+        <div class="d-flex justify-content-end mb-3">
+            <div id="botonesExportacion"></div>
+        </div>
+
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nuevo Turno
             </a>
             
-
-            <a href="reporte_excel.php" class="btn btn-success ml-2" title="Exportar a Excel">
-                <i class="fas fa-file-excel"></i>
-            </a>
         </div>
     </div>
 
@@ -174,8 +176,8 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
             </div>
 
             <div class="col-md-3 d-flex">
-                <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-filter"></i>
+                <button type="submit"  class="btn btn-filtro" title="Buscar">
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
 
@@ -184,7 +186,7 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
     <div class="table-card">
         <div class="table-responsive">
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%" id="tablaTurnos">
                 <thead>
                     <tr>
                         <th>Fecha / Hora</th>
@@ -295,31 +297,55 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
                             <?php } ?>
 
                         </td>
+                            <td class="text-center">
 
-                                <td class="text-center">
+                                <?php
+                                    // Normalizamos el estado para evitar problemas
+                                    // con mayúsculas, espacios, etc.
+                                    $estadoAccion = strtolower(trim($t->estado));
 
-                                    <?php if ($t->estado !== 'cancelado' && $t->estado !== 'completado') { ?>
-                                        <a 
-                                            href="edit.php?id=<?= $t->id_turno ?>"
-                                            class="btn-action btn-edit" 
-                                            title="Modificar / Reprogramar"
-                                        >
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                    <?php } ?>
+                                    $turnoCerrado = in_array(
+                                        $estadoAccion,
+                                        ['completado', 'cancelado'],
+                                        true
+                                    );
+                                ?>
 
+
+                                <?php if (!$turnoCerrado) { ?>
+
+                                    <!-- EDITAR -->
+                                    <a 
+                                        href="edit.php?id=<?= $t->id_turno ?>"
+                                        class="btn-action btn-edit" 
+                                        title="Modificar / Reprogramar"
+                                    >
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+
+
+                                    <!-- ELIMINAR -->
                                     <button 
                                         type="button"
                                         class="btn-action btn-delete"
                                         data-toggle="modal"
                                         data-target="#modalEliminarTurno"
                                         data-id="<?= $t->id_turno ?>"
-                                        data-nombre="<?= htmlspecialchars($t->mascota . ' - ' . date('d/m/Y', strtotime($t->fecha)) . ' ' . substr($t->hora, 0, 5)) ?>"
+                                        data-nombre="<?= htmlspecialchars(
+                                            $t->mascota . ' - ' .
+                                            date('d/m/Y', strtotime($t->fecha)) . ' ' .
+                                            substr($t->hora, 0, 5),
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+                                        title="Eliminar"
                                     >
                                         <i class="fas fa-trash"></i>
                                     </button>
 
-                                </td>
+                                <?php } ?>
+
+                            </td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
@@ -337,51 +363,130 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
 </div>
 
-<div class="modal fade" id="modalEliminarTurno" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+<!-- =========================================================
+     MODAL ELIMINAR TURNO
+========================================================= -->
 
-            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                <h5 style="margin:0; font-weight:700;">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
+<div 
+    class="modal fade modal-eliminar"
+    id="modalEliminarTurno"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalEliminarTurnoLabel"
+    aria-hidden="true"
+>
+
+    <div 
+        class="modal-dialog modal-dialog-centered"
+        role="document"
+    >
+
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 
+                    class="modal-title"
+                    id="modalEliminarTurnoLabel"
+                >
                     Confirmar eliminación
                 </h5>
 
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Cerrar"
+                >
+                    <span aria-hidden="true">&times;</span>
                 </button>
+
             </div>
 
-            <div class="text-center p-4">
-                <i class="fas fa-calendar-times fa-3x mb-3" style="color:#d8c2e8;"></i>
 
-                <p class="mb-1">¿Estás seguro de eliminar el turno?</p>
+            <!-- BODY -->
+            <div class="modal-body">
 
-                <h5 id="nombreTurnoEliminar" style="color:#52266E; font-weight:800;"></h5>
+                <div class="modal-delete-icon">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
 
-                <p class="mt-3" style="font-size:14px; color:#6b7280;">
-                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>.
+                <p class="modal-delete-question">
+                    ¿Estás seguro de eliminar el turno?
                 </p>
+
+                <div 
+                    class="modal-delete-name"
+                    id="nombreTurnoEliminar"
+                >
+                </div>
+
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+                        Esta acción es
+                        <strong>irreversible</strong>.
+                        El turno dejará de estar disponible
+                        en el listado.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
-                <button type="button" class="btn btn-light" data-dismiss="modal">
-                    <i class="fas fa-times"></i> Cancelar
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-modal-cancelar"
+                    data-dismiss="modal"
+                >
+                    <i class="fas fa-times mr-1"></i>
+                    Cancelar
                 </button>
 
-                <a href="#" id="btnConfirmarEliminarTurno" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Sí­, eliminar
+                <a
+                    href="#"
+                    id="btnConfirmarEliminarTurno"
+                    class="btn btn-modal-eliminar"
+                >
+                    <i class="fas fa-trash mr-1"></i>
+                    Sí, eliminar
                 </a>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<script src="../../vendor/jquery/jquery.min.js"></script>
+<script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- Configuración general VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
 
 <script>
 
@@ -442,6 +547,46 @@ setTimeout(() => {
     }
 
 }, 3500);
+
+$(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaTurnos',
+
+        titulo: 'Listado de Turnos',
+
+        subtitulo: 'Gestión del registro de turnos',
+
+        nombreArchivo: 'Listado_Turnos',
+
+        columnasExportar: [0, 1, 2, 3, 4, 5],
+
+        pageLength: 10,
+
+        orientacionPDF: 'landscape',
+
+        anchosExcel: [
+            20,
+            18,
+            22,
+            22,
+            45,
+            15
+        ],
+
+        anchosPDF: [
+            '16%',
+            '15%',
+            '18%',
+            '18%',
+            '22%',
+            '11%'
+        ]
+
+    });
+
+});
 </script>
 
 </body>

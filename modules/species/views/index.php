@@ -67,7 +67,9 @@ if(isset($_GET['success'])) { ?>
 <title>Listado de Especies</title>
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-<link href="../../css/indexspe.css" rel="stylesheet">
+<link href="../../css/indexspecies.css" rel="stylesheet">
+<link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
 <body>
@@ -97,15 +99,12 @@ if(isset($_GET['success'])) { ?>
         <div class="page-subtitle">Gestión de especies y razas</div>
     </div>
 
+    <div id="botonesExportacion" class="mb-3"></div>
+
     <div class="d-flex">
         <a href="create.php" class="btn btn-purple">
             <i class="fas fa-plus"></i> Nueva Especie
         </a>
-
-        <button class="btn btn-success ml-2"
-                onclick="window.location.href='reporte_excel.php'">
-            <i class="fas fa-file-excel"></i>
-        </button>
     </div>
 </div>
 
@@ -119,8 +118,9 @@ if(isset($_GET['success'])) { ?>
         </div>
 
         <div class="col-md-2">
-            <button type="submit" class="btn btn-purple">
-                <i class="fas fa-filter"></i>
+            <button type="submit"class="btn btn-filtro btn-block"
+            title="Buscar">
+            <i class="fas fa-search"></i>
             </button>
         </div>
 
@@ -130,7 +130,7 @@ if(isset($_GET['success'])) { ?>
 <div class="table-card">
 <div class="table-responsive">
 
-<table class="table table-hover" width="100%">
+<table class="table table-hover" width="100%" id="tablaEspecies">
 
 <thead>
 <tr>
@@ -223,7 +223,62 @@ if ($especies->num_rows > 0) {
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
 
+<!-- DataTables -->
+<script src="../../vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<!-- DataTable reutilizable VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
+
 <script>
+
+
+ $(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaEspecies',
+
+        titulo: 'Listado de Especies',
+
+        subtitulo: 'Gestión de especies y razas',
+
+        nombreArchivo: 'Listado_Especies',
+
+        columnasExportar: [0, 1],
+
+        pageLength: 10,
+
+        orientacionPDF: 'portrait',
+
+        anchosExcel: [
+            25,
+            30
+        ],
+
+        anchosPDF: [
+            '50%',
+            '50%'
+        ]
+
+    });
+
+});
+
 
 // Se ejecuta cuando se está por abrir el modal de eliminaciÃ³n.
 $('#modalEliminar').on('show.bs.modal', function (event) {
@@ -240,9 +295,7 @@ $('#modalEliminar').on('show.bs.modal', function (event) {
     $('#btnEliminar').attr('href', 'delete.php?id=' + boton.data('id'));
 });
 
-</script>
 
-<script>
 
 // Espera 3.5 segundos antes de ocultar el mensaje de éxito.
 setTimeout(() => {
@@ -272,7 +325,6 @@ setTimeout(() => {
     }
 
 }, 3500);
-
 </script>
 </body>
 </html>

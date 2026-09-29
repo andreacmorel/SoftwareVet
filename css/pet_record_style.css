@@ -1,623 +1,539 @@
-﻿/* Estilos generales para vistas index, create y edit. */
+﻿/* =========================================================
+   VETSYS - FICHA DE MASCOTA
+========================================================= */
 
-/* Titulos */
-.page-title,
-.titulo-pagina {
-    color: #1f2937;
-    font-weight: 800;
-    margin-bottom: 2px;
+
+/* =========================================================
+   CABECERA DE LA PÁGINA
+========================================================= */
+
+.ficha-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    margin-top: 15px;
+    margin-bottom: 25px;
 }
 
-.page-title i,
+
+.titulo-pagina {
+    margin: 0 0 3px 0;
+
+    color: #1f2937;
+
+    font-weight: 800;
+}
+
+
 .titulo-pagina i {
     color: #52266E;
 }
 
-.page-subtitle,
-.subtitulo-pagina,
-.subtitulo {
+
+.subtitulo-pagina {
     color: #9ca3af;
+
     font-size: 14px;
-    margin-top: -8px;
-    margin-bottom: 25px;
 }
 
-/* Formularios */
-.form-card,
-.card-form {
-    background: #fff;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-    margin-top: 20px;
-    overflow: hidden;
+
+
+/* =========================================================
+   BOTONES SUPERIORES
+========================================================= */
+
+.ficha-header-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
 }
 
-.form-card {
-    padding: 25px;
+
+.ficha-header-actions .btn {
+    min-width: 92px;
+
+    padding: 8px 13px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: none;
 }
 
-.card-header-form {
+
+.btn-volver {
+    background: #ffffff;
+
+    color: #52266E;
+
+    border: 1px solid #d8c2e8;
+}
+
+
+.btn-volver:hover {
     background: #fbf7ff;
-    border-bottom: 1px solid #eee1f6;
-    padding: 18px 22px;
-}
 
-.card-header-form h5 {
     color: #52266E;
-    font-weight: 800;
-    margin: 0;
-}
 
-.card-body {
-    padding: 25px;
-}
-
-label,
-.form-group label,
-.section-label {
-    color: #52266E;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.section-label {
-    margin-bottom: 4px;
-}
-
-.form-control {
-    border: 1px solid #d8c2e8;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.form-control:focus {
     border-color: #52266E;
-    box-shadow: 0 0 0 3px rgba(82, 38, 110, .12);
 }
 
-.form-control.is-invalid,
-select.form-control.is-invalid {
-    border-color: #dc2626 !important;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, .12) !important;
-}
 
-.invalid-feedback {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.section-title {
-    color: #52266E;
-    font-size: 15px;
-    font-weight: 800;
-    margin-bottom: 18px;
-}
-
-.section-title i {
-    color: #52266E;
-}
-
-.help-text {
-    color: #6b7280;
-    font-size: 13px;
-    margin-top: 4px;
-}
-
-/* Botones */
-.btn-purple,
-.btn-guardar {
+.btn-purple {
     background: #52266E;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-weight: 700;
-    padding: 8px 22px;
+
+    color: #ffffff;
+
+    border: 1px solid #52266E;
 }
 
-.btn-purple:hover,
-.btn-guardar:hover {
+
+.btn-purple:hover {
     background: #3f1d55;
-    color: #fff;
+
+    color: #ffffff;
+
+    border-color: #3f1d55;
 }
 
-.btn-cancel,
-.btn-cancelar {
-    background: #e5e7eb;
-    border-radius: 8px;
-    color: #374151;
-    font-weight: 700;
-    padding: 8px 22px;
-}
 
-.btn-cancel:hover,
-.btn-cancelar:hover {
-    background: #d1d5db;
-    color: #111827;
-}
 
-.btn-light-pro {
-    background: #f8f9fc;
-    border-radius: 8px;
-    color: #6b7280;
-    font-weight: 600;
-}
+/* =========================================================
+   DOCUMENTO
+========================================================= */
 
-.actions-bar {
-    border-top: 1px solid #f3f4f6;
-    display: flex;
-    gap: 10px;
-    margin-top: 28px;
-    padding-top: 20px;
-}
+.ficha-documento {
+    width: 100%;
 
-/* Listados */
-.filter-card {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-    margin-top: 25px;
-    margin-bottom: 25px;
-    padding: 18px 20px;
-}
+    max-width: 1050px;
 
-.filter-card label {
-    color: #52266E;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
+    margin: 0 auto 90px auto;
 
-.filter-card .form-control {
-    border: 1px solid #d8c2e8;
-    border-radius: 8px;
-    font-size: 14px;
-}
+    background: #ffffff;
 
-.table-card {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+    border: 1px solid #e5dbea;
+
+    border-top: 5px solid #52266E;
+
+    border-radius: 3px;
+
+    box-shadow:
+        0 8px 28px rgba(31, 41, 55, .08);
+
     overflow: hidden;
 }
 
-.table {
-    margin-bottom: 0;
-}
 
-thead th {
-    background: #fbf7ff !important;
-    border-bottom: 2px solid #eee1f6 !important;
-    color: #52266E !important;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
 
-tbody td {
-    color: #374151;
-    font-size: 14px;
-    vertical-align: middle !important;
-}
+/* =========================================================
+   CABECERA DEL PACIENTE
+========================================================= */
 
-tbody tr:hover {
-    background: #fcf8ff;
-}
-
-td.text-center {
-    vertical-align: middle !important;
-}
-
-.dato-muted,
-.text-muted-vet {
-    color: #6b7280;
-}
-
-/* Identificadores e iconos de tablas */
-.cliente-name,
-.pet-name,
-.prof-name,
-.perfil-name,
-.modulo-name,
-.user-name,
-.especie-name,
-.mascota-name,
-.dato-valor {
-    color: #111827;
-    font-weight: 800;
-}
-
-.cliente-id,
-.pet-id,
-.prof-id,
-.perfil-id,
-.modulo-id,
-.user-id,
-.hc-code {
-    color: #9ca3af;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.cliente-icon,
-.pet-icon,
-.prof-icon,
-.perfil-icon,
-.modulo-icon,
-.user-icon,
-.especie-icon,
-.historia-icon,
-.turno-icon {
-    align-items: center;
-    background: #f0e6f6;
-    border-radius: 8px;
-    color: #52266E;
-    display: inline-flex;
-    height: 34px;
-    justify-content: center;
-    margin-right: 10px;
-    width: 34px;
-}
-
-.turno-date {
-    color: #111827;
-    font-weight: 800;
-}
-
-.turno-hour {
-    color: #6b7280;
-    font-size: 13px;
-}
-
-/* Acciones de tablas */
-.btn-action {
-    align-items: center;
-    border: none;
-    border-radius: 8px;
-    display: inline-flex;
-    height: 31px;
-    justify-content: center;
-    margin: 0 2px;
-    text-decoration: none;
-    width: 31px;
-}
-
-.btn-action:hover {
-    text-decoration: none;
-    transform: scale(1.08);
-}
-
-.btn-edit {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.btn-delete,
-.btn-desactivar {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-
-.btn-activar,
-.btn-treatment {
-    background: #dcfce7;
-    color: #15803d;
-}
-
-.btn-view,
-.btn-print {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
-
-.btn-modulos {
-    background: #ede9fe;
-    color: #6d28d9;
-}
-
-.acciones-td {
-    min-width: 105px;
-}
-
-.acciones-wrap {
+.ficha-paciente-header {
     display: flex;
-    gap: 4px;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+
+    min-height: 135px;
+
+    padding: 28px 38px;
+
+    background: #fbf7ff;
+
+    border-bottom: 1px solid #52266E;
 }
 
-/* Badges y estados */
-.badge-total,
-.badge-raza,
-.badge-vet,
-.badge-especie,
-.badge-peso,
-.ruta-badge,
-.perfil-badge {
-    background: #f0e6f6;
-    border-radius: 999px;
-    color: #52266E;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 10px;
+
+
+.paciente-principal {
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
 }
+
+
+
+/* ICONO */
+
+.paciente-icono {
+    width: 72px;
+    height: 72px;
+
+    min-width: 72px;
+
+    border-radius: 50%;
+
+    background: #52266E;
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 27px;
+}
+
+
+
+/* NOMBRE */
+
+.paciente-identidad h2 {
+    margin: 0 0 9px 0;
+
+    color: #111827;
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.paciente-badges {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.badge-ficha {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 5px 10px;
+
+    border-radius: 15px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.badge-especie {
+    background: #ead7f7;
+
+    color: #52266E;
+}
+
 
 .badge-macho {
     background: #dbeafe;
+
     color: #1d4ed8;
 }
+
 
 .badge-hembra {
     background: #fce7f3;
+
     color: #be185d;
 }
 
-.badge-estado {
-    border-radius: 999px;
-    display: inline-block;
-    font-size: 12px;
+
+
+/* =========================================================
+   NÚMERO DE FICHA
+========================================================= */
+
+.numero-ficha {
+    min-width: 175px;
+
+    padding-left: 28px;
+
+    border-left: 1px solid #e4d7eb;
+
+    text-align: right;
+}
+
+
+.numero-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #8b7896;
+
+    font-size: 11px;
+}
+
+
+.numero-ficha strong {
+    color: #52266E;
+
+    font-size: 25px;
+
+    font-weight: 500;
+
+    letter-spacing: 2px;
+}
+
+
+
+/* =========================================================
+   SECCIONES DE LA FICHA
+========================================================= */
+
+.seccion-ficha {
+    padding-left: 38px;
+    padding-right: 38px;
+    padding-top: 30px;
+    padding-bottom: 0;
+}
+
+
+/* =========================================================
+   SEPARACIÓN ENTRE SECCIONES
+========================================================= */
+
+/* Separa Datos de la mascota de Datos del propietario */
+.seccion-ficha + .seccion-ficha {
+    margin-top: 28px;
+}
+
+
+/* =========================================================
+   TÍTULO DE CADA SECCIÓN
+========================================================= */
+
+.titulo-seccion {
+    margin-bottom: 15px;
+
+    padding-left: 12px;
+
+    border-left: 4px solid #52266E;
+
+    color: #52266E;
+
+    font-size: 14px;
     font-weight: 800;
-    padding: 4px 10px;
+
+    line-height: 20px;
 }
 
-.badge-estado.activo,
-.estado-confirmado,
-.estado-completado {
-    background: #dcfce7;
-    color: #15803d;
+
+.titulo-seccion i {
+    width: 18px;
+
+    margin-right: 5px;
+
+    text-align: center;
+
+    color: #52266E;
 }
 
-.badge-estado.inactivo,
-.estado-cancelado {
-    background: #fee2e2;
-    color: #b91c1c;
-}
 
-.estado-pendiente {
-    background: #fef3c7;
-    color: #92400e;
-}
+/* =========================================================
+   TABLA DE DATOS
+========================================================= */
 
-.estado-en_atencion {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
+.tabla-datos {
+    display: grid;
 
-.inactivo-row {
-    opacity: .68;
-}
-
-.estado-select {
-    border: 1px solid #d8c2e8;
-    border-radius: 8px;
-    color: #374151;
-    font-size: 13px;
-    padding: 4px 8px;
-}
-
-.estado-select:hover {
-    border-color: #52266E;
-}
-
-/* Alertas */
-.vet-alert-success,
-.vet-alert-danger,
-.vet-alert-error,
-.alert-danger-vet,
-.alert-info-vet,
-.alert-pro {
-    border-radius: 16px;
-    margin-bottom: 25px;
-    padding: 18px 22px;
-}
-
-.vet-alert-success {
-    align-items: center;
-    animation: fadeIn .35s ease;
-    background: linear-gradient(135deg, #f6fffa, #eefcf4);
-    border: 1px solid #d7f3e3;
-    box-shadow: 0 6px 18px rgba(25, 135, 84, .08);
-    display: flex;
-    gap: 16px;
     width: 100%;
+
+    border-top: 1px solid #dccde5;
+    border-left: 1px solid #dccde5;
+
+    background: #ffffff;
 }
 
-.vet-alert-danger,
-.vet-alert-error,
-.alert-danger-vet,
-.alert-pro {
-    background: #fee2e2;
-    color: #991b1b;
+
+/* =========================================================
+   DATOS DE LA MASCOTA
+========================================================= */
+
+.mascota-datos {
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr;
+}
+
+
+/* La raza ocupa dos columnas */
+.campo-raza {
+    grid-column: span 2;
+}
+
+
+/* =========================================================
+   DATOS DEL PROPIETARIO
+========================================================= */
+
+.propietario-datos {
+    grid-template-columns:
+        1fr
+        1fr;
+}
+
+
+/* Email ocupa todo el ancho */
+.campo-email {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   CELDAS
+========================================================= */
+
+.campo-ficha {
+    min-height: 72px;
+
+    padding: 13px 16px;
+
+    border-right: 1px solid #dccde5;
+    border-bottom: 1px solid #dccde5;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+/* Nombre del campo */
+.campo-ficha span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #8b7896;
+
+    font-size: 10px;
     font-weight: 600;
 }
 
-.alert-info-vet {
-    background: #eff6ff;
-    color: #1d4ed8;
-}
 
-.vet-alert-icon,
-.vet-alert-danger-icon,
-.vet-alert-error-icon {
-    align-items: center;
-    border-radius: 50%;
-    color: #fff;
-    display: flex;
-    font-size: 18px;
-    height: 48px;
-    justify-content: center;
-    min-width: 48px;
-    width: 48px;
-}
-
-.vet-alert-icon {
-    background: #198754;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, .25);
-}
-
-.vet-alert-danger-icon,
-.vet-alert-error-icon {
-    background: #dc2626;
-    box-shadow: 0 4px 10px rgba(220, 38, 38, .25);
-}
-
-.vet-alert-content h5,
-.vet-alert-danger-content h5 {
-    font-size: 15px;
-    font-weight: 800;
-    margin: 0;
-}
-
-.vet-alert-success .vet-alert-content h5,
-.vet-alert-content h5 {
-    color: #166534;
-}
-
-.vet-alert-danger .vet-alert-content h5,
-.vet-alert-error .vet-alert-content h5,
-.vet-alert-danger-content h5 {
-    color: #991b1b;
-}
-
-.vet-alert-content p,
-.vet-alert-danger-content p {
-    color: #4b5563;
-    font-size: 14px;
-    margin: 3px 0 0;
-}
-
-/* Historias clinicas */
-.trat-row {
-    background: #fbf7ff;
-    border: 1px solid #eee1f6;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    padding: 15px;
-    position: relative;
-}
-
-.btn-del-trat {
-    background: #fee2e2;
-    border: none;
-    border-radius: 8px;
-    color: #b91c1c;
-    height: 28px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 28px;
-}
-
-.btn-add-trat {
-    background: #fbf7ff;
-    border: 1px dashed #52266E;
-    border-radius: 8px;
-    color: #52266E;
-    font-weight: 700;
-    padding: 8px 14px;
-}
-
-.btn-add-trat:hover {
-    background: #f0e6f6;
-    color: #52266E;
-}
-
-/* Asignacion de modulos */
-.modulos-grid {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-}
-
-.modulo-item {
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    cursor: pointer;
-    padding: 14px;
-    transition: border-color .15s, background .15s, transform .15s;
-}
-
-.modulo-item:hover {
-    border-color: #d8c2e8;
-    transform: translateY(-1px);
-}
-
-.modulo-item.checked {
-    background: #faf5ff;
-    border-color: #52266E;
-}
-
-.modulo-item input[type="checkbox"] {
-    margin-right: 8px;
-}
-
-.modulo-nombre {
-    color: #1f2937;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-/* Ficha de mascota */
-.card-ficha {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
-    margin-bottom: 20px;
-    overflow: hidden;
-}
-
-.card-header-ficha {
-    background: #fbf7ff;
-    border-bottom: 1px solid #eee1f6;
-    padding: 16px 20px;
-}
-
-.card-header-ficha h6 {
-    color: #52266E;
-    font-weight: 800;
-    margin: 0;
-}
-
-.dato-item {
-    border-bottom: 1px solid #f3f4f6;
-    padding: 12px 0;
-}
-
-.dato-item:last-child {
-    border-bottom: none;
-}
-
-.dato-label {
-    color: #9ca3af;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.btn-volver {
-    background: #e5e7eb;
-    border-radius: 8px;
-    color: #374151;
-    font-weight: 700;
-    padding: 8px 22px;
-}
-
-.btn-volver:hover {
-    background: #d1d5db;
+/* Valor del campo */
+.campo-ficha strong {
     color: #111827;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    line-height: 1.3;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
+
+/* =========================================================
+   ESPACIO FINAL DE LA FICHA
+========================================================= */
+
+.seccion-ficha:last-of-type {
+    padding-bottom: 40px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .ficha-page-header {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .ficha-header-actions {
+        justify-content: flex-end;
+    }
+
+    .ficha-paciente-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 25px;
+
+        padding: 25px;
+    }
+
+    .numero-ficha {
+        width: 100%;
+
+        padding-left: 0;
+        padding-top: 18px;
+
+        border-left: none;
+        border-top: 1px solid #e4d7eb;
+
+        text-align: left;
+    }
+
+    .seccion-ficha {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 25px;
+    }
+
+    .seccion-ficha + .seccion-ficha {
+        margin-top: 20px;
+    }
+
+    .mascota-datos,
+    .propietario-datos {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .campo-raza {
+        grid-column: auto;
+    }
+
+    .campo-email {
+        grid-column: 1 / -1;
     }
 }
 
+
+/* =========================================================
+   CELULARES
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .mascota-datos,
+    .propietario-datos {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-email {
+        grid-column: auto;
+    }
+
+    .paciente-principal {
+        align-items: flex-start;
+    }
+
+    .paciente-icono {
+        width: 58px;
+        height: 58px;
+
+        min-width: 58px;
+
+        font-size: 22px;
+    }
+
+    .paciente-identidad h2 {
+        font-size: 20px;
+    }
+
+}

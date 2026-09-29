@@ -79,7 +79,7 @@ class ClientController{
                 $manzana
             );
 
-            if ($resultado === true) {
+            if (is_numeric($resultado)) {
                 header("Location: index.php?success=1");
                 exit;
             } else {

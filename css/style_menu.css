@@ -393,12 +393,15 @@
 
         .topbar-divider { width: 1px; height: 28px; background: #e3e6f0; margin: 0 10px; }
 
+/* =========================================================
+   FOOTER GENERAL VETSYS
+========================================================= */
+
 .footer-vetsys {
     position: fixed;
 
     bottom: 0;
     right: 0;
-
     left: 224px;
 
     min-height: 45px;
@@ -422,21 +425,42 @@
 }
 
 
-/* Cuando el menú queda solo con íconos */
+/* =========================================================
+   ESPACIO PARA QUE EL FOOTER NO TAPE EL CONTENIDO
+========================================================= */
+
+/*
+   El scroll de VetSys está en #content-wrapper.
+   Por eso reservamos el espacio dentro de #content
+   y NO en el body.
+*/
+
+#content {
+    padding-bottom: 70px;
+}
+
+
+/* =========================================================
+   FOOTER CON SIDEBAR EN MODO ÍCONOS
+========================================================= */
 
 body[data-sidebar="icons"] .footer-vetsys {
     left: 78px;
 }
 
 
-/* Cuando el menú está oculto */
+/* =========================================================
+   FOOTER CON SIDEBAR OCULTO
+========================================================= */
 
 body[data-sidebar="hidden"] .footer-vetsys {
     left: 0;
 }
 
 
-/* Responsive */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media (max-width: 768px) {
 

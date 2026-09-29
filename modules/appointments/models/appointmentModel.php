@@ -158,17 +158,10 @@ class AppointmentModel{
 
         // Guarda la auditoría
         $sqlAuditoria = "
-            INSERT INTO auditoria
-            (
-                id_usuario,
-                modulo,
-                accion,
-                id_registro,
-                datos_anteriores,
-                datos_nuevos
-            )
-            VALUES
-            (
+            INSERT INTO auditoria(
+                id_usuario,modulo,accion,id_registro,datos_anteriores,
+                datos_nuevos)
+            VALUES(
                 $id_usuario,
                 'Turnos',
                 'Modificación',
@@ -212,27 +205,43 @@ class AppointmentModel{
     //    return $resultado;
    // }
 
-    public function getProfessionals(){
+    public function getProfessionals($id_profesional_actual = 0){
+
+        $id_profesional_actual = (int)$id_profesional_actual;
 
         return $this->conexion->query("
-            SELECT p.id_profesional, CONCAT(per.apellido_persona, ', ', per.nombre_persona) AS nombre
+            SELECT p.id_profesional,
+                CONCAT(
+                    per.apellido_persona,
+                    ', ',
+                    per.nombre_persona
+                ) AS nombre
             FROM profesional p
-            INNER JOIN persona per ON per.id_persona = p.id_persona
+            INNER JOIN persona per 
+                ON per.id_persona = p.id_persona
+            WHERE p.activo = 1
+            OR p.id_profesional = $id_profesional_actual
             ORDER BY per.apellido_persona ASC
         ");
     }
 
-    public function getPets(){
+    public function getPets($id_mascota_actual = 0){
+
+        $id_mascota_actual = (int)$id_mascota_actual;
 
         return $this->conexion->query("
-            SELECT id_mascota, nombre_mascota 
+            SELECT 
+                id_mascota, 
+                nombre_mascota
             FROM mascota
+            WHERE activo = 1
+            OR id_mascota = $id_mascota_actual
             ORDER BY nombre_mascota ASC
         ");
     }
 
     public function getAll($filtro_profesional, $filtro_estado, $filtro_fecha_desde, $filtro_fecha_hasta)
-{
+    {
     $estados_validos = ['pendiente', 'confirmado', 'en_atencion', 'completado', 'cancelado'];
 
     $where = ["t.activo = 1"];
@@ -316,6 +325,7 @@ class AppointmentModel{
         SELECT p.id_profesional, per.nombre_persona, per.apellido_persona
         FROM profesional p
         INNER JOIN persona per ON p.id_persona = per.id_persona
+        WHERE p.activo = 1
         ORDER BY per.apellido_persona ASC
     ");
     }
@@ -325,6 +335,7 @@ class AppointmentModel{
         return mysqli_query($this->conexion, "
             SELECT id_mascota, nombre_mascota
             FROM mascota
+            WHERE activo = 1
             ORDER BY nombre_mascota ASC
         ");
     }
@@ -335,6 +346,7 @@ class AppointmentModel{
             SELECT id_profesional
             FROM profesional
             WHERE id_profesional = $id_profesional
+            AND activo = 1
             LIMIT 1
         ");
 
@@ -347,6 +359,7 @@ class AppointmentModel{
             SELECT id_mascota
             FROM mascota
             WHERE id_mascota = $id_mascota
+            AND activo = 1
             LIMIT 1
         ");
 
@@ -414,7 +427,73 @@ class AppointmentModel{
 
     //return $resultado;
     //}
+    
+    public function professionalIsValidForEdit($id_profesional, $id_profesional_actual){
 
+    $id_profesional = (int)$id_profesional;
+    $id_profesional_actual = (int)$id_profesional_actual;
+
+    $stmt = $this->conexion->prepare("
+        SELECT id_profesional
+        FROM profesional
+        WHERE id_profesional = ?
+        AND (
+            activo = 1
+            OR id_profesional = ?
+        )
+        LIMIT 1
+    ");
+
+    $stmt->bind_param(
+        "ii",
+        $id_profesional,
+        $id_profesional_actual
+    );
+
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    $valido = $resultado->num_rows > 0;
+
+    $stmt->close();
+
+    return $valido;
+    }
+
+
+    public function petIsValidForEdit($id_mascota, $id_mascota_actual){
+
+        $id_mascota = (int)$id_mascota;
+        $id_mascota_actual = (int)$id_mascota_actual;
+
+        $stmt = $this->conexion->prepare("
+            SELECT id_mascota
+            FROM mascota
+            WHERE id_mascota = ?
+            AND (
+                activo = 1
+                OR id_mascota = ?
+            )
+            LIMIT 1
+        ");
+
+        $stmt->bind_param(
+            "ii",
+            $id_mascota,
+            $id_mascota_actual
+        );
+
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        $valido = $resultado->num_rows > 0;
+
+        $stmt->close();
+
+        return $valido;
+    }
     public function updateStatus($id_turno, $estado, $id_usuario){
 
     // Obtiene el estado ANTES

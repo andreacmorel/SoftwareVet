@@ -48,27 +48,28 @@ class PetModel{
         return $totalQuery->fetch_object()->total;
     }
 
-    public function getAll($where, $desde, $porPagina){
-        return $this->conexion->query("
-            SELECT 
-                m.id_mascota,
-                m.nombre_mascota,
-                m.sexo,
-                m.peso,
-                m.edad,
-                m.unidad_edad,
-                m.color,
-                e.nombre_especie,
-                e.raza,
-                CONCAT(p.nombre_persona, ' ', p.apellido_persona) AS cliente
-            FROM mascota m
-            INNER JOIN especie e ON m.id_especie = e.id_especie
-            INNER JOIN cliente c ON m.id_cliente = c.id_cliente
-            INNER JOIN persona p ON c.id_persona = p.id_persona
-            $where
-            ORDER BY m.id_mascota DESC
-            LIMIT $desde, $porPagina
-        ");
+    public function getAll($where){
+
+    return $this->conexion->query("SELECT m.id_mascota,m.nombre_mascota,m.sexo,
+            m.peso,m.edad,m.unidad_edad,m.color,
+            e.nombre_especie,e.raza,
+            CONCAT(
+                p.nombre_persona,
+                ' ',
+                p.apellido_persona
+            ) AS cliente
+
+        FROM mascota m INNER JOIN especie e
+            ON m.id_especie = e.id_especie
+        INNER JOIN cliente c
+            ON m.id_cliente = c.id_cliente
+        INNER JOIN persona p
+            ON c.id_persona = p.id_persona
+
+        $where
+
+        ORDER BY m.id_mascota DESC
+    ");
     }
 
     public function getSpecies(){
@@ -85,14 +86,20 @@ class PetModel{
     return mysqli_query($this->conexion, "SELECT c.id_cliente, p.nombre_persona, p.apellido_persona
         FROM cliente c
         INNER JOIN persona p ON c.id_persona = p.id_persona
+        WHERE c.activo = 1
+        ORDER BY 
+            p.apellido_persona ASC,
+            p.nombre_persona ASC
     ");
     }
 
     public function getSpeciesForSelect(){
 
     return mysqli_query($this->conexion, "
-        SELECT id_especie, nombre_especie, raza 
+        SELECT id_especie, nombre_especie, raza
         FROM especie
+        WHERE activo = 1
+        ORDER BY nombre_especie ASC, raza ASC
     ");
     }
 

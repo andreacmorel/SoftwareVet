@@ -7,197 +7,452 @@ require_once '../../app/menu.php';
 
 <head>
     <meta charset="utf-8">
-    <title>Ficha Mascota</title>
-    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../../css/pet_record_style.css" rel="stylesheet">
 
+    <title>Ficha Mascota</title>
+
+    <link
+        href="../../vendor/fontawesome-free/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="../../css/sb-admin-2.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="../../css/pet_record_style.css"
+        rel="stylesheet"
+    >
 </head>
+
 
 <body>
 
+
+<!-- =====================================================
+     BREADCRUMB
+===================================================== -->
+
 <div class="vetsys-breadcrumb-container">
+
     <ol class="vetsys-breadcrumb">
 
         <li class="breadcrumb-item">
+
             <a href="/SoftwareVet/app/inicio.php">
-                <i class="fas fa-home"></i> Inicio
+
+                <i class="fas fa-home"></i>
+                Inicio
+
             </a>
+
         </li>
 
+
         <li class="breadcrumb-item">
+
             <a href="/SoftwareVet/modules/pets/index.php">
                 Mascotas
             </a>
+
         </li>
+
 
         <li class="breadcrumb-item active">
             Ficha de mascota
         </li>
 
     </ol>
+
 </div>
+
+
 
 <div class="container-fluid">
 
-    <h1 class="h3 titulo-pagina">
-        <i class="fas fa-paw mr-2"></i>
-        Ficha de Mascota
-    </h1>
 
-    <div class="subtitulo-pagina">
-        Información completa del paciente y su propietario.
-    </div>
+    <!-- =================================================
+         CABECERA DE LA PÁGINA
+    ================================================== -->
 
-    <div class="card card-ficha mb-4">
-        <div class="card-header-ficha">
-            <h6>
-                <i class="fas fa-dog mr-2"></i>
-                Datos de la Mascota
-            </h6>
+    <div class="ficha-page-header">
+
+        <div>
+
+            <h1 class="h3 titulo-pagina">
+
+                <i class="fas fa-paw mr-2"></i>
+
+                Ficha de Mascota
+
+            </h1>
+
+
+            <div class="subtitulo-pagina">
+
+                Información completa del paciente
+                y su propietario.
+
+            </div>
+
         </div>
 
-        <div class="card-body">
-            <div class="row">
 
-                <div class="col-md-6">
-                    <div class="dato-item">
-                        <div class="dato-label">Nombre</div>
-                        <div class="dato-valor">
-                            <?= htmlspecialchars($mascota['nombre_mascota']) ?>
-                        </div>
-                    </div>
+        <!-- BOTONES -->
 
-                    <div class="dato-item">
-                        <div class="dato-label">Fecha de nacimiento</div>
-                        <div class="dato-valor">
-                            <?= $fechaNacimiento ?>
-                        </div>
-                    </div>
+        <div class="ficha-header-actions">
 
-                    <div class="dato-item">
-                        <div class="dato-label">Sexo</div>
-                        <div class="dato-valor">
-                            <?php if ($mascota['sexo'] == 'M') { ?>
-                                <span class="badge-vet badge-macho">
-                                    <i class="fas fa-mars mr-1"></i> Macho
-                                </span>
-                            <?php } elseif ($mascota['sexo'] == 'H') { ?>
-                                <span class="badge-vet badge-hembra">
-                                    <i class="fas fa-venus mr-1"></i> Hembra
-                                </span>
-                            <?php } else { ?>
-                                <span class="text-muted-vet">No registrado</span>
-                            <?php } ?>
-                        </div>
-                    </div>
+            <a
+                href="index.php"
+                class="btn btn-volver"
+            >
 
-                    <div class="dato-item">
-                        <div class="dato-label">Peso</div>
-                        <div class="dato-valor">
-                            <span class="badge-vet badge-peso">
-                                <i class="fas fa-weight mr-1"></i>
-                                <?= $peso ?>
-                            </span>
-                        </div>
-                    </div>
+                <i class="fas fa-arrow-left mr-1"></i>
+
+                Volver
+
+            </a>
+
+
+            <a
+                href="print_pet_record.php?id=<?= $id ?>"
+                target="_blank"
+                class="btn btn-purple"
+            >
+
+                <i class="fas fa-print mr-1"></i>
+
+                Imprimir
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="ficha-documento">
+        <div class="ficha-paciente-header">
+            <div class="paciente-principal">
+
+                <div class="paciente-icono">
+
+                    <i class="fas fa-dog"></i>
+
                 </div>
 
-                <div class="col-md-6">
-                    <div class="dato-item">
-                        <div class="dato-label">Color</div>
-                        <div class="dato-valor">
-                            <?= $color ?>
-                        </div>
-                    </div>
+                <div class="paciente-identidad">
 
-                    <div class="dato-item">
-                        <div class="dato-label">Edad</div>
-                        <div class="dato-valor">
-                            <?= $edad ?>
-                        </div>
-                    </div>
+                    <h2>
 
-                    <div class="dato-item">
-                        <div class="dato-label">Especie</div>
-                        <div class="dato-valor">
-                            <span class="badge-vet badge-especie">
-                                <?= htmlspecialchars($mascota['nombre_especie']) ?>
+                        <?= htmlspecialchars(
+                            $mascota['nombre_mascota']
+                        ) ?>
+
+                    </h2>
+
+
+                    <div class="paciente-badges">
+                        <span class="badge-ficha badge-especie">
+
+                            <?= htmlspecialchars(
+                                $mascota['nombre_especie']
+                            ) ?>
+                        </span>
+
+                        <?php if ($mascota['sexo'] == 'M') { ?>
+
+                            <span class="badge-ficha badge-macho">
+
+                                <i class="fas fa-mars"></i>
+
+                                Macho
+
                             </span>
-                        </div>
+
+                        <?php } elseif ($mascota['sexo'] == 'H') { ?>
+
+                            <span class="badge-ficha badge-hembra">
+
+                                <i class="fas fa-venus"></i>
+
+                                Hembra
+
+                            </span>
+
+                        <?php } ?>
+
                     </div>
 
-                    <div class="dato-item">
-                        <div class="dato-label">Raza</div>
-                        <div class="dato-valor">
-                            <?= !empty($mascota['raza']) ? htmlspecialchars($mascota['raza']) : 'Sin especificar' ?>
-                        </div>
-                    </div>
                 </div>
 
             </div>
-        </div>
-    </div>
 
-    <div class="card card-ficha mb-4">
-        <div class="card-header-ficha">
-            <h6>
-                <i class="fas fa-user mr-2"></i>
-                Datos del Dueño
-            </h6>
-        </div>
 
-        <div class="card-body">
-            <div class="row">
+            <div class="numero-ficha">
 
-                <div class="col-md-6">
-                    <div class="dato-item">
-                        <div class="dato-label">Nombre completo</div>
-                        <div class="dato-valor">
-                            <?= htmlspecialchars($mascota['nombre_persona'] . " " . $mascota['apellido_persona']) ?>
-                        </div>
-                    </div>
+                <span class="numero-label">
 
-                    <div class="dato-item">
-                        <div class="dato-label">Teléfono</div>
-                        <div class="dato-valor">
-                            <?= $telefono ?>
-                        </div>
-                    </div>
-                </div>
+                    Ficha clínica
 
-                <div class="col-md-6">
-                    <div class="dato-item">
-                        <div class="dato-label">Email</div>
-                        <div class="dato-valor">
-                            <?= $email ?>
-                        </div>
-                    </div>
-                </div>
+                </span>
+
+                <strong>
+
+                    N° <?= str_pad(
+                        $mascota['id_mascota'],
+                        5,
+                        '0',
+                        STR_PAD_LEFT
+                    ) ?>
+
+                </strong>
 
             </div>
+
         </div>
-    </div>
 
-    <div class="d-flex justify-content-end" style="gap: 12px;">
-        <a href="index.php" class="btn btn-volver">
-            <i class="fas fa-arrow-left mr-1"></i>
-            Volver
-        </a>
 
-        <a href="print_pet_record.php?id=<?= $id ?>" target="_blank" class="btn btn-purple">
-            <i class="fas fa-print mr-1"></i>
-            Imprimir
-        </a>
+        <section class="seccion-ficha">
+            <div class="titulo-seccion">
+
+                <i class="fas fa-paw"></i>
+
+                Datos de la mascota
+
+            </div>
+
+
+
+            <div class="tabla-datos mascota-datos">
+
+                <div class="campo-ficha">
+
+                    <span>Especie</span>
+
+                    <strong>
+
+                        <?= htmlspecialchars(
+                            $mascota['nombre_especie']
+                        ) ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha campo-raza">
+
+                    <span>Raza</span>
+
+                    <strong>
+
+                        <?= !empty($mascota['raza'])
+                            ? htmlspecialchars($mascota['raza'])
+                            : 'Sin especificar'
+                        ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha">
+
+                    <span>Sexo</span>
+
+                    <strong>
+
+                        <?php
+
+                        if ($mascota['sexo'] == 'M') {
+
+                            echo 'Macho';
+
+                        } elseif ($mascota['sexo'] == 'H') {
+
+                            echo 'Hembra';
+
+                        } else {
+
+                            echo 'Sin especificar';
+                        }
+
+                        ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha">
+
+                    <span>Color</span>
+
+                    <strong>
+                        <?= $color ?>
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha">
+
+                    <span>
+                        Fecha de nacimiento
+                    </span>
+
+                    <strong>
+
+                        <?= $fechaNacimiento ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha">
+
+                    <span>Edad</span>
+
+                    <strong>
+
+                        <?php
+
+                        $edad =
+                            $mascota['edad'] ?? '';
+
+                        $unidad =
+                            $mascota['unidad_edad'] ?? '';
+
+
+                        if ($edad == 1) {
+
+                            if ($unidad == 'dias') {
+
+                                $unidad = 'día';
+
+                            } elseif ($unidad == 'meses') {
+
+                                $unidad = 'mes';
+
+                            } elseif ($unidad == 'años') {
+
+                                $unidad = 'año';
+                            }
+
+                        } else {
+
+                            if ($unidad == 'dias') {
+
+                                $unidad = 'días';
+                            }
+                        }
+
+                        ?>
+
+
+                        <?php if (!empty($edad)) { ?>
+
+                            <?= htmlspecialchars($edad) ?>
+
+                            <?= htmlspecialchars($unidad) ?>
+
+                        <?php } else { ?>
+
+                            Sin especificar
+
+                        <?php } ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha">
+
+                    <span>Peso</span>
+
+                    <strong>
+                        <?= $peso ?>
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+        <section class="seccion-ficha">
+
+
+            <div class="titulo-seccion">
+
+                <i class="fas fa-user"></i>
+
+                Datos del propietario
+
+            </div>
+
+
+
+            <div class="tabla-datos propietario-datos">
+                <div class="campo-ficha">
+
+                    <span>
+                        Nombre completo
+                    </span>
+
+                    <strong>
+
+                        <?= htmlspecialchars(
+                            $mascota['nombre_persona']
+                            . ' ' .
+                            $mascota['apellido_persona']
+                        ) ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha">
+
+                    <span>
+                        Teléfono
+                    </span>
+
+                    <strong>
+
+                        <?= $telefono ?>
+
+                    </strong>
+
+                </div>
+
+                <div class="campo-ficha campo-email">
+
+                    <span>
+                        Email
+                    </span>
+
+                    <strong>
+
+                        <?= $email ?>
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
     </div>
 
 </div>
+
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
 
+
 </body>
+
 </html>
-
-

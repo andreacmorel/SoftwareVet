@@ -1,55 +1,525 @@
-        body {
-            background: #f8f9fc;
-        }
+/* =========================================================
+   VETSYS - IMPRESIÓN FICHA DE MASCOTA
+========================================================= */
 
-        .dato {
-            font-size: 15px;
-            margin-bottom: 7px;
-            color: #000;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .dato b {
-            color: #52266E;
-        }
 
-        h4 {
-            color: #52266E;
-            font-weight: 700;
-        }
+body {
+    margin: 0;
 
-        .linea-principal {
-            border-top: 3px solid #52266E;
-        }
+    padding: 35px;
 
-        .linea-seccion {
-            border-top: 2px solid #eee;
-        }
+    background: #f4f5f8;
 
-        .fecha-impresion {
-            font-size: 12px;
-            color: #999;
-            margin-top: 4px;
-        }
+    color: #111827;
 
-        @media print {
-            body {
-                background: white !important;
-            }
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-            .acciones {
-                display: none !important;
-            }
 
-            .card {
-                box-shadow: none !important;
-                border: none !important;
-            }
 
-            .container {
-                margin-top: 0 !important;
-            }
+/* =========================================================
+   BOTONES
+========================================================= */
 
-            img {
-                max-width: 60px;
-            }
-        }
+.acciones {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto 15px auto;
+
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 8px;
+}
+
+
+.acciones a,
+.acciones button {
+    border-radius: 7px;
+
+    padding: 8px 14px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    text-decoration: none;
+}
+
+
+.btn-volver {
+    background: #ffffff;
+
+    color: #52266E;
+
+    border: 1px solid #d8c2e8;
+}
+
+
+.btn-imprimir {
+    background: #52266E;
+
+    color: #ffffff;
+
+    border: 1px solid #52266E;
+}
+
+
+
+/* =========================================================
+   HOJA
+========================================================= */
+
+.hoja-ficha {
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    background: #ffffff;
+
+    border: 1px solid #e5dbea;
+
+    border-top: 5px solid #52266E;
+
+    box-shadow:
+        0 8px 28px rgba(31, 41, 55, .08);
+}
+
+
+
+/* =========================================================
+   VETSYS
+========================================================= */
+
+.encabezado-vetsys {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 28px;
+
+    border-bottom: 1px solid #eee7f2;
+}
+
+
+.marca-vetsys {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+.logo-vetsys {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+    background: #52266E;
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+}
+
+.nombre-vetsys {
+    color: #52266E;
+
+    font-size: 20px;
+
+    font-weight: 800;
+}
+
+
+.subtitulo-vetsys {
+    margin-top: 2px;
+
+    color: #8b93a1;
+
+    font-size: 10px;
+}
+
+
+.fecha-emision {
+    text-align: right;
+}
+
+
+.fecha-emision span {
+    display: block;
+
+    color: #9ca3af;
+
+    font-size: 9px;
+
+    margin-bottom: 3px;
+}
+
+
+.fecha-emision strong {
+    color: #374151;
+
+    font-size: 11px;
+}
+
+
+
+/* =========================================================
+   PACIENTE
+========================================================= */
+
+.paciente-header {
+    min-height: 95px;
+
+    padding: 18px 28px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #fbf7ff;
+    border-bottom: 1px solid #52266E;
+}
+
+
+.paciente-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.paciente-icono {
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+    border-radius: 50%;
+
+    background: #52266E;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+}
+
+
+.paciente-identidad h1 {
+    margin: 0 0 8px 0;
+
+    color: #111827;
+
+    font-size: 21px;
+
+    font-weight: 800;
+}
+
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badges {
+    display: flex;
+
+    gap: 6px;
+}
+
+
+.badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 4px 9px;
+
+    border-radius: 14px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.badge-especie {
+    background: #ead7f7;
+
+    color: #52266E;
+}
+
+
+.badge-macho {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+
+.badge-hembra {
+    background: #fce7f3;
+
+    color: #be185d;
+}
+
+
+
+/* =========================================================
+   NÚMERO
+========================================================= */
+
+.numero-ficha {
+    min-width: 150px;
+
+    padding-left: 25px;
+
+    border-left: 1px solid #e4d7eb;
+
+    text-align: right;
+}
+
+
+.numero-ficha span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #8b7896;
+
+    font-size: 9px;
+}
+
+
+.numero-ficha strong {
+    color: #52266E;
+
+    font-size: 22px;
+
+    font-weight: 500;
+
+    letter-spacing: 2px;
+}
+
+
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+.seccion {
+    padding: 25px 28px 0 28px;
+}
+
+
+.seccion-propietario {
+    margin-top: 12px;
+
+    padding-bottom: 30px;
+}
+
+
+.titulo-seccion {
+    margin-bottom: 12px;
+
+    padding-left: 10px;
+
+    border-left: 3px solid #52266E;
+
+    color: #52266E;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.titulo-seccion i {
+    width: 16px;
+
+    margin-right: 4px;
+
+    text-align: center;
+}
+
+
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+.grid-datos {
+    display: grid;
+
+    width: 100%;
+
+    border-top: 1px solid #dccde5;
+
+    border-left: 1px solid #dccde5;
+}
+
+
+.mascota-datos {
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr;
+}
+
+
+.campo-raza {
+    grid-column: span 2;
+}
+
+
+.propietario-datos {
+    grid-template-columns:
+        1fr
+        1fr;
+}
+
+
+.campo-email {
+    grid-column: 1 / -1;
+}
+
+
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+
+.campo {
+    min-height: 62px;
+
+    padding: 10px 13px;
+
+    border-right: 1px solid #dccde5;
+
+    border-bottom: 1px solid #dccde5;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+.campo span {
+    margin-bottom: 5px;
+
+    color: #8b7896;
+
+    font-size: 8px;
+
+    font-weight: 600;
+}
+
+
+.campo strong {
+    color: #111827;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+
+/* =========================================================
+   PIE
+========================================================= */
+
+.pie-ficha {
+    padding: 12px 28px;
+
+    border-top: 1px solid #eee7f2;
+
+    color: #9ca3af;
+
+    font-size: 8px;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+
+
+/* =========================================================
+   IMPRESIÓN
+========================================================= */
+
+@page {
+    size: A4 portrait;
+
+    margin: 12mm;
+}
+
+
+@media print {
+
+    body {
+        padding: 0;
+
+        background: #ffffff;
+
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+
+    .acciones {
+        display: none !important;
+    }
+
+
+    .hoja-ficha {
+        width: 100%;
+
+        max-width: none;
+
+        margin: 0;
+
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+
+        box-shadow: none;
+    }
+
+
+    .paciente-header,
+    .badge,
+    .paciente-icono,
+    .logo-vetsys {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+}

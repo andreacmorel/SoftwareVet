@@ -164,7 +164,7 @@ require_once '../../app/menu.php';
                                 </td>
 
                                 <td class="dato-muted">
-                                    <?= !empty($h->descripcion) ? htmlspecialchars($h->descripcion) : 'â€”' ?>
+                                    <?= !empty($h->descripcion) ? htmlspecialchars($h->descripcion) : 'Sin descripción' ?>
                                 </td>
 
                                 <td class="dato-muted">
@@ -172,7 +172,7 @@ require_once '../../app/menu.php';
                                 </td>
 
                                 <td class="dato-muted">
-                                    <?= !empty($h->observacion) ? htmlspecialchars($h->observacion) : 'â€”' ?>
+                                    <?= !empty($h->observacion) ? htmlspecialchars($h->observacion) : 'Sin observaciones' ?>
                                 </td>
 
                                 <td class="text-center align-middle">

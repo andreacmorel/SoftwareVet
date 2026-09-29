@@ -66,7 +66,9 @@ if(isset($_GET['deleted'])) { ?>
     <title>Listado de Profesionales</title>
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../../css/indexprof.css" rel="stylesheet">
+    <link href="../../css/indexprofessional.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
 </head>
 
@@ -98,16 +100,17 @@ if(isset($_GET['deleted'])) { ?>
             <div class="page-subtitle">Gestión del registro de profesionales</div>
         </div>
 
+        <div class="d-flex justify-content-end mb-3">
+            <div id="botonesExportacion"></div>
+        </div>
+
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nuevo Profesional
             </a>
 
-            <button class="btn btn-success ml-2"
-                    onclick="window.location.href='reporte_excel.php'"
-                    title="Exportar a Excel">
-                <i class="fas fa-file-excel"></i>
-            </button>
+           
+            
         </div>
     </div>
 
@@ -122,8 +125,8 @@ if(isset($_GET['deleted'])) { ?>
             </div>
 
             <div class="col-md-2 ">
-                <button type="submit" class="btn btn-purple">
-                <i class="fas fa-filter"></i>
+                <button type="submit"  class="btn btn-filtro" title="Buscar">
+                <i class="fas fa-search"></i>
             </button>
             </div>
 
@@ -132,7 +135,7 @@ if(isset($_GET['deleted'])) { ?>
 
     <div class="table-card">
         <div class="table-responsive">
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%"  id="tablaProfesionales">
                 <thead>
                     <tr>
                         <th>Profesional</th>
@@ -205,51 +208,113 @@ if(isset($_GET['deleted'])) { ?>
 
 </div>
 
-<div class="modal fade" id="modalEliminarProfesional" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+<!-- =====================================================
+     MODAL CONFIRMAR ELIMINACIÓN DE PROFESIONAL
+===================================================== -->
 
-            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                <h5 style="margin:0; font-weight:700;">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
+<div class="modal fade modal-eliminar"
+     id="modalEliminarProfesional"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
                     Confirmar eliminación
                 </h5>
 
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
                 </button>
+
             </div>
 
-            <div class="text-center p-4">
-                <i class="fas fa-user-md fa-3x mb-3" style="color:#d8c2e8;"></i>
 
-                <p class="mb-1">¿Estás seguro de eliminar a</p>
+            <!-- CUERPO -->
+            <div class="modal-body">
 
-                <h5 id="nombreProfesionalEliminar" style="color:#52266E; font-weight:800;"></h5>
+                <div class="modal-delete-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
 
-                <p class="mt-3" style="font-size:14px; color:#6b7280;">
-                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>.
+                <p class="modal-delete-question">
+                    ¿Estás seguro de eliminar al profesional?
                 </p>
+
+                <div id="nombreProfesionalEliminar"
+                     class="modal-delete-name">
+                </div>
+
+
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+                        El profesional dejará de estar disponible en los
+                        <strong>listados y selecciones del sistema</strong>.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
-                <button type="button" class="btn btn-light" data-dismiss="modal">
-                    <i class="fas fa-times"></i> Cancelar
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-modal-cancelar"
+                        data-dismiss="modal">
+
+                    Cancelar
+
                 </button>
 
-                <a href="#" id="btnConfirmarEliminarProfesional" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Sí­, eliminar
+                <a href="#"
+                   id="btnConfirmarEliminarProfesional"
+                   class="btn btn-modal-eliminar">
+
+                    <i class="fas fa-trash mr-1"></i>
+                    Sí, eliminar
+
                 </a>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- DataTable reutilizable de VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
 
 <script>
 $('#modalEliminarProfesional').on('show.bs.modal', function (event) {
@@ -262,7 +327,51 @@ $('#modalEliminarProfesional').on('show.bs.modal', function (event) {
     $('#btnConfirmarEliminarProfesional').attr('href', 'delete.php?id=' + id);
 });
 </script>
+
 <script>
+
+$(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaProfesionales',
+
+        titulo: 'Listado de Profesionales',
+
+        subtitulo: 'Gestión del registro de profesionales',
+
+        nombreArchivo: 'Listado_Profesionales',
+
+        columnasExportar: [0, 1, 2, 3, 4, 5, 6],
+
+        pageLength: 10,
+
+        orientacionPDF: 'landscape',
+
+        anchosExcel: [
+            25,
+            16,
+            30,
+            20,
+            12,
+            20,
+            14
+        ],
+
+        anchosPDF: [
+            '18%',
+            '13%',
+            '21%',
+            '14%',
+            '10%',
+            '14%',
+            '10%'
+        ]
+
+    });
+
+});
+
 
 setTimeout(() => {
 

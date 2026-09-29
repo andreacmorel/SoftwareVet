@@ -37,16 +37,17 @@ if(isset($_GET['updated'])) { ?>
     </div>
 
 <?php } ?>
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <title>Mascotas</title>
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="../../css/indexpet.css" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
 <body>
@@ -78,13 +79,11 @@ if(isset($_GET['updated'])) { ?>
             <div class="page-subtitle">Gestión del registro de pacientes</div>
         </div>
 
+        <div id="botonesExportacion" class="mr-2"></div>
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nueva Mascota
             </a>
-            <a href="reporte_excel.php" class="btn btn-success ml-2" title="Exportar a Excel">
-            <i class="fas fa-file-excel"></i>
-        </a>
         </div>
 
     </div>
@@ -121,8 +120,8 @@ if(isset($_GET['updated'])) { ?>
             </div>
 
             <div class="col-md-1">
-                <button type="submit" class="btn btn-purple btn-block">
-                    <i class="fas fa-filter"></i>
+                <button type="submit" class="btn btn-purple btn-block btn-filtro" title="Buscar">
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
 
@@ -131,7 +130,7 @@ if(isset($_GET['updated'])) { ?>
 
     <div class="table-card">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table id="tablaMascotas" class="table table-hover">
                 <thead>
                     <tr>
                         <th>Mascota</th>
@@ -198,16 +197,46 @@ if(isset($_GET['updated'])) { ?>
                                     <?= !empty($row->peso) ? htmlspecialchars($row->peso) . ' <small class="text-muted">kg</small>' : 'â€”' ?>
                                 </td>
 
-                            <td>
-                                <?php if (!empty($row->edad)) { ?>
-                                    <span class="mascota-edad">
-                                    <?= htmlspecialchars($row->edad) ?>
-                                        <?= htmlspecialchars($row->unidad_edad ?? '') ?>
-                                    </span>
-                                <?php } else { ?>
-                                    —
-                                <?php } ?>
-                            </td>
+                                <td>
+                                    <?php if (!empty($row->edad)) { ?>
+
+                                        <?php
+                                        // Unidad de edad guardada en la base de datos
+                                        $unidad = $row->unidad_edad ?? '';
+
+                                        // Si la edad es 1, mostramos la unidad en singular
+                                        if ($row->edad == 1) {
+
+                                            if ($unidad == 'dias') {
+                                                $unidad = 'día';
+
+                                            } elseif ($unidad == 'meses') {
+                                                $unidad = 'mes';
+
+                                            } elseif ($unidad == 'años') {
+                                                $unidad = 'año';
+                                            }
+
+                                        } else {
+
+                                            // Para edades mayores a 1
+                                            if ($unidad == 'dias') {
+                                                $unidad = 'días';
+                                            }
+                                        }
+                                        ?>
+
+                                        <span class="mascota-edad">
+                                            <?= htmlspecialchars($row->edad) ?>
+                                            <?= htmlspecialchars($unidad) ?>
+                                        </span>
+
+                                    <?php } else { ?>
+
+                                        —
+
+                                    <?php } ?>
+                                </td>
 
                                 <td>
                                     <?= !empty($row->color) ? htmlspecialchars($row->color) : '—' ?>
@@ -254,54 +283,270 @@ if(isset($_GET['updated'])) { ?>
 
 </div>
 
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+<!-- =====================================================
+     MODAL CONFIRMAR ELIMINACIÓN
+===================================================== -->
 
-            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                <h5 style="margin:0; font-weight:700;">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
+<div class="modal fade modal-eliminar" id="modalEliminar" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
                     Confirmar eliminación
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
+
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
                 </button>
+
             </div>
 
-            <div class="text-center p-4">
 
-                <i class="fas fa-paw fa-3x mb-3" style="color:#d8c2e8;"></i>
+            <!-- CUERPO -->
+            <div class="modal-body">
 
-                <p class="mb-1">¿Estás seguro de eliminar a</p>
+                <div class="modal-delete-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
 
-                <h5 id="nombreMascotaEliminar" style="color:#52266E; font-weight:800;"></h5>
-
-                <p class="mt-3" style="font-size:14px; color:#6b7280;">
-                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>. Se eliminaran también sus historias clínicas y turnos asociados.
+                <p class="modal-delete-question">
+                    ¿Estás seguro de eliminar a
                 </p>
 
+                <div id="nombreMascotaEliminar"
+                     class="modal-delete-name">
+                </div>
+
+
+                <!-- ADVERTENCIA -->
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+                        Esta acción es <strong>irreversible</strong>.
+                        Se eliminarán también sus historias clínicas
+                        y turnos asociados.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
 
-                <button type="button" class="btn btn-light" data-dismiss="modal">
-                    <i class="fas fa-times"></i> Cancelar
+            <!-- BOTONES -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-modal-cancelar"
+                        data-dismiss="modal">
+
+                    <i class="fas fa-times mr-1"></i>
+                    Cancelar
+
                 </button>
 
-                <a href="#" id="btnConfirmarEliminar" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Sí­, eliminar
+
+                <a href="#"
+                   id="btnConfirmarEliminar"
+                   class="btn btn-modal-eliminar">
+
+                    <i class="fas fa-trash mr-1"></i>
+                    Sí, eliminar
+
                 </a>
 
             </div>
 
         </div>
+
     </div>
+
 </div>
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Necesario para exportar a Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- Necesario para exportar a PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Exportación Excel, PDF e Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="../../js/vetsys-datatables.js"></script>
+
 <script>
+
+// =====================================================
+// DATATABLE MASCOTAS
+// =====================================================
+
+const tablaMascotas = inicializarDataTableVetSys({
+
+    // Tabla que vamos a convertir en DataTable
+    tabla: '#tablaMascotas',
+
+    // Título utilizado en las exportaciones
+    titulo: 'Listado de Mascotas',
+
+    // Subtítulo para PDF / impresión
+    subtitulo: 'Gestión del registro de pacientes',
+
+    // Nombre de los archivos descargados
+    nombreArchivo: 'VetSys_Mascotas',
+
+    // No exportar la última columna (Acciones)
+    columnasExportar: ':not(:last-child)',
+
+    // Cantidad de registros por página
+    pageLength: 10,
+
+
+    // =================================================
+    // ANCHOS DEL EXCEL
+    // =================================================
+
+    anchosExcel: [
+        18, // Mascota
+        25, // Especie / Raza
+        13, // Sexo
+        13, // Peso
+        15, // Edad
+        22, // Color
+        28  // Propietario
+    ],
+
+    anchosPDF: [
+    65,  // Mascota
+    100, // Especie / Raza
+    50,  // Sexo
+    55,  // Peso
+    60,  // Edad
+    70,  // Color
+    90   // Propietario
+    ],
+
+
+    // =================================================
+    // FORMATO ESPECIAL DE MASCOTAS
+    // =================================================
+
+    formatearCelda: function (
+        texto,
+        data,
+        row,
+        column,
+        node
+    ) {
+
+        // ---------------------------------------------
+        // MASCOTA
+        // ---------------------------------------------
+
+        if (column === 0) {
+
+            // Sacamos el ID interno:
+            // #26, #1, etc.
+            const celda = $(node).clone();
+
+            celda.find('.pet-id').remove();
+
+            texto = celda
+                .text()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+
+        // ---------------------------------------------
+        // ESPECIE / RAZA
+        // ---------------------------------------------
+
+        if (column === 1) {
+
+            const especie = $(node)
+                .find('strong')
+                .first()
+                .text()
+                .trim();
+
+            const raza = $(node)
+                .find('.badge-raza')
+                .text()
+                .trim();
+
+
+            if (especie && raza) {
+
+                texto =
+                    especie + ' - ' + raza;
+
+            } else if (especie) {
+
+                texto = especie;
+
+            } else if (raza) {
+
+                texto = raza;
+            }
+        }
+
+
+        // ---------------------------------------------
+        // EDAD
+        // ---------------------------------------------
+
+        if (column === 4) {
+
+            if (
+                texto === '—' ||
+                texto === '' ||
+                texto === 'â€”'
+            ) {
+
+                texto = 'Sin especificar';
+            }
+        }
+
+
+        // ---------------------------------------------
+        // COLOR
+        // ---------------------------------------------
+
+        if (column === 5) {
+
+            if (
+                texto === '—' ||
+                texto === '' ||
+                texto === 'â€”'
+            ) {
+
+                texto = 'Sin especificar';
+            }
+        }
+
+
+        return texto;
+    }
+
+});
+
 $('#modalEliminar').on('show.bs.modal', function (event) {
     var boton = $(event.relatedTarget);
 

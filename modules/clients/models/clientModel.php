@@ -150,7 +150,7 @@ class ClientModel{
             mysqli_query($this->conexion, $sqlDomicilio);
         }
 
-        return true;
+        return $id_cliente;
     }
 
     public function existsForEdit($nombre, $apellido, $telefono, $id){

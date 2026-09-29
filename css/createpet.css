@@ -621,3 +621,154 @@ td.text-center {
     }
 }
 
+
+/* Select de cliente y botón en la misma fila */
+.cliente-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* El select ocupa el espacio restante */
+.cliente-selector select {
+    flex: 1;
+    width: auto;
+}
+
+/* El botón mantiene su tamaño */
+.btn-nuevo-cliente {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    height: 38px;
+    padding: 0 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Caja principal */
+#modalNuevoCliente .modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
+}
+
+
+/* Encabezado */
+#modalNuevoCliente .modal-header {
+    background-color: #52266E;
+    color: white;
+    border-bottom: none;
+    padding: 18px 22px;
+}
+
+
+/* Título */
+#modalNuevoCliente .modal-title {
+    color: white;
+    font-weight: 600;
+}
+
+
+/* Ícono del título */
+#modalNuevoCliente .modal-title i {
+    color: white;
+}
+
+
+/* X para cerrar */
+#modalNuevoCliente .close {
+    color: white;
+    opacity: 0.85;
+    text-shadow: none;
+}
+
+#modalNuevoCliente .close:hover {
+    color: white;
+    opacity: 1;
+}
+
+
+/* Cuerpo */
+#modalNuevoCliente .modal-body {
+    background-color: #ffffff;
+    padding: 24px;
+}
+
+
+/* Labels */
+#modalNuevoCliente label {
+    color: #52266E;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+
+/* Campos */
+#modalNuevoCliente .form-control {
+    border: 1px solid #d8c4e5;
+    border-radius: 7px;
+}
+
+
+/* Campo seleccionado */
+#modalNuevoCliente .form-control:focus {
+    border-color: #52266E;
+    box-shadow: 0 0 0 0.2rem rgba(82, 38, 110, 0.12);
+}
+
+
+/* Línea divisoria */
+#modalNuevoCliente hr {
+    border-color: #eeeeee;
+}
+
+
+/* Título Dirección */
+#modalNuevoCliente h6 {
+    color: #52266E;
+}
+
+
+/* Ícono Dirección */
+#modalNuevoCliente h6 i {
+    color: #52266E;
+}
+
+
+/* Pie del modal */
+#modalNuevoCliente .modal-footer {
+    background-color: #faf8fb;
+    border-top: 1px solid #eeeeee;
+    padding: 15px 22px;
+}
+
+
+/* Botón Guardar */
+#modalNuevoCliente .btn-purple {
+    background-color: #52266E;
+    border-color: #52266E;
+    color: white;
+}
+
+#modalNuevoCliente .btn-purple:hover {
+    background-color: #432058;
+    border-color: #432058;
+    color: white;
+}
+
+
+/* Botón Cancelar */
+#modalNuevoCliente .btn-cancelar {
+    background-color: #e9e9ee;
+    color: #555;
+    border: none;
+}
+
+#modalNuevoCliente .btn-cancelar:hover {
+    background-color: #ddddE3;
+    color: #333;
+}

@@ -62,6 +62,16 @@ require_once '../../app/menu.php';
                 </div>
             <?php } ?>
 
+            <?php
+
+            $especiesRazas = [];
+
+            while ($e = mysqli_fetch_assoc($resEspecies)) {
+                $especiesRazas[] = $e;
+            }
+
+            ?>
+
             <form method="POST" novalidate>
 
                 <div class="row">
@@ -182,24 +192,66 @@ require_once '../../app/menu.php';
 
             </div>
 
+            <div class="form-group">
+
+                <label>
+                    Especie
+                    <span style="color:#dc2626;">*</span>
+                </label>
+
+                <select
+                    id="selectEspecie"
+                    class="form-control">
+                    <option value="">
+                        Seleccione una especie
+                    </option>
+
+                    <?php
+
+                    $nombresEspecies = [];
+                    foreach ($especiesRazas as $e) {
+                        $nombreEspecie = $e['nombre_especie'];
+                        if (!in_array($nombreEspecie, $nombresEspecies)) {
+                            $nombresEspecies[] = $nombreEspecie;
+                    ?>
+
+                        <option
+                            value="<?= htmlspecialchars($nombreEspecie) ?>">
+                            <?= htmlspecialchars($nombreEspecie) ?>
+                        </option>
+
+                    <?php
+                        }
+                    }
+                    ?>
+
+                </select>
+
+            </div>
+
                 <div class="form-group">
-                    <label>Especie / Raza <span style="color:#dc2626;">*</span></label>
 
-                    <select name="id_especie"
-                            class="form-control <?= isset($erroresCampos['id_especie']) ? 'is-invalid' : '' ?>">
-                        <option value="">Seleccione una especie</option>
+                    <label>Raza
+                        <span style="color:#dc2626;">*</span>
+                    </label>
 
-                        <?php while($e = mysqli_fetch_assoc($resEspecies)) { ?>
-                            <option value="<?= $e['id_especie'] ?>"
-                                <?= (($mascota['id_especie'] ?? '') == $e['id_especie']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($e['nombre_especie']." - ".$e['raza']) ?>
-                            </option>
-                        <?php } ?>
+                    <select id="selectRaza" name="id_especie"
+                        class="form-control <?= isset($erroresCampos['id_especie']) ? 'is-invalid' : '' ?>">
+
+                        <option value="">
+                            Seleccione una raza
+                        </option>
                     </select>
 
-                    <?php if(isset($erroresCampos['id_especie'])) { ?>
-                        <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['id_especie']) ?></div>
+
+                    <?php if (isset($erroresCampos['id_especie'])) { ?>
+
+                        <div class="invalid-feedback">
+                            <?= htmlspecialchars($erroresCampos['id_especie']) ?>
+                        </div>
+
                     <?php } ?>
+
                 </div>
 
                 <div class="form-group">
@@ -244,6 +296,152 @@ require_once '../../app/menu.php';
 <script src="/SoftwareVet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/SoftwareVet/js/sb-admin-2.min.js"></script>
 
+<script>
+
+// =====================================================
+// COMBO DINÁMICO ESPECIE → RAZA - EDITAR MASCOTA
+// =====================================================
+
+// Datos enviados desde PHP
+const especiesRazas = <?= json_encode(
+    $especiesRazas,
+    JSON_UNESCAPED_UNICODE
+) ?>;
+
+
+// ID actualmente guardado en la mascota
+const idEspecieActual = <?= json_encode(
+    (string)($mascota['id_especie'] ?? '')
+) ?>;
+
+
+// Selects
+const selectEspecie =
+    document.getElementById('selectEspecie');
+
+const selectRaza =
+    document.getElementById('selectRaza');
+
+
+// =====================================================
+// CARGAR RAZAS
+// =====================================================
+
+function cargarRazas(
+    nombreEspecie,
+    idSeleccionado = ''
+) {
+
+    // Limpiar combo
+    selectRaza.innerHTML =
+        '<option value="">Seleccione una raza</option>';
+
+
+    // Si no hay especie
+    if (!nombreEspecie) {
+
+        selectRaza.innerHTML =
+            '<option value="">Primero seleccione una especie</option>';
+
+        selectRaza.disabled = true;
+
+        return;
+    }
+
+
+    selectRaza.disabled = false;
+
+
+    // Filtrar las razas
+    const razasFiltradas =
+        especiesRazas.filter(function (item) {
+
+            return item.nombre_especie ===
+                nombreEspecie;
+
+        });
+
+
+    // Crear opciones
+    razasFiltradas.forEach(function (item) {
+
+        const opcion =
+            document.createElement('option');
+
+        opcion.value =
+            item.id_especie;
+
+        opcion.textContent =
+            item.raza;
+
+
+        // Seleccionar raza actual
+        if (
+            String(item.id_especie) ===
+            String(idSeleccionado)
+        ) {
+
+            opcion.selected = true;
+        }
+
+
+        selectRaza.appendChild(opcion);
+
+    });
+
+}
+
+
+// =====================================================
+// CARGAR DATOS ACTUALES AL ABRIR EDITAR
+// =====================================================
+
+if (idEspecieActual) {
+
+    // Buscar el registro actual
+    const registroActual =
+        especiesRazas.find(function (item) {
+
+            return String(item.id_especie) ===
+                String(idEspecieActual);
+
+        });
+
+
+    if (registroActual) {
+
+        // Seleccionar especie actual
+        selectEspecie.value =
+            registroActual.nombre_especie;
+
+
+        // Cargar razas y seleccionar la actual
+        cargarRazas(
+            registroActual.nombre_especie,
+            idEspecieActual
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// CUANDO EL USUARIO CAMBIA LA ESPECIE
+// =====================================================
+
+selectEspecie.addEventListener(
+    'change',
+    function () {
+
+        cargarRazas(
+            this.value
+        );
+
+    }
+);
+
+</script>
 </body>
 </html>
 

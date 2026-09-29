@@ -1,229 +1,72 @@
-﻿ .page-title {
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 2px;
-        }
+﻿/* =========================================================
+   VETSYS - ESPECIES
+   MISMO ESTILO BASE QUE MASCOTAS
+========================================================= */
 
-        .page-title i {
-            color: #52266E;
-        }
 
-        .page-subtitle {
-            color: #9ca3af;
-            font-size: 14px;
-        }
+/* =========================================================
+   TÍTULO
+========================================================= */
 
-        .btn-purple {
-            background: #52266E;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .btn-purple:hover {
-            background: #3f1d55;
-            color: white;
-        }
-
-        .badge-total {
-            background: white;
-            color: #52266E;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,.08);
-        }
-
-        .mascota-edad {
-            color: #111827;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .filter-card {
-            background: white;
-            border-radius: 15px;
-            padding: 18px 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            margin-top: 25px;
-            margin-bottom: 25px;
-        }
-
-        .filter-card label {
-            color: #52266E;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .filter-card .form-control {
-            border-radius: 8px;
-            border: 1px solid #d8c2e8;
-            font-size: 14px;
-        }
-
-        .table-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            overflow: hidden;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        thead th {
-            background: #fbf7ff;
-            color: #52266E;
-            font-size: 12px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #eee1f6 !important;
-            font-weight: 800;
-        }
-
-        tbody td {
-            vertical-align: middle !important;
-            font-size: 14px;
-            color: #374151;
-        }
-
-        tbody tr:hover {
-            background: #fcf8ff;
-        }
-
-        .pet-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: #fff3df;
-            color: #f97316;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-
-        .pet-name {
-            font-weight: 800;
-            color: #111827;
-        }
-
-        .pet-id {
-            color: #9ca3af;
-            font-size: 12px;
-        }
-
-        .badge-raza {
-            background: #ead7f7;
-            color: #52266E;
-            padding: 4px 9px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-macho {
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-hembra {
-            background: #fce7f3;
-            color: #be185d;
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .btn-action {
-            width: 31px;
-            height: 31px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            margin: 0 2px;
-        }
-
-        .btn-view {
-            background: #e0f2fe;
-            color: #0284c7;
-        }
-
-        .btn-edit {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .btn-delete {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .pagination .page-link {
-            color: #52266E;
-            border-radius: 8px;
-            margin: 0 2px;
-        }
-
-        .pagination .active .page-link {
-            background: #52266E;
-            border-color: #52266E;
-            color: white;
-        }
-        .vet-alert-success{
-    width:100%;
-    background:linear-gradient(135deg,#f6fffa,#eefcf4);
-    border:1px solid #d7f3e3;
-    border-radius:16px;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    box-shadow:0 6px 18px rgba(25,135,84,.08);
-    margin-bottom:25px;
-    animation:fadeIn .35s ease;
+.page-title {
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 2px;
 }
 
-.vet-alert-icon{
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    background:#198754;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    box-shadow:0 4px 10px rgba(25,135,84,.25);
+.page-title i {
+    color: #52266E;
 }
 
-.vet-alert-content h5{
-    margin:0;
-    font-size:15px;
-    font-weight:800;
-    color:#166534;
-}
-
-.vet-alert-content p{
-    margin:3px 0 0;
-    color:#4b5563;
-    font-size:14px;
+.page-subtitle {
+    color: #9ca3af;
+    font-size: 14px;
 }
 
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
+/* =========================================================
+   BOTÓN PRINCIPAL
+========================================================= */
+
+.btn-purple {
+    background: #52266E;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
 }
+
+.btn-purple:hover {
+    background: #3f1d55;
+    color: white;
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.filter-card {
+    background: white;
+    border-radius: 15px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.filter-card label {
+    color: #52266E;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.filter-card .form-control {
+    border-radius: 8px;
+    border: 1px solid #d8c2e8;
+    font-size: 14px;
+}
+
 
 /* =========================================================
    BOTÓN FILTRO - GRIS
@@ -249,13 +92,15 @@
 
 
 /* Lupa */
+
 .btn-filtro i {
     font-size: 14px;
     color: #ffffff !important;
 }
 
 
-/* HOVER */
+/* Hover */
+
 .btn-filtro:hover {
     background: #5c636a !important;
     border-color: #5c636a !important;
@@ -267,7 +112,8 @@
 }
 
 
-/* CLICK */
+/* Click */
+
 .btn-filtro:active {
     background: #565e64 !important;
     border-color: #565e64 !important;
@@ -278,19 +124,227 @@
 }
 
 
-/* FOCUS */
+/* Focus */
+
 .btn-filtro:focus {
     color: #ffffff !important;
 
     box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.18) !important;
 }
 
+
 /* =========================================================
-   MODAL ELIMINAR MASCOTA - VETSYS (versión mejorada)
+   TABLA
+========================================================= */
+
+.table-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   CABECERA
+========================================================= */
+
+thead th {
+    background: #fbf7ff;
+    color: #52266E;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #eee1f6 !important;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   CUERPO
+========================================================= */
+
+tbody td {
+    vertical-align: middle !important;
+    font-size: 14px;
+    color: #374151;
+}
+
+tbody tr:hover {
+    background: #fcf8ff;
+}
+
+
+/* =========================================================
+   ESPECIE
+========================================================= */
+
+.especie-icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+
+    background: #f3ecf8;
+    color: #52266E;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 10px;
+}
+
+.especie-name {
+    font-weight: 800;
+    color: #111827;
+}
+
+.dato-muted {
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   BOTONES ACCIONES
+========================================================= */
+
+.btn-action {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    margin: 0 2px;
+}
+
+
+/* EDITAR */
+
+.btn-edit {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+
+/* ELIMINAR */
+
+.btn-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+/* =========================================================
+   PAGINACIÓN BOOTSTRAP
+========================================================= */
+
+.pagination .page-link {
+    color: #52266E;
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+.pagination .active .page-link {
+    background: #52266E;
+    border-color: #52266E;
+    color: white;
+}
+
+
+/* =========================================================
+   ALERTA DE ÉXITO
+========================================================= */
+
+.vet-alert-success {
+    width: 100%;
+
+    background: linear-gradient(135deg,#f6fffa,#eefcf4);
+
+    border: 1px solid #d7f3e3;
+    border-radius: 16px;
+
+    padding: 18px 22px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    box-shadow: 0 6px 18px rgba(25,135,84,.08);
+
+    margin-bottom: 25px;
+
+    animation: fadeIn .35s ease;
+}
+
+.vet-alert-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    border-radius: 50%;
+
+    background: #198754;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+
+    box-shadow: 0 4px 10px rgba(25,135,84,.25);
+}
+
+.vet-alert-content h5 {
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    color: #166534;
+}
+
+.vet-alert-content p {
+    margin: 3px 0 0;
+
+    color: #4b5563;
+
+    font-size: 14px;
+}
+
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MODAL ELIMINAR ESPECIE - VETSYS
 ========================================================= */
 
 .modal-eliminar .modal-content {
     border: none;
+
     border-radius: 16px;
 
     overflow: hidden;
@@ -299,10 +353,11 @@
 }
 
 
-/* Animación de entrada (respuesta a la acción de abrir) */
+/* Animación */
 
 .modal-eliminar.fade .modal-dialog {
     transform: translateY(-12px) scale(.97);
+
     transition: transform .25s ease, opacity .25s ease;
 }
 
@@ -312,7 +367,7 @@
 
 
 /* =========================================================
-   HEADER (blanco: el protagonista es el icono rojo)
+   HEADER MODAL
 ========================================================= */
 
 .modal-eliminar .modal-header {
@@ -325,7 +380,6 @@
 
     border-bottom: 1px solid #f0f0f0;
 }
-
 
 .modal-eliminar .modal-title {
     margin: 0;
@@ -341,19 +395,16 @@
     font-weight: 700;
 }
 
-
-/* Sin triángulo de advertencia en el título: el icono central ya comunica la gravedad.
-   (Puedes borrar el <i> del HTML y quitar esta regla.) */
-
 .modal-eliminar .modal-title i {
     display: none;
 }
 
 
-/* Botón X */
+/* X */
 
 .modal-eliminar .close {
     margin: -4px -3px -4px auto;
+
     padding: 5px;
 
     color: #6b7280;
@@ -367,7 +418,6 @@
     transition: all .2s ease;
 }
 
-
 .modal-eliminar .close:hover {
     color: #1f2937;
 
@@ -376,9 +426,9 @@
     transform: scale(1.08);
 }
 
-
 .modal-eliminar .close:focus-visible {
     outline: 3px solid rgba(82, 38, 110, .30);
+
     outline-offset: 2px;
 
     border-radius: 6px;
@@ -386,7 +436,7 @@
 
 
 /* =========================================================
-   CUERPO
+   CUERPO MODAL
 ========================================================= */
 
 .modal-eliminar .modal-body {
@@ -399,7 +449,7 @@
 
 
 /* =========================================================
-   ICONO DE ELIMINAR
+   ICONO ELIMINAR
 ========================================================= */
 
 .modal-delete-icon {
@@ -416,7 +466,6 @@
 
     border-radius: 50%;
 
-    /* anillo suave que da profundidad */
     box-shadow: 0 0 0 8px #fff7f7;
 
     color: #e74c3c;
@@ -438,10 +487,13 @@
 }
 
 
-/* Nombre de la mascota (chip) */
+/* =========================================================
+   NOMBRE ESPECIE
+========================================================= */
 
 .modal-delete-name {
     margin-bottom: 22px;
+
     padding: 4px 16px;
 
     display: inline-block;
@@ -458,7 +510,9 @@
     font-weight: 800;
 
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
 
@@ -481,6 +535,7 @@
 
     border: 1px solid #fde2df;
     border-left: 3px solid #e74c3c;
+
     border-radius: 9px;
 
     color: #4b5563;
@@ -491,7 +546,6 @@
     text-align: left;
 }
 
-
 .modal-delete-warning i {
     margin-top: 2px;
 
@@ -500,21 +554,17 @@
     font-size: 14px;
 }
 
-
 .modal-delete-warning strong {
     color: #1f2937;
 
     font-weight: 700;
 }
 
-
-/* Lista opcional de consecuencias */
-
 .modal-delete-warning ul {
     margin: 6px 0 0;
+
     padding-left: 18px;
 }
-
 
 .modal-delete-warning li {
     margin-bottom: 2px;
@@ -522,7 +572,7 @@
 
 
 /* =========================================================
-   FOOTER DEL MODAL
+   FOOTER MODAL
 ========================================================= */
 
 .modal-eliminar .modal-footer {
@@ -540,7 +590,7 @@
 
 
 /* =========================================================
-   CANCELAR (discreto)
+   CANCELAR
 ========================================================= */
 
 .btn-modal-cancelar {
@@ -559,30 +609,25 @@
     transition: all .2s ease;
 }
 
-
 .btn-modal-cancelar:hover {
     background: #f3f4f6;
 
     color: #4b5563;
 }
 
-
-/* Sin X en Cancelar para que no compita con el botón de cerrar.
-   (Puedes borrar el <i> del HTML y quitar esta regla.) */
-
 .btn-modal-cancelar i {
     display: none;
 }
 
-
 .btn-modal-cancelar:focus-visible {
     outline: 3px solid rgba(107, 114, 128, .30);
+
     outline-offset: 2px;
 }
 
 
 /* =========================================================
-   CONFIRMAR ELIMINACIÓN (único botón fuerte)
+   CONFIRMAR ELIMINACIÓN
 ========================================================= */
 
 .btn-modal-eliminar {
@@ -601,7 +646,6 @@
     transition: all .2s ease;
 }
 
-
 .btn-modal-eliminar:hover {
     background: #d94232;
 
@@ -616,17 +660,15 @@
     box-shadow: 0 4px 10px rgba(231, 76, 60, .20);
 }
 
-
 .btn-modal-eliminar:focus-visible {
     outline: 3px solid rgba(231, 76, 60, .35);
+
     outline-offset: 2px;
 }
-
 
 .btn-modal-eliminar:active {
     transform: translateY(0);
 }
-
 
 .btn-modal-eliminar:disabled,
 .btn-modal-eliminar.disabled {
@@ -645,20 +687,23 @@
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
     .modal-eliminar.fade .modal-dialog,
     .modal-eliminar .close,
     .btn-modal-cancelar,
     .btn-modal-eliminar {
+
         transition: none;
     }
 }
 
 
 /* =========================================================
-   MÓVIL
+   MODAL MÓVIL
 ========================================================= */
 
 @media (max-width: 480px) {
+
     .modal-eliminar .modal-body {
         padding: 24px 20px 20px;
     }
@@ -671,29 +716,43 @@
         width: 100%;
     }
 }
+
+
 /* =========================================================
    BOTONES DE EXPORTACIÓN - DATATABLES
 ========================================================= */
 
 .dt-buttons {
     margin-bottom: 12px;
+
     display: flex;
+
     gap: 8px;
 }
 
-/* Base común (pisa el degradado y sombra por defecto de DataTables) */
+
+/* Base común */
+
 .dt-buttons .dt-button.buttons-excel,
 .dt-buttons .dt-button.buttons-pdf,
 .dt-buttons .dt-button.buttons-print {
+
     background-image: none !important;
+
     border: none !important;
     border-radius: 8px !important;
+
     font-size: 12px !important;
     font-weight: 700 !important;
+
     padding: 8px 14px !important;
+
     margin: 0 !important;
+
     box-shadow: none !important;
+
     opacity: 1 !important;
+
     transition: all .2s ease;
 }
 
@@ -705,42 +764,60 @@
     transform: translateY(-1px);
 }
 
-/* Excel: verde */
+
+/* Excel */
+
 .dt-buttons .dt-button.buttons-excel {
     background: #dcfce7 !important;
+
     color: #15803d !important;
 }
+
 .dt-buttons .dt-button.buttons-excel:hover {
     background: #bbf7d0 !important;
+
     color: #166534 !important;
 }
 
-/* PDF: rojo */
+
+/* PDF */
+
 .dt-buttons .dt-button.buttons-pdf {
     background: #fee2e2 !important;
+
     color: #b91c1c !important;
 }
+
 .dt-buttons .dt-button.buttons-pdf:hover {
     background: #fecaca !important;
+
     color: #991b1b !important;
 }
 
-/* Imprimir: azul */
+
+/* Imprimir */
+
 .dt-buttons .dt-button.buttons-print {
     background: #dbeafe !important;
+
     color: #1d4ed8 !important;
 }
+
 .dt-buttons .dt-button.buttons-print:hover {
     background: #bfdbfe !important;
+
     color: #1e40af !important;
 }
 
+
 /* =========================================================
    DATATABLES - PAGINACIÓN VETSYS
-   Diseño minimalista
+   EXACTAMENTE EL MISMO PATRÓN QUE MASCOTAS
 ========================================================= */
 
-/* Información: "Mostrando 1 a 10..." */
+
+/* Información: Mostrando 1 a 10... */
+
 .dataTables_wrapper .dataTables_info {
     padding-top: 15px !important;
     padding-left: 8px;
@@ -753,6 +830,7 @@
 
 
 /* Contenedor */
+
 .dataTables_wrapper .dataTables_paginate {
     padding-top: 10px !important;
     padding-right: 8px;
@@ -765,6 +843,7 @@
 
 
 /* Botones generales */
+
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     min-width: 32px !important;
     height: 32px;
@@ -793,6 +872,7 @@
 
 
 /* Hover */
+
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     background: #f4ebf8 !important;
 
@@ -839,6 +919,7 @@
 
 
 /* Hover anterior / siguiente */
+
 .dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover,
 .dataTables_wrapper .dataTables_paginate .paginate_button.next:hover {
 
@@ -875,21 +956,22 @@
 
 
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE DATATABLE
 ========================================================= */
 
 @media (max-width: 768px) {
 
     .dataTables_wrapper .dataTables_info {
+
         text-align: center !important;
 
         padding: 12px 0 6px 0 !important;
     }
 
     .dataTables_wrapper .dataTables_paginate {
+
         justify-content: center;
 
         padding: 5px 0 10px 0 !important;
     }
 }
-

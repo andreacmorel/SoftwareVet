@@ -38,7 +38,7 @@ require_once '../../app/menu.php';
 <div class="container-fluid">
 
     <h1 class="h3 titulo-pagina">
-        <i class="fas fa-calendar-check"></i></i>
+        <i class="fas fa-calendar-check"></i>
         Editar Turno
     </h1>
 
@@ -68,7 +68,7 @@ require_once '../../app/menu.php';
 
     <div class="form-group col-md-6">
         <label>Fecha <span style="color:#dc2626;">*</span></label>
-        <input type="date"name="fecha"
+        <input type="date" name="fecha"
             class="form-control <?= isset($erroresCampos['fecha']) ? 'is-invalid' : '' ?>"
             min="<?= date('Y-m-d') ?>"
             value="<?= htmlspecialchars($fecha) ?>">
@@ -80,10 +80,11 @@ require_once '../../app/menu.php';
 
     <div class="form-group col-md-6">
         <label>Hora <span style="color:#dc2626;">*</span></label>
-
-        <input type="time"name="hora"
+        <input type="time" name="hora"
         class="form-control <?= isset($erroresCampos['hora']) ? 'is-invalid' : '' ?>"
-        value="<?= htmlspecialchars($hora) ?>">
+        value="<?= htmlspecialchars($hora) ?>"  min="08:00"
+        max="20:00"
+        step="1800">
 
         <?php if(isset($erroresCampos['hora'])) { ?>
             <div class="invalid-feedback"><?= htmlspecialchars($erroresCampos['hora']) ?></div>

@@ -108,7 +108,9 @@ require_once '../../app/menu.php';
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../../css/index1.css" rel="stylesheet">
+    <link href="../../css/indexclient.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
 </head>
 
@@ -141,16 +143,12 @@ require_once '../../app/menu.php';
             <div class="page-subtitle">Gestión del registro de clientes</div>
         </div>
 
+        <div id="botonesExportacion" class="mr-2"></div>
+
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple" title="Agregar cliente">
                 <i class="fas fa-plus"></i> Nuevo Cliente
             </a>
-
-            <button class="btn btn-success ml-2"
-                    onclick="window.location.href='reporte_excel.php'"
-                    title="Exportar a Excel">
-                <i class="fas fa-file-excel"></i>
-            </button>
         </div>
 
     </div>
@@ -166,8 +164,8 @@ require_once '../../app/menu.php';
             </div>
 
             <div class="col-md-2 ">
-                <button type="submit" class="btn btn-purple">
-                <i class="fas fa-filter"></i>
+                <button type="submit" class="btn btn-filtro btn-block">
+                <i class="fas fa-search"></i>
             </button>
             </div>
         </div>
@@ -175,7 +173,7 @@ require_once '../../app/menu.php';
 
     <div class="table-card">
         <div class="table-responsive">
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%" id="tablaClientes">
                 <thead>
                     <tr>
                         <th>Cliente</th>
@@ -264,51 +262,218 @@ require_once '../../app/menu.php';
     </div>
 
 </div>
-<div class="modal fade" id="modalEliminarCliente" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+<!-- =====================================================
+     MODAL CONFIRMAR ELIMINACIÓN DE CLIENTE
+===================================================== -->
 
-            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                <h5 style="margin:0; font-weight:700;">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
+<div class="modal fade modal-eliminar"
+     id="modalEliminarCliente"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
                     Confirmar eliminación
                 </h5>
 
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
                 </button>
+
             </div>
 
-            <div class="text-center p-4">
-                <i class="fas fa-user fa-3x mb-3" style="color:#d8c2e8;"></i>
 
-                <p class="mb-1">¿Estás seguro de eliminar a</p>
+            <!-- CUERPO -->
+            <div class="modal-body">
 
-                <h5 id="nombreClienteEliminar" style="color:#52266E; font-weight:800;"></h5>
+                <div class="modal-delete-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
 
-                <p class="mt-3" style="font-size:14px; color:#6b7280;">
-                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>.
+                <p class="modal-delete-question">
+                    ¿Estás seguro de eliminar al cliente?
                 </p>
+
+                <div id="nombreClienteEliminar"
+                     class="modal-delete-name">
+                </div>
+
+
+                <!-- ADVERTENCIA -->
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+                        Esta acción es <strong>irreversible</strong>.
+                        El cliente dejará de estar disponible en el sistema.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
-                <button type="button" class="btn btn-light" data-dismiss="modal">
-                    <i class="fas fa-times"></i> Cancelar
+
+            <!-- BOTONES -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-modal-cancelar"
+                        data-dismiss="modal">
+
+                    <i class="fas fa-times mr-1"></i>
+                    Cancelar
+
                 </button>
 
-                <a href="#" id="btnConfirmarEliminarCliente" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Sí, eliminar
+                <a href="#"
+                   id="btnConfirmarEliminarCliente"
+                   class="btn btn-modal-eliminar">
+
+                    <i class="fas fa-trash mr-1"></i>
+                    Sí, eliminar
+
                 </a>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Excel / PDF -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- Configuración general VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
+
 <script>
+// =====================================================
+// DATATABLE CLIENTES
+// =====================================================
+
+const tablaClientes = inicializarDataTableVetSys({
+
+    // Tabla
+    tabla: '#tablaClientes',
+
+    // Título de exportaciones
+    titulo: 'Listado de Clientes',
+
+    // Subtítulo
+    subtitulo: 'Gestión del registro de clientes',
+
+    // Nombre del archivo
+    nombreArchivo: 'VetSys_Clientes',
+
+    // No exportar Acciones
+    columnasExportar: ':not(:last-child)',
+
+    // Registros por página
+    pageLength: 10,
+
+
+    // =================================================
+    // ANCHOS EXCEL
+    // =================================================
+
+anchosExcel: [
+    28, // Cliente
+    18, // Teléfono
+    32, // Email
+    25, // Calle
+    18, // Número
+    27, // Barrio
+    18  // Manzana
+],
+
+
+    // =================================================
+    // ANCHOS PDF
+    // =================================================
+anchosPDF: [
+    '16%', // Cliente
+    '14%', // Teléfono
+    '20%', // Email
+    '16%', // Calle
+    '11%', // Número
+    '14%', // Barrio
+    '9%'   // Manzana
+],
+
+    // =================================================
+    // FORMATO ESPECIAL DE CLIENTES
+    // =================================================
+
+    formatearCelda: function (
+        texto,
+        data,
+        row,
+        column,
+        node
+    ) {
+
+        // ---------------------------------------------
+        // CLIENTE
+        // ---------------------------------------------
+
+        if (column === 0) {
+
+            const celda = $(node).clone();
+
+            // No exportamos el ID visual #1, #2...
+            celda.find('.cliente-id').remove();
+
+            texto = celda
+                .text()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+
+        // ---------------------------------------------
+        // DATOS VACÍOS
+        // ---------------------------------------------
+
+        if (
+            texto === '—' ||
+            texto === 'â€”' ||
+            texto === ''
+        ) {
+            texto = 'Sin especificar';
+        }
+
+
+        return texto;
+    }
+
+});
+
 $('#modalEliminarCliente').on('show.bs.modal', function (event) {
     var boton = $(event.relatedTarget);
 
