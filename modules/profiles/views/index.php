@@ -77,10 +77,11 @@ if(isset($_GET['success'])) { ?>
 <head>
     <meta charset="utf-8">
     <title>Listado de Perfiles</title>
-
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../../css/indexperf.css" rel="stylesheet">
+    <link href="../../css/indexperfil.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
 <body>
@@ -111,6 +112,8 @@ if(isset($_GET['success'])) { ?>
             <div class="page-subtitle">Gestión de perfiles y permisos del sistema</div>
         </div>
 
+        <div id="botonesExportacion" class="mb-3"></div>
+
         <a href="create.php" class="btn btn-purple">
             <i class="fas fa-plus"></i> Nuevo Perfil
         </a>
@@ -126,10 +129,12 @@ if(isset($_GET['success'])) { ?>
             </div>
 
             <div class="col-md-2">
-                <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-filter"></i>
-                </button>
-            </div>
+            <button type="submit"
+                    class="btn btn-filtro"
+                    title="Buscar">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
 
         </div>
     </form>
@@ -137,7 +142,7 @@ if(isset($_GET['success'])) { ?>
     <div class="table-card">
         <div class="table-responsive">
 
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%" id="tablaPerfiles">
                 <thead>
                     <tr>
                         <th>Perfil</th>
@@ -204,59 +209,181 @@ if(isset($_GET['success'])) { ?>
     </div>
 
 </div>
-<div class="modal fade" id="modalEliminarPerfil" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+<!-- =========================================================
+     MODAL ELIMINAR PERFIL
+========================================================= -->
 
-            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                
-                <h5 style="margin:0; font-weight:700;">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Confirmar eliminación
+<div
+    class="modal fade modal-eliminar-perfil"
+    id="modalEliminarPerfil"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered"
+        role="document">
+
+        <div class="modal-content">
+
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Eliminar perfil
+
                 </h5>
 
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
+
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
                 </button>
 
             </div>
 
-            <div class="text-center p-4">
 
-                <i class="fas fa-user-tag fa-3x mb-3" style="color:#d8c2e8;"></i>
+            <!-- BODY -->
+            <div class="modal-body">
 
-                <p class="mb-1">¿Estás seguro de eliminar el perfil</p>
 
-                <h5 id="nombrePerfilEliminar" style="color:#52266E; font-weight:800;"></h5>
+                <!-- ICONO -->
+                <div class="modal-delete-icon">
 
-                <p class="mt-3" style="font-size:14px; color:#6b7280;">
-                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>.
+                    <i class="fas fa-user-tag"></i>
+
+                </div>
+
+
+                <!-- PREGUNTA -->
+                <p class="modal-delete-question">
+
+                    ¿Estás seguro de eliminar el perfil?
+
                 </p>
 
+
+                <!-- NOMBRE -->
+                <div>
+
+                    <span
+                        id="nombrePerfilEliminar"
+                        class="modal-delete-name">
+                    </span>
+
+                </div>
+
+
+                <!-- ADVERTENCIA -->
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+
+                        Esta acción es
+                        <strong>irreversible</strong>.
+
+                        El perfil será eliminado del sistema.
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
 
-                <button type="button" class="btn btn-light" data-dismiss="modal">
-                    <i class="fas fa-times"></i>
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+
+                <button
+                    type="button"
+                    class="btn btn-modal-cancelar"
+                    data-dismiss="modal">
                     Cancelar
+
                 </button>
 
-                <a href="#" id="btnConfirmarEliminarPerfil" class="btn btn-danger">
-                    <i class="fas fa-trash"></i>
-                    Sí, eliminar
+
+                <a
+                    href="#"
+                    id="btnConfirmarEliminarPerfil"
+                    class="btn btn-modal-eliminar">
+
+                    <i class="fas fa-trash mr-1"></i>
+
+                    Eliminar
+
                 </a>
+
 
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="../../vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- DataTable reutilizable VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaPerfiles',
+
+        titulo: 'Listado de Perfiles',
+
+        subtitulo: 'Gestión de perfiles y permisos del sistema',
+
+        nombreArchivo: 'Listado_Perfiles',
+
+        columnasExportar: [0],
+
+        pageLength: 10,
+
+        orientacionPDF: 'portrait',
+
+        anchosExcel: [
+            35
+        ],
+
+        anchosPDF: [
+            '100%'
+        ]
+
+    });
+
+});
+
+</script>
+
 <script>
 
 setTimeout(() => {
@@ -291,28 +418,6 @@ $('#modalEliminarPerfil').on('show.bs.modal', function (event) {
     $('#btnConfirmarEliminarPerfil')
         .attr('href', 'delete.php?id=' + id);
 });
-
-</script>
-<script>
-
-setTimeout(() => {
-
-    const alerta = document.querySelector(
-        '.vet-alert-success, .vet-alert-danger'
-    );
-
-    if(alerta){
-
-        alerta.style.transition = '.4s';
-        alerta.style.opacity = '0';
-        alerta.style.transform = 'translateY(-10px)';
-
-        setTimeout(() => {
-            alerta.remove();
-        }, 400);
-    }
-
-}, 3500);
 
 </script>
 </body>

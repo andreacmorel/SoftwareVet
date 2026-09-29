@@ -34,6 +34,9 @@ require_once '../../app/menu.php';
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 <link href="../../css/index_user.css" rel="stylesheet">
+<!-- DataTables clásico (igual que Mascotas) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
 </head>
 
@@ -65,6 +68,8 @@ require_once '../../app/menu.php';
         </h1>
         <div class="page-subtitle">Gestión de usuarios del sistema</div>
     </div>
+
+        <div id="botonesExportacion" class="mb-3"></div>
 
     <a href="create.php" class="btn btn-purple">
         <i class="fas fa-plus"></i> Nuevo Usuario
@@ -113,15 +118,15 @@ require_once '../../app/menu.php';
 <form method="GET" class="filter-card">
     <div class="row align-items-end">
 
-        <div class="col-md-10">
+        <div class="col-md-11">
             <label>Buscar</label>
             <input type="text" name="buscar" class="form-control" placeholder="Buscar por usuario, email o perfil"
             value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
         </div>
 
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-purple">
-                <i class="fas fa-filter"></i>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-purple btn-block btn-filtro" title="Buscar">
+                <i class="fas fa-search"></i>
             </button>
         </div>
 
@@ -131,7 +136,7 @@ require_once '../../app/menu.php';
 <div class="table-card">
 <div class="table-responsive">
 
-<table class="table table-hover" width="100%">
+<table class="table table-hover" width="100%"  id="tablaUsuarios">
 
 <thead>
 <tr>
@@ -155,19 +160,21 @@ require_once '../../app/menu.php';
 <!-- Datos del usuario -->
 <td>
     <div class="d-flex align-items-center">
-        <span class="user-icon mr-2">
+
+        <span class="usuario-icon">
             <i class="fas fa-user"></i>
         </span>
 
         <div>
-            <div class="user-name">
+            <div class="usuario-name">
                 <?= htmlspecialchars($user->nombre ?? '') ?>
             </div>
 
-            <div class="user-id">
+            <div class="usuario-id">
                 #<?= $user->id_usuario ?>
             </div>
         </div>
+
     </div>
 </td>
 
@@ -230,7 +237,7 @@ require_once '../../app/menu.php';
 <?php } else { ?>
 
 <tr>
-<td colspan="5" class="text-center text-muted py-4">
+<td colspan="7" class="text-center text-muted py-4">
     <i class="fas fa-search mr-1"></i>
     No se encontraron usuarios.
 </td>
@@ -247,77 +254,94 @@ require_once '../../app/menu.php';
 
 </div>
 <!-- Cuerpo del modal-->
-<div class="modal fade" id="modalEstadoUsuario" tabindex="-1">
+<!-- =========================================================
+     MODAL ACTIVAR / DESACTIVAR USUARIO
+========================================================= -->
 
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modal-estado"
+     id="modalEstadoUsuario"
+     tabindex="-1"
+     role="dialog"
+     aria-hidden="true">
 
-        <div class="modal-content" style="border:none;border-radius:16px;overflow:hidden;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
 
-            <div style="background:#52266E;color:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+        <div class="modal-content">
 
-                <h5 style="margin:0;font-weight:700;">
-                    <i class="fas fa-user-lock mr-2"></i>
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
                     Cambiar estado
                 </h5>
 
                 <button type="button"
-                        class="close text-white"
+                        class="close"
                         data-dismiss="modal"
-                        style="opacity:1;">
-                    &times;
+                        aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
                 </button>
 
             </div>
 
-            <div class="text-center p-4">
 
-                <i id="iconoEstadoUsuario"
-                class="fas fa-user-lock fa-3x mb-3"
-                style="color:#d8c2e8;">
-                </i>
+            <!-- BODY -->
+            <div class="modal-body">
 
-                <p class="mb-1" id="textoEstadoUsuario"></p>
+                <div class="modal-estado-icon">
 
-                <h5 id="nombreEstadoUsuario"
-                    style="color:#52266E;font-weight:800;">
-                </h5>
+                    <i id="iconoEstadoUsuario"
+                       class="fas fa-user-lock">
+                    </i>
 
-    <div id="boxEstadoUsuario" style="border-radius:10px;
-        padding:11px 14px;
-        display:flex;
-        align-items:flex-start;
-        gap:10px;
-        text-align:left;
-        margin-top:18px;
-        width:100%;
-">
+                </div>
 
-    <i id="iconoInfoEstado" class="fas fa-info-circle" style="font-size:14px;margin-top:2px;flex-shrink:0;">
-    </i>
 
-    <p id="mensajeInfoEstado" style="font-size:12.5px; line-height:1.55; margin:0;">
-    </p>
+                <p class="modal-estado-question"
+                   id="textoEstadoUsuario">
+                </p>
 
-</div>
+
+                <div>
+                    <span id="nombreEstadoUsuario"
+                          class="modal-estado-name">
+                    </span>
+                </div>
+
+
+                <div id="boxEstadoUsuario"
+                     class="modal-estado-warning">
+
+                    <i id="iconoInfoEstado"
+                       class="fas fa-info-circle">
+                    </i>
+
+                    <p id="mensajeInfoEstado"></p>
+
+                </div>
 
             </div>
 
-            <div class="d-flex justify-content-end p-3"
-                style="gap:10px;border-top:1px solid #eee;">
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
 
                 <button type="button"
-                        class="btn btn-light"
+                        class="btn btn-modal-cancelar"
                         data-dismiss="modal">
-                    <i class="fas fa-times"></i>
+
+                 
                     Cancelar
+
                 </button>
 
+
                 <a href="#"
-                id="btnConfirmarEstadoUsuario"
-                class="btn btn-danger">
+                   id="btnConfirmarEstadoUsuario"
+                   class="btn btn-modal-estado">
 
                     <i id="iconoBotonEstado"
-                    class="fas fa-user-lock">
+                       class="fas fa-user-lock mr-1">
                     </i>
 
                     <span id="textoBotonEstado">
@@ -336,6 +360,65 @@ require_once '../../app/menu.php';
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables clásico (igual que Mascotas) -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- DataTable reutilizable VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaUsuarios',
+
+        titulo: 'Listado de Usuarios',
+
+        subtitulo: 'Gestión de usuarios del sistema',
+
+        nombreArchivo: 'Listado_Usuarios',
+
+        columnasExportar: [0, 1, 2, 3, 4, 5],
+
+        pageLength: 10,
+
+        orientacionPDF: 'landscape',
+
+        anchosExcel: [
+            20, // Nombre
+            20, // Apellido
+            20, // Usuario
+            30, // Email
+            20, // Perfil
+            15  // Estado
+        ],
+
+        anchosPDF: [
+            '15%', // Nombre
+            '15%', // Apellido
+            '15%', // Usuario
+            '25%', // Email
+            '17%', // Perfil
+            '13%'  // Estado
+        ]
+
+    });
+
+});
+
+</script>
+
 <script>
     // Se ejecuta cuando se abre el modal de cambio de estado.
 $('#modalEstadoUsuario').on('show.bs.modal', function (event) {
@@ -387,7 +470,7 @@ $('#modalEstadoUsuario').on('show.bs.modal', function (event) {
             .addClass('fa-user-lock');
 
     } else {
-        // Configura el modal para desactivar usuario.
+        // Configura el modal para activar usuario.
         // Cambia textos, colores, iconos y botón.
         $('#textoEstadoUsuario').text(
             '¿Estás seguro de activar al usuario?'
@@ -453,4 +536,3 @@ setTimeout(() => {
 
 </body>
 </html>
-

@@ -1,0 +1,932 @@
+/* =========================================================
+   VETSYS - MÓDULO AUDITORÍA
+========================================================= */
+
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+
+.page-title {
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 2px;
+}
+
+.page-title i {
+    color: #52266E;
+}
+
+.page-subtitle {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.filter-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.filter-card label {
+    color: #52266E;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.filter-card .form-control {
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid #d8c2e8;
+    font-size: 14px;
+    transition: all .2s ease;
+}
+
+.filter-card .form-control:focus {
+    border-color: #52266E;
+    box-shadow: 0 0 0 3px rgba(82, 38, 110, .10);
+}
+
+
+/* =========================================================
+   BOTÓN FILTRO
+========================================================= */
+
+.btn-filtro {
+    width: 75px;
+    height: 38px;
+
+    background: #6c757d !important;
+    color: #ffffff !important;
+
+    border: 1px solid #6c757d !important;
+    border-radius: 8px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: none !important;
+
+    transition: all .2s ease;
+}
+
+.btn-filtro i {
+    color: #ffffff !important;
+    font-size: 14px;
+}
+
+.btn-filtro:hover {
+    background: #5c636a !important;
+    border-color: #5c636a !important;
+    color: #ffffff !important;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15) !important;
+}
+
+.btn-filtro:active {
+    background: #565e64 !important;
+    border-color: #565e64 !important;
+
+    transform: translateY(0);
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .12) !important;
+}
+
+.btn-filtro:focus {
+    color: #ffffff !important;
+
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, .18) !important;
+}
+
+
+/* =========================================================
+   TARJETA DEL LISTADO
+========================================================= */
+
+.table-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border-radius: 15px;
+
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+
+    overflow: hidden !important;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   TABLE RESPONSIVE
+   SOLO SCROLL HORIZONTAL
+========================================================= */
+
+.table-card .table-responsive {
+    width: 100% !important;
+
+    height: auto !important;
+    max-height: none !important;
+
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+}
+
+
+/* =========================================================
+   TABLA AUDITORÍA
+========================================================= */
+
+#tablaAuditoria {
+    width: 100% !important;
+
+    height: auto !important;
+    max-height: none !important;
+
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+#tablaAuditoria thead th {
+    background: #fbf7ff !important;
+
+    color: #52266E !important;
+
+    padding: 13px 12px !important;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    vertical-align: middle !important;
+
+    border-top: none !important;
+
+    border-bottom: 2px solid #eee1f6 !important;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FILAS
+========================================================= */
+
+#tablaAuditoria tbody td {
+    padding: 12px !important;
+
+    vertical-align: middle !important;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+#tablaAuditoria tbody tr:first-child td {
+    border-top: none;
+}
+
+#tablaAuditoria tbody tr:hover {
+    background: #fcf8ff;
+}
+
+
+/* =========================================================
+   FECHA
+========================================================= */
+
+.turno-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    margin-right: 10px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f0e6f6;
+
+    border-radius: 8px;
+
+    color: #52266E;
+}
+
+.turno-icon i {
+    color: #52266E !important;
+    font-size: 14px;
+}
+
+.turno-date {
+    color: #111827;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+.turno-hour {
+    margin-top: 3px;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   USUARIO
+========================================================= */
+
+.user-name {
+    color: #111827;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   MÓDULO
+========================================================= */
+
+.badge-total {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 10px;
+
+    background: #f0e6f6;
+
+    border-radius: 999px;
+
+    color: #52266E;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.badge-total i {
+    color: #52266E;
+}
+
+
+/* =========================================================
+   ACCIÓN
+========================================================= */
+
+#tablaAuditoria tbody td:nth-child(4) strong {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 10px;
+
+    background: #eef2ff;
+
+    border-radius: 999px;
+
+    color: #4338ca;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   REGISTRO
+========================================================= */
+
+.pet-name,
+.dato-valor {
+    color: #111827;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ANTES / DESPUÉS
+========================================================= */
+
+#tablaAuditoria td:nth-child(6),
+#tablaAuditoria td:nth-child(7) {
+    min-width: 180px;
+    max-width: 300px;
+
+    color: #6b7280 !important;
+
+    font-size: 12.5px;
+
+    line-height: 1.5;
+
+    white-space: normal;
+
+    word-break: break-word;
+}
+
+
+/* ANTES */
+
+#tablaAuditoria td:nth-child(6) {
+    background: rgba(254, 242, 242, .35);
+}
+
+
+/* DESPUÉS */
+
+#tablaAuditoria td:nth-child(7) {
+    background: rgba(240, 253, 244, .35);
+}
+
+
+/* =========================================================
+   DATOS SECUNDARIOS
+========================================================= */
+
+.dato-muted {
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   DATATABLE
+========================================================= */
+
+#tablaAuditoria_wrapper {
+    width: 100% !important;
+
+    height: auto !important;
+    max-height: none !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    overflow: visible !important;
+}
+
+
+/* Ocultamos búsqueda y selector propio de DataTables */
+
+#tablaAuditoria_wrapper .dataTables_filter,
+#tablaAuditoria_wrapper .dataTables_length {
+    display: none !important;
+}
+
+
+/* =========================================================
+   EVITAR DOBLE SCROLL
+========================================================= */
+
+#tablaAuditoria_wrapper,
+#tablaAuditoria_wrapper > .row,
+#tablaAuditoria_wrapper > .row > div {
+    max-height: none !important;
+}
+
+#tablaAuditoria_wrapper .dataTables_scroll,
+#tablaAuditoria_wrapper .dataTables_scrollBody {
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow-y: hidden !important;
+}
+
+
+/* =========================================================
+   FOOTER DATATABLE
+========================================================= */
+
+#tablaAuditoria_wrapper > .row:last-child {
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 12px 14px 16px !important;
+
+    display: flex !important;
+
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+
+    align-items: center !important;
+}
+
+
+/* INFORMACIÓN IZQUIERDA */
+
+#tablaAuditoria_wrapper > .row:last-child > div:first-child {
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: flex-start !important;
+
+    padding: 0 !important;
+}
+
+
+/* PAGINACIÓN DERECHA */
+
+#tablaAuditoria_wrapper > .row:last-child > div:last-child {
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: flex-end !important;
+
+    padding: 0 !important;
+}
+
+
+/* =========================================================
+   "MOSTRANDO 1 A..."
+========================================================= */
+
+#tablaAuditoria_wrapper .dataTables_info {
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    color: #9ca3af !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
+
+    font-weight: 500 !important;
+
+    line-height: 32px !important;
+
+    white-space: nowrap !important;
+}
+
+
+/* =========================================================
+   PAGINACIÓN
+========================================================= */
+
+#tablaAuditoria_wrapper .dataTables_paginate {
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    float: none !important;
+
+    display: flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center !important;
+    justify-content: flex-end !important;
+
+    white-space: nowrap !important;
+
+    font-family: "Nunito", sans-serif !important;
+}
+
+
+/* CONTENEDOR */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.pagination {
+
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+
+    align-items: center !important;
+    justify-content: flex-end !important;
+
+    gap: 4px !important;
+
+    list-style: none !important;
+}
+
+
+/* ITEM */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-item {
+
+    display: inline-flex !important;
+
+    float: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/* =========================================================
+   LINKS PAGINACIÓN
+========================================================= */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-link {
+
+    min-width: 32px !important;
+
+    height: 32px !important;
+
+    padding: 0 9px !important;
+
+    margin: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    color: #52266E !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
+
+    font-weight: 600 !important;
+
+    line-height: 1 !important;
+
+    text-decoration: none !important;
+
+    box-shadow: none !important;
+
+    white-space: nowrap !important;
+
+    transition: all .18s ease;
+}
+
+
+/* HOVER */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-item:not(.active):not(.disabled)
+.page-link:hover {
+
+    background: #f4ebf8 !important;
+
+    color: #52266E !important;
+}
+
+
+/* =========================================================
+   PÁGINA ACTIVA
+========================================================= */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-item.active
+.page-link {
+
+    width: 32px !important;
+
+    min-width: 32px !important;
+
+    height: 32px !important;
+
+    padding: 0 !important;
+
+    background: #52266E !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    color: #ffffff !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
+
+    font-weight: 700 !important;
+
+    box-shadow: 0 3px 8px rgba(82, 38, 110, .20) !important;
+}
+
+
+/* =========================================================
+   ANTERIOR / SIGUIENTE
+========================================================= */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-item.previous
+.page-link,
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-item.next
+.page-link {
+
+    width: auto !important;
+
+    min-width: auto !important;
+
+    padding: 0 8px !important;
+
+    background: transparent !important;
+
+    color: #52266E !important;
+
+    font-size: 12px !important;
+
+    font-weight: 600 !important;
+
+    white-space: nowrap !important;
+}
+
+
+/* =========================================================
+   DESHABILITADO
+========================================================= */
+
+#tablaAuditoria_wrapper
+.dataTables_paginate
+.page-item.disabled
+.page-link {
+
+    background: transparent !important;
+
+    border: none !important;
+
+    color: #c9b9cf !important;
+
+    opacity: 1 !important;
+
+    cursor: default !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   COMPATIBILIDAD DATATABLES
+========================================================= */
+
+#tablaAuditoria_wrapper .paginate_button {
+    border: none !important;
+
+    background: transparent !important;
+
+    padding: 0 !important;
+
+    margin: 0 !important;
+
+    box-shadow: none !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
+}
+
+
+/* =========================================================
+   BOTONES EXPORTACIÓN
+========================================================= */
+
+#botonesExportacion {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    margin: 0 !important;
+}
+
+#botonesExportacion .dt-buttons {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0 !important;
+}
+
+#botonesExportacion .dt-button {
+    margin: 0 !important;
+
+    padding: 8px 13px !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    background-image: none !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
+
+    font-weight: 700 !important;
+
+    box-shadow: none !important;
+
+    transition: all .18s ease;
+}
+
+#botonesExportacion .dt-button:hover {
+    transform: translateY(-1px);
+}
+
+
+/* EXCEL */
+
+#botonesExportacion .buttons-excel {
+    background: #dcfce7 !important;
+
+    color: #15803d !important;
+}
+
+#botonesExportacion .buttons-excel:hover {
+    background: #bbf7d0 !important;
+
+    color: #166534 !important;
+}
+
+
+/* PDF */
+
+#botonesExportacion .buttons-pdf {
+    background: #fee2e2 !important;
+
+    color: #b91c1c !important;
+}
+
+#botonesExportacion .buttons-pdf:hover {
+    background: #fecaca !important;
+
+    color: #991b1b !important;
+}
+
+
+/* IMPRIMIR */
+
+#botonesExportacion .buttons-print {
+    background: #dbeafe !important;
+
+    color: #1d4ed8 !important;
+}
+
+#botonesExportacion .buttons-print:hover {
+    background: #bfdbfe !important;
+
+    color: #1e40af !important;
+}
+
+
+/* =========================================================
+   FLECHITAS ORDENAMIENTO DATATABLE
+========================================================= */
+
+#tablaAuditoria thead .sorting:before,
+#tablaAuditoria thead .sorting_asc:before,
+#tablaAuditoria thead .sorting_desc:before,
+
+#tablaAuditoria thead .sorting:after,
+#tablaAuditoria thead .sorting_asc:after,
+#tablaAuditoria thead .sorting_desc:after {
+
+    color: #bca8c9 !important;
+
+    opacity: .55 !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 992px) {
+
+    #tablaAuditoria {
+        min-width: 1100px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .filter-card {
+        padding: 15px;
+    }
+
+    #botonesExportacion {
+        width: 100%;
+
+        margin-top: 15px !important;
+
+        justify-content: flex-start;
+    }
+
+    #botonesExportacion .dt-buttons {
+        flex-wrap: wrap;
+    }
+
+    #tablaAuditoria_wrapper > .row:last-child {
+        display: block !important;
+
+        padding: 12px 10px 14px !important;
+    }
+
+    #tablaAuditoria_wrapper > .row:last-child > div {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        flex: 0 0 100% !important;
+
+        justify-content: center !important;
+    }
+
+    #tablaAuditoria_wrapper .dataTables_info {
+        justify-content: center !important;
+
+        margin-bottom: 6px !important;
+
+        text-align: center !important;
+    }
+
+    #tablaAuditoria_wrapper .dataTables_paginate {
+        width: 100%;
+
+        justify-content: center !important;
+    }
+
+    #tablaAuditoria_wrapper
+    .dataTables_paginate
+    .pagination {
+
+        justify-content: center !important;
+
+        flex-direction: row !important;
+
+        flex-wrap: nowrap !important;
+    }
+}

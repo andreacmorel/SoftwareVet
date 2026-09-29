@@ -13,7 +13,9 @@ $generarPDF = isset($_GET['pdf']);
 
 // Si se solicitó PDF, carga Dompdf y activa el buffer de salida
 if ($generarPDF) {
+
     require_once '../../vendor/autoload.php';
+
     ob_start();
 }
 
@@ -24,6 +26,7 @@ $id = (int)($_GET['id'] ?? 0);
 
 // Valida que el ID sea correcto
 if ($id <= 0) {
+
     die("ID de historia clínica no válido.");
 }
 
@@ -35,7 +38,8 @@ if ($id <= 0) {
 */
 
 $stmt = $conexion->prepare("
-    SELECT 
+
+    SELECT
         h.id_historia_clinica,
         h.fecha,
         h.descripcion,
@@ -59,19 +63,20 @@ $stmt = $conexion->prepare("
 
     FROM historia_clinica h
 
-    INNER JOIN mascota m 
+    INNER JOIN mascota m
         ON h.id_mascota = m.id_mascota
 
-    LEFT JOIN especie e 
+    LEFT JOIN especie e
         ON m.id_especie = e.id_especie
 
-    INNER JOIN cliente c 
+    INNER JOIN cliente c
         ON m.id_cliente = c.id_cliente
 
-    INNER JOIN persona p 
+    INNER JOIN persona p
         ON c.id_persona = p.id_persona
 
     WHERE h.id_historia_clinica = ?
+
 ");
 
 
@@ -89,6 +94,7 @@ $res = $stmt->get_result();
 
 // Si no encuentra la historia clínica
 if ($res->num_rows == 0) {
+
     die("Historia clínica no encontrada.");
 }
 
@@ -119,21 +125,27 @@ $stmt->close();
 
 $edadMascota = 'Sin especificar';
 
+
 if (!empty($hc['edad'])) {
 
     $numeroEdad = $hc['edad'];
+
     $unidadEdad = $hc['unidad_edad'] ?? '';
+
 
     // Singular
     if ($numeroEdad == 1) {
 
         if ($unidadEdad == 'dias') {
+
             $unidadEdad = 'día';
 
         } elseif ($unidadEdad == 'meses') {
+
             $unidadEdad = 'mes';
 
         } elseif ($unidadEdad == 'años') {
+
             $unidadEdad = 'año';
         }
 
@@ -141,15 +153,19 @@ if (!empty($hc['edad'])) {
 
         // Plural
         if ($unidadEdad == 'dias') {
+
             $unidadEdad = 'días';
 
         } elseif ($unidadEdad == 'meses') {
+
             $unidadEdad = 'meses';
 
         } elseif ($unidadEdad == 'años') {
+
             $unidadEdad = 'años';
         }
     }
+
 
     $edadMascota = $numeroEdad . ' ' . $unidadEdad;
 }
@@ -162,17 +178,19 @@ if (!empty($hc['edad'])) {
 */
 
 $stmtTrat = $conexion->prepare("
-    SELECT 
+
+    SELECT
         t.duracion,
         t.dosis,
         t.descripcion
 
     FROM detalle_historia_clinica dh
 
-    INNER JOIN tratamientos t 
+    INNER JOIN tratamientos t
         ON dh.id_tratamiento = t.id_tratamiento
 
     WHERE dh.id_historia_clinica = ?
+
 ");
 
 
@@ -189,310 +207,380 @@ $tratamientos = $stmtTrat->get_result();
 
 ?>
 
+
 <!DOCTYPE html>
 
 <html lang="es">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>Historia Clínica</title>
+    <title>Historia Clínica</title>
 
 
-<style>
+    <!-- =====================================================
+         CSS SOLO PARA LA VISTA EN PANTALLA
+    ====================================================== -->
 
-/* =========================================================
-   DOCUMENTO GENERAL
-========================================================= */
+    <?php if (!$generarPDF): ?>
 
-body {
-    font-family: DejaVu Sans, Arial, sans-serif;
+        <link
+            href="../../vendor/fontawesome-free/css/all.min.css"
+            rel="stylesheet"
+        >
 
-    color: #1f2937;
+        <link
+            href="/SoftwareVet/css/medical_record_print.css"
+            rel="stylesheet"
+        >
 
-    margin: 22px 30px;
+    <?php endif; ?>
 
-    font-size: 12px;
 
-    line-height: 1.5;
-}
+    <!-- =====================================================
+         CSS DEL DOCUMENTO / PDF
+         Se mantiene dentro del archivo para Dompdf
+    ====================================================== -->
 
+    <style>
 
-/* =========================================================
-   ENCABEZADO
-========================================================= */
+        /* =========================================================
+           DOCUMENTO GENERAL
+        ========================================================= */
 
-.header {
-    border-bottom: 3px solid #52266E;
+        body {
 
-    padding-bottom: 14px;
+            font-family: DejaVu Sans, Arial, sans-serif;
 
-    margin-bottom: 22px;
-}
+            color: #1f2937;
 
+            margin: 22px 30px;
 
-.header-top {
-    position: relative;
-}
+            font-size: 12px;
 
+            line-height: 1.5;
+        }
 
-/* Información de VetSys y fecha */
 
-.header_one {
-    font-size: 10px;
+        /* =========================================================
+           ENCABEZADO
+        ========================================================= */
 
-    color: #7b8494;
+        .header {
 
-    line-height: 1.6;
-}
+            border-bottom: 3px solid #52266E;
 
+            padding-bottom: 14px;
 
-/* Título principal */
+            margin-bottom: 22px;
+        }
 
-.logo-title {
-    font-family: DejaVu Sans, Arial, sans-serif;
 
-    font-size: 23px;
+        .header-top {
 
-    font-weight: 700;
+            position: relative;
+        }
 
-    color: #52266E;
 
-    text-transform: uppercase;
+        .header_one {
 
-    letter-spacing: 1px;
+            font-size: 10px;
 
-    text-align: center;
+            color: #7b8494;
 
-    margin-top: 4px;
-}
+            line-height: 1.6;
+        }
 
 
-/* Código de Historia Clínica */
+        .logo-title {
 
-.badge-hc {
-    position: absolute;
+            font-family: DejaVu Sans, Arial, sans-serif;
 
-    top: 0;
+            font-size: 23px;
 
-    right: 0;
+            font-weight: 700;
 
-    background: #f3e8ff;
+            color: #52266E;
 
-    border: 1px solid #e7d7f5;
+            text-transform: uppercase;
 
-    border-radius: 6px;
+            letter-spacing: 1px;
 
-    color: #52266E;
+            text-align: center;
 
-    font-size: 10px;
+            margin-top: 4px;
+        }
 
-    font-weight: 700;
 
-    padding: 5px 9px;
-}
+        .badge-hc {
 
+            position: absolute;
 
-/* =========================================================
-   SECCIONES
-========================================================= */
+            top: 0;
 
-.section {
-    margin-top: 18px;
+            right: 0;
 
-    page-break-inside: avoid;
-}
+            background: #f3e8ff;
 
+            border: 1px solid #e7d7f5;
 
-/* Títulos de las secciones */
+            border-radius: 6px;
 
-.section h3 {
-    color: #52266E;
+            color: #52266E;
 
-    font-size: 11px;
+            font-size: 10px;
 
-    font-weight: 700;
+            font-weight: 700;
 
-    text-transform: uppercase;
+            padding: 5px 9px;
+        }
 
-    letter-spacing: 0.5px;
 
-    border-bottom: 1px solid #e9dcef;
+        /* =========================================================
+           SECCIONES
+        ========================================================= */
 
-    padding-bottom: 6px;
+        .section {
 
-    margin: 0 0 10px 0;
-}
+            margin-top: 18px;
 
+            page-break-inside: avoid;
+        }
 
-/* =========================================================
-   DATOS EN DOS COLUMNAS
-========================================================= */
 
-.grid {
-    display: grid;
+        .section h3 {
 
-    grid-template-columns: repeat(2, 1fr);
+            color: #52266E;
 
-    gap: 7px 25px;
-}
+            font-size: 11px;
 
+            font-weight: 700;
 
-/* Cada dato */
+            text-transform: uppercase;
 
-.item {
-    font-size: 12px;
+            letter-spacing: .5px;
 
-    color: #374151;
+            border-bottom: 1px solid #e9dcef;
 
-    padding: 2px 0;
-}
+            padding-bottom: 6px;
 
+            margin: 0 0 10px 0;
+        }
 
-/* Nombre del dato */
 
-.label {
-    font-weight: 700;
+        /* =========================================================
+           DATOS EN DOS COLUMNAS
+        ========================================================= */
 
-    color: #6b7280;
-}
+        .grid {
 
+            display: grid;
 
-/* =========================================================
-   DESCRIPCIÓN Y OBSERVACIÓN
-========================================================= */
+            grid-template-columns: repeat(2, 1fr);
 
-.box {
-    border: 1px solid #eadff0;
+            gap: 7px 25px;
+        }
 
-    border-left: 3px solid #52266E;
 
-    border-radius: 6px;
+        .item {
 
-    padding: 11px 13px;
+            font-size: 12px;
 
-    background: #fcf9fe;
+            color: #374151;
 
-    color: #374151;
+            padding: 2px 0;
+        }
 
-    font-size: 12px;
 
-    line-height: 1.6;
+        .label {
 
-    min-height: 28px;
-}
+            font-weight: 700;
 
+            color: #6b7280;
+        }
 
-/* =========================================================
-   TABLA DE TRATAMIENTOS
-========================================================= */
 
-.table {
-    width: 100%;
+        /* =========================================================
+           DESCRIPCIÓN / OBSERVACIÓN
+        ========================================================= */
 
-    border-collapse: collapse;
+        .box {
 
-    margin-top: 8px;
-}
+            border: 1px solid #eadff0;
 
+            border-left: 3px solid #52266E;
 
-/* Encabezados */
+            border-radius: 6px;
 
-.table th {
-    background: #f7f0fa;
+            padding: 11px 13px;
 
-    color: #52266E;
+            background: #fcf9fe;
 
-    text-align: left;
+            color: #374151;
 
-    padding: 8px 9px;
+            font-size: 12px;
 
-    font-size: 10px;
+            line-height: 1.6;
 
-    font-weight: 700;
+            min-height: 28px;
+        }
 
-    text-transform: uppercase;
 
-    letter-spacing: 0.3px;
+        /* =========================================================
+           TRATAMIENTOS
+        ========================================================= */
 
-    border: 1px solid #e7d7f5;
-}
+        .table {
 
+            width: 100%;
 
-/* Datos */
+            border-collapse: collapse;
 
-.table td {
-    padding: 8px 9px;
+            margin-top: 8px;
+        }
 
-    border: 1px solid #ece5f0;
 
-    color: #374151;
+        .table th {
 
-    font-size: 11px;
+            background: #f7f0fa;
 
-    vertical-align: top;
-}
+            color: #52266E;
 
+            text-align: left;
 
-/* =========================================================
-   SIN TRATAMIENTOS
-========================================================= */
+            padding: 8px 9px;
 
-.no-tratamientos {
-    background: #fcf9fe;
+            font-size: 10px;
 
-    border: 1px dashed #d8c2e8;
+            font-weight: 700;
 
-    color: #6b7280;
+            text-transform: uppercase;
 
-    padding: 12px;
+            letter-spacing: .3px;
 
-    border-radius: 6px;
+            border: 1px solid #e7d7f5;
+        }
 
-    text-align: center;
 
-    font-size: 11px;
-}
+        .table td {
 
+            padding: 8px 9px;
 
-/* =========================================================
-   PIE DEL DOCUMENTO
-========================================================= */
+            border: 1px solid #ece5f0;
 
-.footer {
-    margin-top: 30px;
+            color: #374151;
 
-    padding-top: 10px;
+            font-size: 11px;
 
-    border-top: 1px solid #eee1f6;
+            vertical-align: top;
+        }
 
-    font-size: 9px;
 
-    color: #9ca3af;
+        /* =========================================================
+           SIN TRATAMIENTOS
+        ========================================================= */
 
-    text-align: center;
-}
+        .no-tratamientos {
 
+            background: #fcf9fe;
 
-/* =========================================================
-   IMPRESIÓN
-========================================================= */
+            border: 1px dashed #d8c2e8;
 
-@media print {
+            color: #6b7280;
 
-    body {
-        margin: 15px 20px;
-    }
+            padding: 12px;
 
-}
+            border-radius: 6px;
 
-</style>
+            text-align: center;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           PIE DEL DOCUMENTO
+        ========================================================= */
+
+        .footer {
+
+            margin-top: 30px;
+
+            padding-top: 10px;
+
+            border-top: 1px solid #eee1f6;
+
+            font-size: 9px;
+
+            color: #9ca3af;
+
+            text-align: center;
+        }
+
+
+        /* =========================================================
+           IMPRESIÓN
+        ========================================================= */
+
+        @media print {
+
+            body {
+
+                margin: 15px 20px;
+            }
+        }
+
+    </style>
 
 </head>
 
 
 <body>
+
+
+<!-- =====================================================
+     BOTONES DE LA VISTA
+     NO APARECEN EN EL PDF
+===================================================== -->
+
+<?php if (!$generarPDF): ?>
+
+    <div class="acciones-pantalla">
+
+
+        <!-- VOLVER -->
+
+        <a
+            href="index.php"
+            class="btn-volver"
+        >
+
+            <i class="fas fa-arrow-left"></i>
+
+            <span>Volver</span>
+
+        </a>
+
+
+        <!-- DESCARGAR PDF -->
+
+        <a
+            href="print.php?id=<?= $hc['id_historia_clinica'] ?>&pdf=1"
+            class="btn-descargar-pdf"
+        >
+
+            <i class="fas fa-file-pdf"></i>
+
+            <span>Descargar PDF</span>
+
+        </a>
+
+
+    </div>
+
+<?php endif; ?>
+
 
 
 <!-- =====================================================
@@ -959,6 +1047,7 @@ body {
 
 <?php
 
+
 // Cierra la consulta de tratamientos
 $stmtTrat->close();
 
@@ -1031,5 +1120,6 @@ if ($generarPDF) {
     // Finaliza la ejecución
     exit;
 }
+
 
 ?>

@@ -47,7 +47,7 @@ if(isset($_GET['success'])) { ?>
     <div class="vet-alert-success">
 
         <div class="vet-alert-icon">
-            <i class="fas fa-pen"></i>
+            <i class="fas fa-trash"></i>
         </div>
 
         <div class="vet-alert-content">
@@ -68,7 +68,7 @@ if(isset($_GET['success'])) { ?>
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 <link href="../../css/indexspecies.css" rel="stylesheet">
-<link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
@@ -117,10 +117,9 @@ if(isset($_GET['success'])) { ?>
             value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
         </div>
 
-        <div class="col-md-2">
-            <button type="submit"class="btn btn-filtro btn-block"
-            title="Buscar">
-            <i class="fas fa-search"></i>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-purple btn-block btn-filtro" title="Buscar">
+                <i class="fas fa-search"></i>
             </button>
         </div>
 
@@ -197,50 +196,105 @@ if ($especies->num_rows > 0) {
 
 </div>
 
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content" style="border-radius:15px; overflow:hidden;">
+<!-- =========================================================
+     MODAL ELIMINAR ESPECIE
+========================================================= -->
 
-<div style="background:#52266E; color:white; padding:15px;">
-    <h5><i class="fas fa-exclamation-triangle"></i> Confirmar eliminación</h5>
-</div>
+<div class="modal fade modal-eliminar"
+     id="modalEliminar"
+     tabindex="-1"
+     role="dialog"
+     aria-hidden="true">
 
-<div class="text-center p-4">
-    <p>¿Eliminar esta especie?</p>
-    <h5 id="nombreEliminar" style="color:#52266E;"></h5>
-</div>
+    <div class="modal-dialog modal-dialog-centered" role="document">
 
-<div class="d-flex justify-content-end p-3">
-    <button class="btn btn-light mr-2" data-dismiss="modal">Cancelar</button>
-    <a href="#" id="btnEliminar" class="btn btn-danger">Eliminar</a>
-</div>
+        <div class="modal-content">
 
-</div>
-</div>
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Confirmar eliminación
+                </h5>
+
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <div class="modal-delete-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+
+                <p class="modal-delete-question">
+                    ¿Está seguro que desea eliminar esta especie?
+                </p>
+
+                <div>
+                    <span id="nombreEliminar"
+                          class="modal-delete-name">
+                    </span>
+                </div>
+
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+                        <strong>Esta acción no se puede deshacer.</strong>
+                        La especie será eliminada del sistema.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-modal-cancelar"
+                        data-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <a href="#"
+                   id="btnEliminar"
+                   class="btn btn-modal-eliminar">
+                    <i class="fas fa-trash-alt mr-1"></i>
+                    Eliminar
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
-
-<!-- DataTables -->
-<script src="../../vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../../vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
+<!-- DataTables clásico (igual que Mascotas) -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <!-- DataTables Buttons -->
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-
 <!-- Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-
 <!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
 <!-- Imprimir -->
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-
 <!-- DataTable reutilizable VetSys -->
 <script src="../../js/vetsys-datatables.js"></script>
 
@@ -280,18 +334,18 @@ if ($especies->num_rows > 0) {
 });
 
 
-// Se ejecuta cuando se está por abrir el modal de eliminaciÃ³n.
+// Se ejecuta cuando se está por abrir el modal de eliminación.
 $('#modalEliminar').on('show.bs.modal', function (event) {
 
-    // Obtiene el botón que activá o abrirá el modal.
+    // Obtiene el botón que activó o abrirá el modal.
     var boton = $(event.relatedTarget);
 
     // Coloca dentro del modal el nombre del registro que se quiere eliminar.
     // Ese nombre viene desde el atributo data-nombre del botón.
     $('#nombreEliminar').text(boton.data('nombre'));
 
-    // Arma dinámicamente el enlace de eliminaciÃ³n.
-    // Toma el ID desde data-id y lo enviá por URL al archivo delete.php.
+    // Arma dinámicamente el enlace de eliminación.
+    // Toma el ID desde data-id y lo envía por URL al archivo delete.php.
     $('#btnEliminar').attr('href', 'delete.php?id=' + boton.data('id'));
 });
 
@@ -306,7 +360,7 @@ setTimeout(() => {
     // Verifica que la alerta exista.
     if(alerta){
 
-        // Aplica una transiciÃ³n suave para la animación.
+        // Aplica una transición suave para la animación.
         alerta.style.transition = '.4s';
 
         // Hace que la alerta se vuelva transparente.
@@ -328,4 +382,3 @@ setTimeout(() => {
 </script>
 </body>
 </html>
-

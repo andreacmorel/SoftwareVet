@@ -40,6 +40,9 @@ $resultado = mysqli_query($conexion, $sql);
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/index_style.css" rel="stylesheet">
+    <link href="/SoftwareVet/css/indexaudit.css" rel="stylesheet">
+    <link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
 <body>
@@ -75,6 +78,8 @@ $resultado = mysqli_query($conexion, $sql);
             </div>
         </div>
 
+        <div id="botonesExportacion"></div>
+
     </div>
 
     <form method="GET" class="filter-card">
@@ -106,8 +111,10 @@ $resultado = mysqli_query($conexion, $sql);
 
             <div class="col-md-2">
 
-                <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-filter"></i>
+                <button type="submit"
+                        class="btn btn-filtro"
+                        title="Buscar">
+                    <i class="fas fa-search"></i>
                 </button>
 
             </div>
@@ -120,7 +127,7 @@ $resultado = mysqli_query($conexion, $sql);
 
         <div class="table-responsive">
 
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%" id="tablaAuditoria">
 
                 <thead>
 
@@ -264,6 +271,68 @@ $resultado = mysqli_query($conexion, $sql);
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="../../vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- DataTable reutilizable VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaAuditoria',
+
+        titulo: 'Historial de Auditoría',
+
+        subtitulo: 'Registro de cambios realizados en el sistema',
+
+        nombreArchivo: 'Historial_Auditoria',
+
+        // Fecha - Usuario - Módulo - Acción - Registro - Antes - Después
+        columnasExportar: [0, 1, 2, 3, 4, 5, 6],
+
+        pageLength: 10,
+
+        orientacionPDF: 'landscape',
+
+        anchosExcel: [
+            18,
+            25,
+            18,
+            18,
+            22,
+            35,
+            35
+        ],
+
+        anchosPDF: [
+            '12%',
+            '14%',
+            '10%',
+            '10%',
+            '12%',
+            '21%',
+            '21%'
+        ]
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>

@@ -1,15 +1,15 @@
 ﻿/* =========================================================
-   VETSYS - USUARIOS
+   VETSYS - MÓDULO PERFILES
 ========================================================= */
 
 
 /* =========================================================
-   TÍTULO DE PÁGINA
+   TÍTULO
 ========================================================= */
 
 .page-title {
-    color: #1f2937;
     font-weight: 800;
+    color: #1f2937;
     margin-bottom: 2px;
 }
 
@@ -30,29 +30,22 @@
 .btn-purple {
     background: #52266E;
     color: #ffffff;
-
     border: none;
     border-radius: 8px;
-
     padding: 8px 16px;
-
     font-weight: 600;
-
     transition: all .2s ease;
 }
 
 .btn-purple:hover {
     background: #3f1d55;
     color: #ffffff;
-
     transform: translateY(-1px);
-
     box-shadow: 0 4px 10px rgba(82, 38, 110, .18);
 }
 
 .btn-purple:focus {
     color: #ffffff;
-
     box-shadow: 0 0 0 3px rgba(82, 38, 110, .15);
 }
 
@@ -63,50 +56,41 @@
 
 .filter-card {
     background: #ffffff;
-
     border-radius: 15px;
-
     padding: 18px 20px;
-
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
     margin-top: 25px;
     margin-bottom: 25px;
-
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
 }
 
 .filter-card label {
     color: #52266E;
-
     font-size: 12px;
     font-weight: 800;
-
     text-transform: uppercase;
 }
 
 .filter-card .form-control {
     height: 38px;
-
-    border: 1px solid #d8c2e8;
     border-radius: 8px;
-
+    border: 1px solid #d8c2e8;
     font-size: 14px;
-
     transition: all .2s ease;
 }
 
 .filter-card .form-control:focus {
     border-color: #52266E;
-
     box-shadow: 0 0 0 3px rgba(82, 38, 110, .10);
 }
 
 
 /* =========================================================
-   BOTÓN FILTRO - GRIS
+   BOTÓN FILTRO
 ========================================================= */
 
 .btn-filtro {
     height: 38px;
+    width: 75px;
 
     background: #6c757d !important;
     color: #ffffff !important;
@@ -120,20 +104,13 @@
 
     box-shadow: none !important;
 
-    transition: all 0.2s ease;
+    transition: all .2s ease;
 }
-
-
-/* Lupa */
 
 .btn-filtro i {
-    font-size: 14px;
-
     color: #ffffff !important;
+    font-size: 14px;
 }
-
-
-/* HOVER */
 
 .btn-filtro:hover {
     background: #5c636a !important;
@@ -142,11 +119,8 @@
 
     transform: translateY(-2px);
 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15) !important;
 }
-
-
-/* CLICK */
 
 .btn-filtro:active {
     background: #565e64 !important;
@@ -154,35 +128,39 @@
 
     transform: translateY(0);
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .12) !important;
 }
-
-
-/* FOCUS */
 
 .btn-filtro:focus {
     color: #ffffff !important;
 
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.18) !important;
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, .18) !important;
 }
 
 
 /* =========================================================
-   TARJETA TABLA
+   TARJETA DE LA TABLA
 ========================================================= */
 
 .table-card {
-    background: white;
+    background: #ffffff;
 
     border-radius: 15px;
 
-    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
 
     overflow: hidden;
+
+    margin-bottom: 20px;
 }
 
-.table {
-    margin-bottom: 0;
+.table-card .table-responsive {
+    overflow-x: auto;
+}
+
+#tablaPerfiles {
+    width: 100% !important;
+    margin-bottom: 0 !important;
 }
 
 
@@ -190,44 +168,57 @@
    ENCABEZADO TABLA
 ========================================================= */
 
-thead th {
-    background: #fbf7ff;
+#tablaPerfiles thead th {
+    background: #fbf7ff !important;
 
-    color: #52266E;
+    color: #52266E !important;
+
+    padding-top: 13px !important;
+    padding-bottom: 13px !important;
 
     font-size: 12px;
+    font-weight: 800;
 
     text-transform: uppercase;
 
-    border-bottom: 2px solid #eee1f6 !important;
+    vertical-align: middle !important;
 
-    font-weight: 800;
+    border-top: none !important;
+    border-bottom: 2px solid #eee1f6 !important;
 }
 
 
 /* =========================================================
-   CUERPO TABLA
+   FILAS
 ========================================================= */
 
-tbody td {
+#tablaPerfiles tbody td {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+
     vertical-align: middle !important;
+
+    color: #374151;
 
     font-size: 14px;
 
-    color: #374151;
+    border-top: 1px solid #e5e7eb;
 }
 
-tbody tr:hover {
+#tablaPerfiles tbody tr:first-child td {
+    border-top: none;
+}
+
+#tablaPerfiles tbody tr:hover {
     background: #fcf8ff;
 }
 
 
 /* =========================================================
-   COLUMNA USUARIO
-   MISMO ESTILO QUE LOS OTROS MÓDULOS
+   COLUMNA PERFIL
 ========================================================= */
 
-.usuario-icon {
+.perfil-icon {
     width: 34px;
     height: 34px;
     min-width: 34px;
@@ -238,22 +229,19 @@ tbody tr:hover {
     align-items: center;
     justify-content: center;
 
-    background: #f3ecf8;
+    background: #f0e6f6;
 
     border-radius: 8px;
 
     color: #52266E;
 }
 
-.usuario-icon i {
+.perfil-icon i {
     color: #52266E !important;
     font-size: 14px;
 }
 
-
-/* NOMBRE EN NEGRITA */
-
-.usuario-name {
+.perfil-name {
     color: #111827 !important;
 
     font-size: 14px;
@@ -263,10 +251,7 @@ tbody tr:hover {
     line-height: 1.2;
 }
 
-
-/* ID ABAJO DEL NOMBRE */
-
-.usuario-id {
+.perfil-id {
     margin-top: 2px;
 
     color: #9ca3af !important;
@@ -277,205 +262,235 @@ tbody tr:hover {
 
     line-height: 1.2;
 }
+
+
 /* =========================================================
-   PERFIL
+   COLUMNA ACCIONES
 ========================================================= */
 
-.perfil-badge {
-    display: inline-block;
+#tablaPerfiles th:last-child,
+#tablaPerfiles td:last-child {
+    width: 160px !important;
+    min-width: 160px !important;
 
-    padding: 4px 10px;
+    white-space: nowrap !important;
 
-    background: #f3ecf8;
-
-    border-radius: 999px;
-
-    color: #52266E;
-
-    font-size: 12px;
-
-    font-weight: 800;
+    text-align: center !important;
 }
 
 
 /* =========================================================
-   ESTADO USUARIO
-========================================================= */
-
-.badge-estado {
-    display: inline-block;
-
-    padding: 4px 10px;
-
-    border-radius: 999px;
-
-    font-size: 12px;
-
-    font-weight: 800;
-}
-
-
-/* ACTIVO */
-
-.badge-estado.activo {
-    background: #dcfce7;
-
-    color: #15803d;
-}
-
-
-/* INACTIVO */
-
-.badge-estado.inactivo {
-    background: #fee2e2;
-
-    color: #b91c1c;
-}
-
-
-/* =========================================================
-   ACCIONES
-   Igual que los módulos anteriores: sin movimiento hover
+   BOTONES ACCIONES
 ========================================================= */
 
 .btn-action {
     width: 31px;
     height: 31px;
 
-    margin: 0 2px;
-
     padding: 0;
 
-    display: inline-flex;
+    margin: 0 2px;
 
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
 
-    border: none;
+    vertical-align: middle;
 
+    border: none;
     border-radius: 8px;
 
     text-decoration: none !important;
+
+    transition: all .18s ease;
 }
 
 .btn-action:hover {
     text-decoration: none !important;
+    transform: translateY(-1px);
 }
 
 
-/* =========================================================
-   EDITAR
-========================================================= */
+/* ASIGNAR MÓDULOS */
+
+.btn-modulos {
+    background: #e8f4f8;
+    color: #0c7f9e;
+}
+
+.btn-modulos:hover {
+    background: #d5edf4;
+    color: #096c87;
+}
+
+
+/* EDITAR */
 
 .btn-edit {
     background: #fef3c7;
-
     color: #92400e;
 }
 
 .btn-edit:hover {
     background: #fde68a;
-
     color: #78350f;
 }
 
 
-/* =========================================================
-   DESACTIVAR
-========================================================= */
+/* ELIMINAR */
 
-.btn-desactivar {
+.btn-delete {
     background: #fee2e2;
-
     color: #b91c1c;
 }
 
-.btn-desactivar:hover {
+.btn-delete:hover {
     background: #fecaca;
-
     color: #991b1b;
 }
 
 
 /* =========================================================
-   ACTIVAR
+   DATATABLE
 ========================================================= */
 
-.btn-activar {
-    background: #dcfce7;
-
-    color: #15803d;
-}
-
-.btn-activar:hover {
-    background: #bbf7d0;
-
-    color: #166534;
-}
-
-
-/* =========================================================
-   OCULTAR CONTROLES NATIVOS QUE NO USAMOS
-========================================================= */
-
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter {
+#tablaPerfiles_wrapper .dataTables_filter,
+#tablaPerfiles_wrapper .dataTables_length {
     display: none !important;
 }
 
+#tablaPerfiles_wrapper {
+    width: 100%;
+
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 
 /* =========================================================
-   DATATABLES - PAGINACIÓN VETSYS
-   IGUAL QUE ESPECIES / MASCOTAS
+   FOOTER DATATABLE
 ========================================================= */
 
+#tablaPerfiles_wrapper > .row:last-child {
+    width: 100%;
 
-/* Información: "Mostrando 1 a 10..." */
+    margin: 0 !important;
 
-.dataTables_wrapper .dataTables_info {
-    padding-top: 15px !important;
+    padding: 14px 14px 16px !important;
 
-    padding-left: 8px;
+    display: flex !important;
+    align-items: center !important;
+}
+
+#tablaPerfiles_wrapper > .row:last-child > div {
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+}
+
+#tablaPerfiles_wrapper > .row:last-child > div:first-child {
+    justify-content: flex-start !important;
+}
+
+#tablaPerfiles_wrapper > .row:last-child > div:last-child {
+    justify-content: flex-end !important;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DATATABLE
+========================================================= */
+
+#tablaPerfiles_wrapper .dataTables_info {
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
 
     color: #9ca3af !important;
 
     font-size: 12px !important;
 
-    font-weight: 500;
+    font-weight: 500 !important;
+
+    line-height: 32px !important;
 }
 
 
-/* Contenedor */
+/* =========================================================
+   PAGINACIÓN
+========================================================= */
 
-.dataTables_wrapper .dataTables_paginate {
-    padding-top: 10px !important;
-
-    padding-right: 8px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 3px;
-}
-
-
-/* Botones generales */
-
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    min-width: 32px !important;
-
+#tablaPerfiles_wrapper .dataTables_paginate {
     height: 32px;
 
-    margin: 0 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    float: none !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: flex-end !important;
+}
+
+#tablaPerfiles_wrapper .dataTables_paginate .pagination {
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: flex-end !important;
+
+    gap: 4px !important;
+}
+
+#tablaPerfiles_wrapper .dataTables_paginate .paginate_button {
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   LINKS PAGINACIÓN
+========================================================= */
+
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.pagination
+.page-item
+.page-link {
+
+    min-width: 32px !important;
+    height: 32px !important;
 
     padding: 0 9px !important;
+    margin: 0 !important;
 
-    display: inline-flex !important;
+    display: flex !important;
 
-    align-items: center;
-
-    justify-content: center;
+    align-items: center !important;
+    justify-content: center !important;
 
     background: transparent !important;
 
@@ -483,11 +498,15 @@ tbody tr:hover {
 
     border-radius: 8px !important;
 
-    color: #6b7280 !important;
+    outline: none !important;
+
+    color: #52266E !important;
 
     font-size: 12px !important;
 
-    font-weight: 600;
+    font-weight: 600 !important;
+
+    line-height: 1 !important;
 
     box-shadow: none !important;
 
@@ -495,25 +514,78 @@ tbody tr:hover {
 }
 
 
-/* Hover */
+/* =========================================================
+   HOVER PAGINACIÓN
+========================================================= */
 
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button:not(.active):not(.disabled)
+.page-link:hover {
+
     background: #f4ebf8 !important;
-
-    border: none !important;
 
     color: #52266E !important;
 }
 
 
-/* Página activa */
+/* =========================================================
+   ANTERIOR / SIGUIENTE
+========================================================= */
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.current,
-.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.previous
+.page-link,
+
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.next
+.page-link {
+
+    width: auto !important;
+
+    min-width: auto !important;
+
+    height: 32px !important;
+
+    padding: 0 8px !important;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    color: #52266E !important;
+
+    font-size: 12px !important;
+
+    font-weight: 600 !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   PÁGINA ACTUAL
+========================================================= */
+
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.active
+.page-link {
+
+    width: 32px !important;
 
     min-width: 32px !important;
 
-    height: 32px;
+    height: 32px !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
 
     background: #52266E !important;
 
@@ -523,58 +595,75 @@ tbody tr:hover {
 
     color: #ffffff !important;
 
-    box-shadow: 0 3px 8px rgba(82, 38, 110, .18) !important;
+    font-size: 12px !important;
+
+    font-weight: 700 !important;
+
+    box-shadow: 0 3px 8px rgba(82, 38, 110, .20) !important;
+}
+
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.active
+.page-link:hover {
+
+    background: #52266E !important;
+
+    color: #ffffff !important;
 }
 
 
-/* Anterior / Siguiente */
+/* =========================================================
+   PAGINACIÓN DESHABILITADA
+========================================================= */
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
-.dataTables_wrapper .dataTables_paginate .paginate_button.next {
-
-    padding: 0 10px !important;
-
-    color: #52266E !important;
-
-    font-weight: 600;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover,
-.dataTables_wrapper .dataTables_paginate .paginate_button.next:hover {
-
-    background: #f4ebf8 !important;
-
-    color: #52266E !important;
-}
-
-
-/* Deshabilitados */
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.disabled
+.page-link {
 
     background: transparent !important;
 
-    color: #c4b8ca !important;
+    border: none !important;
+
+    color: #c9b9cf !important;
+
+    opacity: 1 !important;
 
     cursor: default !important;
 
     box-shadow: none !important;
 }
 
+#tablaPerfiles_wrapper
+.page-item:first-child
+.page-link,
 
-/* Parte inferior */
+#tablaPerfiles_wrapper
+.page-item:last-child
+.page-link {
 
-.dataTables_wrapper {
-    padding-bottom: 14px;
+    border: none !important;
+
+    border-radius: 8px !important;
 }
 
 
 /* =========================================================
-   BOTONES DE EXPORTACIÓN
+   BOTONES EXPORTACIÓN
 ========================================================= */
 
-.dt-buttons {
+#botonesExportacion {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 0 !important;
+}
+
+#botonesExportacion .dt-buttons {
     display: flex;
 
     align-items: center;
@@ -584,7 +673,7 @@ tbody tr:hover {
     margin: 0 !important;
 }
 
-.dt-buttons .dt-button {
+#botonesExportacion .dt-button {
     margin: 0 !important;
 
     padding: 8px 13px !important;
@@ -604,64 +693,62 @@ tbody tr:hover {
     transition: all .18s ease;
 }
 
-.dt-buttons .dt-button:hover {
+#botonesExportacion .dt-button:hover {
     transform: translateY(-1px);
 }
 
 
 /* EXCEL */
 
-.dt-buttons .buttons-excel {
+#botonesExportacion .buttons-excel {
     background: #dcfce7 !important;
-
     color: #15803d !important;
 }
 
-.dt-buttons .buttons-excel:hover {
+#botonesExportacion .buttons-excel:hover {
     background: #bbf7d0 !important;
-
     color: #166534 !important;
 }
 
 
 /* PDF */
 
-.dt-buttons .buttons-pdf {
+#botonesExportacion .buttons-pdf {
     background: #fee2e2 !important;
-
     color: #b91c1c !important;
 }
 
-.dt-buttons .buttons-pdf:hover {
+#botonesExportacion .buttons-pdf:hover {
     background: #fecaca !important;
-
     color: #991b1b !important;
 }
 
 
 /* IMPRIMIR */
 
-.dt-buttons .buttons-print {
+#botonesExportacion .buttons-print {
     background: #dbeafe !important;
-
     color: #1d4ed8 !important;
 }
 
-.dt-buttons .buttons-print:hover {
+#botonesExportacion .buttons-print:hover {
     background: #bfdbfe !important;
-
     color: #1e40af !important;
 }
 
 
 /* =========================================================
-   ALERTAS DE ÉXITO
+   ALERTA ÉXITO
 ========================================================= */
 
 .vet-alert-success {
     width: 100%;
 
-    margin-bottom: 25px;
+    background: linear-gradient(135deg, #f6fffa, #eefcf4);
+
+    border: 1px solid #d7f3e3;
+
+    border-radius: 16px;
 
     padding: 18px 22px;
 
@@ -671,37 +758,28 @@ tbody tr:hover {
 
     gap: 16px;
 
-    background: linear-gradient(
-        135deg,
-        #f6fffa,
-        #eefcf4
-    );
-
-    border: 1px solid #d7f3e3;
-
-    border-radius: 16px;
-
     box-shadow: 0 6px 18px rgba(25, 135, 84, .08);
 
-    animation: vetAlertEntrada .35s ease;
+    margin-bottom: 25px;
+
+    animation: fadeIn .35s ease;
 }
 
 .vet-alert-icon {
     width: 48px;
     height: 48px;
-
     min-width: 48px;
+
+    border-radius: 50%;
+
+    background: #198754;
+
+    color: #ffffff;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
-
-    background: #198754;
-
-    border-radius: 50%;
-
-    color: #ffffff;
 
     font-size: 18px;
 
@@ -728,26 +806,91 @@ tbody tr:hover {
 
 
 /* =========================================================
-   MODAL CAMBIAR ESTADO DE USUARIO
+   ALERTA ERROR
 ========================================================= */
 
-.modal-estado .modal-content {
+.vet-alert-danger {
+    width: 100%;
+
+    background: linear-gradient(135deg, #fff5f5, #fff0f0);
+
+    border: 1px solid #ffd6d6;
+
+    border-radius: 16px;
+
+    padding: 18px 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    box-shadow: 0 6px 18px rgba(220, 38, 38, .06);
+
+    margin-bottom: 25px;
+
+    animation: fadeIn .35s ease;
+}
+
+.vet-alert-danger-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    border-radius: 50%;
+
+    background: #dc2626;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+
+    box-shadow: 0 4px 10px rgba(220, 38, 38, .20);
+}
+
+.vet-alert-danger-content h5 {
+    margin: 0;
+
+    color: #991b1b;
+
+    font-size: 15px;
+
+    font-weight: 800;
+}
+
+.vet-alert-danger-content p {
+    margin: 3px 0 0;
+
+    color: #4b5563;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MODAL ELIMINAR PERFIL
+========================================================= */
+
+.modal-eliminar-perfil .modal-content {
     border: none;
 
     border-radius: 16px;
 
     overflow: hidden;
 
-    box-shadow:
-        0 20px 55px rgba(31, 41, 55, .22);
+    box-shadow: 0 20px 55px rgba(31, 41, 55, .22);
 }
 
 
-/* =========================================================
-   ANIMACIÓN MODAL
-========================================================= */
+/* ANIMACIÓN */
 
-.modal-estado.fade .modal-dialog {
+.modal-eliminar-perfil.fade .modal-dialog {
     transform: translateY(-12px) scale(.97);
 
     transition:
@@ -755,16 +898,16 @@ tbody tr:hover {
         opacity .25s ease;
 }
 
-.modal-estado.show .modal-dialog {
+.modal-eliminar-perfil.show .modal-dialog {
     transform: none;
 }
 
 
 /* =========================================================
-   HEADER MODAL
+   MODAL HEADER
 ========================================================= */
 
-.modal-estado .modal-header {
+.modal-eliminar-perfil .modal-header {
     padding: 16px 20px;
 
     display: flex;
@@ -776,7 +919,7 @@ tbody tr:hover {
     border-bottom: 1px solid #f0f0f0;
 }
 
-.modal-estado .modal-title {
+.modal-eliminar-perfil .modal-title {
     margin: 0;
 
     color: #1f2937;
@@ -786,7 +929,7 @@ tbody tr:hover {
     font-weight: 700;
 }
 
-.modal-estado .close {
+.modal-eliminar-perfil .close {
     margin: -4px -3px -4px auto;
 
     padding: 5px;
@@ -798,24 +941,20 @@ tbody tr:hover {
     opacity: .75;
 
     text-shadow: none;
-
-    transition: all .2s ease;
 }
 
-.modal-estado .close:hover {
+.modal-eliminar-perfil .close:hover {
     color: #1f2937;
 
     opacity: 1;
-
-    transform: scale(1.08);
 }
 
 
 /* =========================================================
-   BODY MODAL
+   MODAL BODY
 ========================================================= */
 
-.modal-estado .modal-body {
+.modal-eliminar-perfil .modal-body {
     padding: 30px 32px 26px;
 
     background: #ffffff;
@@ -824,11 +963,9 @@ tbody tr:hover {
 }
 
 
-/* =========================================================
-   ICONO MODAL
-========================================================= */
+/* ICONO */
 
-.modal-estado-icon {
+.modal-delete-icon {
     width: 64px;
     height: 64px;
 
@@ -839,39 +976,21 @@ tbody tr:hover {
     align-items: center;
     justify-content: center;
 
-    border-radius: 50%;
-
-    font-size: 23px;
-}
-
-
-/* DESACTIVAR */
-
-.modal-desactivar .modal-estado-icon {
     background: #fff1f1;
 
-    box-shadow: 0 0 0 8px #fff7f7;
+    border-radius: 50%;
 
     color: #e74c3c;
+
+    font-size: 23px;
+
+    box-shadow: 0 0 0 8px #fff7f7;
 }
 
 
-/* ACTIVAR */
+/* PREGUNTA */
 
-.modal-activar .modal-estado-icon {
-    background: #ecfdf3;
-
-    box-shadow: 0 0 0 8px #f4fff8;
-
-    color: #198754;
-}
-
-
-/* =========================================================
-   PREGUNTA MODAL
-========================================================= */
-
-.modal-estado-question {
+.modal-delete-question {
     margin: 0 0 10px;
 
     color: #6b7280;
@@ -880,11 +999,9 @@ tbody tr:hover {
 }
 
 
-/* =========================================================
-   NOMBRE DEL USUARIO
-========================================================= */
+/* NOMBRE PERFIL */
 
-.modal-estado-name {
+.modal-delete-name {
     margin-bottom: 22px;
 
     padding: 4px 16px;
@@ -911,11 +1028,9 @@ tbody tr:hover {
 }
 
 
-/* =========================================================
-   MENSAJE / ADVERTENCIA MODAL
-========================================================= */
+/* ADVERTENCIA */
 
-.modal-estado-warning {
+.modal-delete-warning {
     width: 100%;
 
     padding: 14px 16px;
@@ -925,6 +1040,12 @@ tbody tr:hover {
     align-items: flex-start;
 
     gap: 10px;
+
+    background: #fff8f7;
+
+    border: 1px solid #fde2df;
+
+    border-left: 3px solid #e74c3c;
 
     border-radius: 9px;
 
@@ -937,52 +1058,24 @@ tbody tr:hover {
     text-align: left;
 }
 
-.modal-estado-warning i {
+.modal-delete-warning i {
     margin-top: 2px;
+
+    color: #e74c3c;
 }
 
-.modal-estado-warning strong {
+.modal-delete-warning strong {
     color: #1f2937;
 
     font-weight: 700;
 }
 
 
-/* DESACTIVAR */
-
-.modal-desactivar .modal-estado-warning {
-    background: #fff8f7;
-
-    border: 1px solid #fde2df;
-
-    border-left: 3px solid #e74c3c;
-}
-
-.modal-desactivar .modal-estado-warning i {
-    color: #e74c3c;
-}
-
-
-/* ACTIVAR */
-
-.modal-activar .modal-estado-warning {
-    background: #f3fff7;
-
-    border: 1px solid #d7f3e3;
-
-    border-left: 3px solid #198754;
-}
-
-.modal-activar .modal-estado-warning i {
-    color: #198754;
-}
-
-
 /* =========================================================
-   FOOTER MODAL
+   MODAL FOOTER
 ========================================================= */
 
-.modal-estado .modal-footer {
+.modal-eliminar-perfil .modal-footer {
     padding: 14px 20px;
 
     display: flex;
@@ -997,9 +1090,7 @@ tbody tr:hover {
 }
 
 
-/* =========================================================
-   BOTÓN CANCELAR
-========================================================= */
+/* CANCELAR */
 
 .btn-modal-cancelar {
     padding: 8px 14px;
@@ -1026,12 +1117,14 @@ tbody tr:hover {
 }
 
 
-/* =========================================================
-   BOTÓN CONFIRMAR ESTADO
-========================================================= */
+/* ELIMINAR */
 
-.btn-modal-estado {
+.btn-modal-eliminar {
     padding: 8px 16px;
+
+    background: #e74c3c;
+
+    border: 1px solid #e74c3c;
 
     border-radius: 8px;
 
@@ -1046,16 +1139,7 @@ tbody tr:hover {
     transition: all .2s ease;
 }
 
-
-/* DESACTIVAR */
-
-.modal-desactivar .btn-modal-estado {
-    background: #e74c3c;
-
-    border: 1px solid #e74c3c;
-}
-
-.modal-desactivar .btn-modal-estado:hover {
+.btn-modal-eliminar:hover {
     background: #d94232;
 
     border-color: #d94232;
@@ -1066,50 +1150,23 @@ tbody tr:hover {
 
     transform: translateY(-1px);
 
-    box-shadow:
-        0 4px 10px rgba(231, 76, 60, .20);
-}
-
-
-/* ACTIVAR */
-
-.modal-activar .btn-modal-estado {
-    background: #198754;
-
-    border: 1px solid #198754;
-}
-
-.modal-activar .btn-modal-estado:hover {
-    background: #157347;
-
-    border-color: #157347;
-
-    color: #ffffff !important;
-
-    text-decoration: none;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 4px 10px rgba(25, 135, 84, .20);
+    box-shadow: 0 4px 10px rgba(231, 76, 60, .20);
 }
 
 
 /* =========================================================
-   ANIMACIONES
+   ANIMACIÓN ALERTAS
 ========================================================= */
 
-@keyframes vetAlertEntrada {
+@keyframes fadeIn {
 
     from {
         opacity: 0;
-
         transform: translateY(-8px);
     }
 
     to {
         opacity: 1;
-
         transform: translateY(0);
     }
 }
@@ -1125,37 +1182,59 @@ tbody tr:hover {
         padding: 15px;
     }
 
-    .dataTables_wrapper .dataTables_info {
+    #tablaPerfiles_wrapper > .row:last-child {
+        display: block !important;
+
+        padding: 12px 10px 14px !important;
+    }
+
+    #tablaPerfiles_wrapper > .row:last-child > div {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        flex: 0 0 100% !important;
+
+        justify-content: center !important;
+    }
+
+    #tablaPerfiles_wrapper .dataTables_info {
+        justify-content: center !important;
+
+        margin-bottom: 6px !important;
+
         text-align: center !important;
-
-        padding: 12px 0 6px 0 !important;
     }
 
-    .dataTables_wrapper .dataTables_paginate {
-        justify-content: center;
+    #tablaPerfiles_wrapper .dataTables_paginate {
+        width: 100%;
 
-        padding: 5px 0 10px 0 !important;
+        justify-content: center !important;
     }
 
-    .dt-buttons {
+    #tablaPerfiles_wrapper .dataTables_paginate .pagination {
+        justify-content: center !important;
+    }
+
+    #botonesExportacion .dt-buttons {
         flex-wrap: wrap;
-    }
 
+        justify-content: center;
+    }
 }
 
 
 @media (max-width: 480px) {
 
-    .modal-estado .modal-body {
+    .modal-eliminar-perfil .modal-body {
         padding: 24px 20px 20px;
     }
 
-    .modal-estado .modal-footer {
+    .modal-eliminar-perfil .modal-footer {
         flex-direction: column-reverse;
     }
 
-    .modal-estado .modal-footer .btn {
+    .modal-eliminar-perfil .modal-footer .btn {
         width: 100%;
     }
-
 }

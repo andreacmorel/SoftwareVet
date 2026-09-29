@@ -10,7 +10,10 @@ require_once '../../app/menu.php';
     <title>Listado de Historia Clí­nica</title>
     <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../../css/style_system2.css" rel="stylesheet">
+    <link href="../../css/style_medicalrecord.css" rel="stylesheet">
+    <link href="/SoftwareVet/css/index_style.css" rel="stylesheet">
+    <link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -40,6 +43,8 @@ require_once '../../app/menu.php';
             </h1>
             <div class="page-subtitle">Gestión del historial clí­nico de mascotas</div>
         </div>
+
+        <div id="botonesExportacion"></div>
 
         <a href="create.php" class="btn btn-purple">
             <i class="fas fa-plus"></i> Nueva Historia Clí­nica
@@ -120,8 +125,8 @@ require_once '../../app/menu.php';
             </div>
 
             <div class="col-md-4 d-flex">
-                <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-filter"></i>
+                <button type="submit" class="btn btn-filtro" title="Filtrar">
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
 
@@ -130,7 +135,7 @@ require_once '../../app/menu.php';
 
     <div class="table-card">
         <div class="table-responsive">
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%" id="tablaHistorias">
                 <thead>
                     <tr>
                         <th>Mascota</th>
@@ -185,11 +190,11 @@ require_once '../../app/menu.php';
 
                                 <td class="text-center align-middle">
 
-                                <a href="print.php?id=<?= $h->id_historia_clinica ?>&pdf=1"
-                                    class="btn-action btn-print"
-                                    title="Descargar PDF">
-                                    <i class="fas fa-file-pdf"></i>
-                                    </a>
+                                <a href="print.php?id=<?= $h->id_historia_clinica ?>"
+                                class="btn-action btn-view"
+                                title="Ver historia clínica">
+                                    <i class="fas fa-eye"></i>
+                                </a>
 
                                     <a 
                                         href="edit.php?id=<?= $h->id_historia_clinica ?>"
@@ -228,42 +233,80 @@ require_once '../../app/menu.php';
 
 </div>
 
-<div class="modal fade" id="modalEliminarHistoria" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:15px; overflow:hidden; border:none;">
+<<!-- MODAL ELIMINAR HISTORIA CLÍNICA -->
+<div class="modal fade modal-eliminar-historia"
+     id="modalEliminarHistoria"
+     tabindex="-1"
+     role="dialog"
+     aria-hidden="true">
 
-            <div style="background:#52266E; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-                <h5 style="margin:0; font-weight:700;">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Confirmar eliminación
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Eliminar historia clínica
                 </h5>
 
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
                 </button>
+
             </div>
 
-            <div class="text-center p-4">
-                <i class="fas fa-notes-medical fa-3x mb-3" style="color:#d8c2e8;"></i>
+            <!-- BODY -->
+            <div class="modal-body">
 
-                <p class="mb-1">¿Estás seguro de eliminar este registro?</p>
+                <div class="modal-delete-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
 
-                <h5 id="nombreHistoriaEliminar" style="color:#52266E; font-weight:800;"></h5>
-
-                <p class="mt-3" style="font-size:14px; color:#6b7280;">
-                    <i class="fas fa-exclamation-circle text-danger mr-1"></i>
-                    Esta acción es <b>irreversible</b>.
+                <p class="modal-delete-question">
+                    ¿Estás seguro de que deseas eliminar esta historia clínica?
                 </p>
+
+                <div id="nombreHistoriaEliminar"
+                     class="modal-delete-name">
+                </div>
+
+                <div class="modal-delete-warning">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <div>
+                        <strong>Esta acción no se puede deshacer.</strong>
+                        <br>
+                        El registro de la historia clínica será eliminado permanentemente.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="d-flex justify-content-end p-3" style="gap:10px; border-top:1px solid #eee;">
-                <button type="button" class="btn btn-light" data-dismiss="modal">
-                    <i class="fas fa-times"></i> Cancelar
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-modal-cancelar"
+                        data-dismiss="modal">
+                    Cancelar
                 </button>
 
-                <a href="#" id="btnConfirmarEliminarHistoria" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Si­, eliminar
+                <a href="#"
+                   id="btnConfirmarEliminarHistoria"
+                   class="btn btn-modal-eliminar">
+
+                    <i class="fas fa-trash-alt mr-1"></i>
+                    Eliminar
+
                 </a>
+
             </div>
 
         </div>
@@ -273,6 +316,68 @@ require_once '../../app/menu.php';
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables -->
+<script src="../../vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="../../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- VetSys DataTables -->
+<script src="../../js/vetsys-datatables.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    inicializarDataTableVetSys({
+
+        tabla: '#tablaHistorias',
+
+        titulo: 'Historias Clínicas',
+
+        subtitulo: 'Registro de historias clínicas veterinarias',
+
+        nombreArchivo: 'Historias_Clinicas',
+
+        /*
+         IMPORTANTE:
+         Acá van solamente las columnas que queremos exportar.
+         Tratamiento y Acciones NO se exportan.
+        */
+        columnasExportar: [0, 1, 2, 3, 4],
+
+        pageLength: 10,
+
+        orientacionPDF: 'landscape',
+
+        anchosExcel: [
+            18,
+            25,
+            25,
+            35,
+            35
+        ],
+
+        anchosPDF: [
+            '13%',
+            '17%',
+            '17%',
+            '26%',
+            '27%'
+        ]
+
+    });
+
+});
+
+</script>
 
 <script>
 $('#modalEliminarHistoria').on('show.bs.modal', function (event) {

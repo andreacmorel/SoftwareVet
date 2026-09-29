@@ -11,6 +11,8 @@ require_once '../../app/menu.php';
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 <link href="../../css/index_module.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
 </head>
 
@@ -41,6 +43,8 @@ require_once '../../app/menu.php';
             <div class="page-subtitle">Gestión de módulos del sistema</div>
         </div>
 
+        <div id="botonesExportacion" class="mb-3"></div>
+        
         <a href="create.php" class="btn btn-purple">
             <i class="fas fa-plus"></i> Nuevo Módulo
         </a>
@@ -103,13 +107,13 @@ require_once '../../app/menu.php';
                     name="buscar"
                     class="form-control"
                     placeholder="Buscar por nombre o ruta"
-                    value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>"
-                >
+                    value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
             </div>
 
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-purple">
-                    <i class="fas fa-filter"></i>
+             <div class="col-md-2">
+
+                <button type="submit" class="btn btn-filtro" title="Buscar">
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
         </div>
@@ -118,7 +122,7 @@ require_once '../../app/menu.php';
     <div class="table-card">
         <div class="table-responsive">
 
-            <table class="table table-hover" width="100%">
+            <table class="table table-hover" width="100%" id="tablaModulos">
                 <thead>
                     <tr>
                         <th>Módulo</th>
@@ -330,93 +334,207 @@ require_once '../../app/menu.php';
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
+<!-- DataTables clásico (igual que Mascotas) -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<!-- Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- Imprimir -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<!-- DataTable reutilizable VetSys -->
+<script src="../../js/vetsys-datatables.js"></script>
 
 <script>
-$('#modalEstadoModulo').on('show.bs.modal', function (event) {
 
-    var button = $(event.relatedTarget);
-    var id = button.data('id');
-    var nombre = button.data('nombre');
-    var estado = button.data('estado');
+$(document).ready(function () {
 
-    $('#nombreEstadoModulo').text(nombre);
+    /* =====================================================
+       DATATABLE MÓDULOS
+    ===================================================== */
 
-    if (estado == 1) {
+    inicializarDataTableVetSys({
 
-        $('#textoEstadoModulo').text('¿Estás seguro de desactivar este módulo?');
+        tabla: '#tablaModulos',
 
-        $('#mensajeInfoModulo').text('El módulo dejará de estar disponible para nuevas asignaciones de permisos.');
+        titulo: 'Listado de Módulos',
 
-        $('#boxEstadoModulo').css({
-            background:'#FDEDEC',
-            border:'1px solid #F1948A'
-        });
+        subtitulo: 'Gestión de módulos del sistema',
 
-        $('#mensajeInfoModulo').css({ color:'#C0392B' });
-        $('#iconoInfoModulo').css({ color:'#C0392B' });
+        nombreArchivo: 'Listado_Modulos',
 
-        $('#btnConfirmarEstadoModulo')
-            .attr('href', 'change_status.php?id=' + id)
-            .removeClass('btn-success')
-            .addClass('btn-danger');
+        // Módulo - Ruta - Ícono - Estado
+        // No exportamos la columna Acciones
+        columnasExportar: [0, 1, 2, 3],
 
-        $('#textoBotonModulo').text('Desactivar');
+        pageLength: 10,
 
-        $('#iconoEstadoModulo')
-            .removeClass('fa-check')
-            .addClass('fa-lock');
+        orientacionPDF: 'landscape',
 
-        $('#iconoBotonModulo')
-            .removeClass('fa-check')
-            .addClass('fa-lock');
+        anchosExcel: [
+            25,
+            35,
+            18,
+            15
+        ],
 
-    } else {
+        anchosPDF: [
+            '25%',
+            '35%',
+            '20%',
+            '20%'
+        ]
 
-        $('#textoEstadoModulo').text('¿Estás seguro de activar este módulo?');
+    });
 
-        $('#mensajeInfoModulo').text('El módulo volverá a estar disponible para asignarlo a perfiles.');
 
-        $('#boxEstadoModulo').css({
-            background:'#ECFDF5',
-            border:'1px solid #86EFAC'
-        });
+    /* =====================================================
+       MODAL CAMBIAR ESTADO
+    ===================================================== */
 
-        $('#mensajeInfoModulo').css({ color:'#166534' });
-        $('#iconoInfoModulo').css({ color:'#166534' });
+    $('#modalEstadoModulo').on('show.bs.modal', function (event) {
 
-        $('#btnConfirmarEstadoModulo')
-            .attr('href', 'change_status.php?id=' + id)
-            .removeClass('btn-danger')
-            .addClass('btn-success');
+        // Botón que abrió el modal
+        var button = $(event.relatedTarget);
 
-        $('#textoBotonModulo').text('Activar');
+        // Datos del módulo
+        var id = button.data('id');
+        var nombre = button.data('nombre');
+        var estado = button.data('estado');
 
-        $('#iconoEstadoModulo')
-            .removeClass('fa-lock')
-            .addClass('fa-check');
+        // Mostrar nombre del módulo
+        $('#nombreEstadoModulo').text(nombre);
 
-        $('#iconoBotonModulo')
-            .removeClass('fa-lock')
-            .addClass('fa-check');
-    }
+
+        /* =================================================
+           DESACTIVAR MÓDULO
+        ================================================= */
+
+        if (estado == 1) {
+
+            $('#textoEstadoModulo').text(
+                '¿Estás seguro de desactivar este módulo?'
+            );
+
+            $('#mensajeInfoModulo').text(
+                'El módulo dejará de estar disponible para nuevas asignaciones de permisos.'
+            );
+
+            // Caja informativa roja
+            $('#boxEstadoModulo').css({
+                background: '#FDEDEC',
+                border: '1px solid #F1948A'
+            });
+
+            $('#mensajeInfoModulo').css({
+                color: '#C0392B'
+            });
+
+            $('#iconoInfoModulo').css({
+                color: '#C0392B'
+            });
+
+            // Botón confirmar
+            $('#btnConfirmarEstadoModulo')
+                .attr('href', 'change_status.php?id=' + id)
+                .removeClass('btn-success')
+                .addClass('btn-danger');
+
+            $('#textoBotonModulo').text('Desactivar');
+
+            // Icono principal
+            $('#iconoEstadoModulo')
+                .removeClass('fa-check')
+                .addClass('fa-lock');
+
+            // Icono del botón
+            $('#iconoBotonModulo')
+                .removeClass('fa-check')
+                .addClass('fa-lock');
+
+
+        /* =================================================
+           ACTIVAR MÓDULO
+        ================================================= */
+
+        } else {
+
+            $('#textoEstadoModulo').text(
+                '¿Estás seguro de activar este módulo?'
+            );
+
+            $('#mensajeInfoModulo').text(
+                'El módulo volverá a estar disponible para asignarlo a perfiles.'
+            );
+
+            // Caja informativa verde
+            $('#boxEstadoModulo').css({
+                background: '#ECFDF5',
+                border: '1px solid #86EFAC'
+            });
+
+            $('#mensajeInfoModulo').css({
+                color: '#166534'
+            });
+
+            $('#iconoInfoModulo').css({
+                color: '#166534'
+            });
+
+            // Botón confirmar
+            $('#btnConfirmarEstadoModulo')
+                .attr('href', 'change_status.php?id=' + id)
+                .removeClass('btn-danger')
+                .addClass('btn-success');
+
+            $('#textoBotonModulo').text('Activar');
+
+            // Icono principal
+            $('#iconoEstadoModulo')
+                .removeClass('fa-lock')
+                .addClass('fa-check');
+
+            // Icono del botón
+            $('#iconoBotonModulo')
+                .removeClass('fa-lock')
+                .addClass('fa-check');
+        }
+
+    });
+
+
+    /* =====================================================
+       OCULTAR ALERTA DE ÉXITO
+    ===================================================== */
+
+    setTimeout(() => {
+
+        const alerta = document.querySelector('.vet-alert-success');
+
+        if (alerta) {
+
+            alerta.style.transition = '.4s';
+
+            alerta.style.opacity = '0';
+
+            alerta.style.transform = 'translateY(-10px)';
+
+            setTimeout(() => {
+
+                alerta.remove();
+
+            }, 400);
+        }
+
+    }, 3500);
+
+
 });
+
 </script>
-
-<script>
-setTimeout(() => {
-    const alerta = document.querySelector('.vet-alert-success');
-
-    if(alerta){
-        alerta.style.transition = '.4s';
-        alerta.style.opacity = '0';
-        alerta.style.transform = 'translateY(-10px)';
-
-        setTimeout(() => {
-            alerta.remove();
-        }, 400);
-    }
-}, 3500);
-</script>
-
 </body>
 </html>

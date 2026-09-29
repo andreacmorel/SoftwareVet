@@ -1,5 +1,6 @@
 ﻿/* =========================================================
-   VETSYS - MÓDULO MÓDULOS
+   VETSYS - HISTORIA CLÍNICA
+   LISTADO / DATATABLE
 ========================================================= */
 
 
@@ -89,8 +90,8 @@
 ========================================================= */
 
 .btn-filtro {
-    width: 75px;
     height: 38px;
+    width: 75px;
 
     background: #6c757d !important;
     color: #ffffff !important;
@@ -139,66 +140,43 @@
 
 
 /* =========================================================
-   TARJETA DEL LISTADO
+   TARJETA DE LA TABLA
 ========================================================= */
 
 .table-card {
-    width: 100%;
-
     background: #ffffff;
 
     border-radius: 15px;
 
     box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
 
-    overflow: hidden !important;
+    overflow: hidden;
 
     margin-bottom: 20px;
 }
 
-
-/* =========================================================
-   TABLE RESPONSIVE
-   SOLO SCROLL HORIZONTAL
-========================================================= */
-
 .table-card .table-responsive {
-    width: 100% !important;
-
-    height: auto !important;
-    max-height: none !important;
-
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+    overflow-x: auto;
 }
 
-
-/* =========================================================
-   TABLA
-========================================================= */
-
-#tablaModulos {
+#tablaHistorias {
     width: 100% !important;
-
-    height: auto !important;
-    max-height: none !important;
-
-    margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
 
 
 /* =========================================================
-   ENCABEZADO
+   ENCABEZADO TABLA
 ========================================================= */
 
-#tablaModulos thead th {
+#tablaHistorias thead th {
+    position: relative;
+
     background: #fbf7ff !important;
 
     color: #52266E !important;
 
-    padding-top: 13px !important;
-    padding-bottom: 13px !important;
+    padding: 13px 30px 13px 12px !important;
 
     font-size: 12px;
     font-weight: 800;
@@ -208,7 +186,6 @@
     vertical-align: middle !important;
 
     border-top: none !important;
-
     border-bottom: 2px solid #eee1f6 !important;
 
     white-space: nowrap;
@@ -216,10 +193,69 @@
 
 
 /* =========================================================
+   FLECHAS DE ORDENAMIENTO
+========================================================= */
+
+#tablaHistorias.dataTable thead .sorting:before,
+#tablaHistorias.dataTable thead .sorting_asc:before,
+#tablaHistorias.dataTable thead .sorting_desc:before {
+    position: absolute !important;
+
+    right: 12px !important;
+    bottom: 50% !important;
+
+    content: "▲" !important;
+
+    display: block !important;
+
+    color: #cbbbd5 !important;
+
+    font-size: 7px !important;
+    line-height: 1 !important;
+
+    opacity: .55 !important;
+
+    transform: translateY(-1px);
+}
+
+#tablaHistorias.dataTable thead .sorting:after,
+#tablaHistorias.dataTable thead .sorting_asc:after,
+#tablaHistorias.dataTable thead .sorting_desc:after {
+    position: absolute !important;
+
+    right: 12px !important;
+    top: 50% !important;
+
+    content: "▼" !important;
+
+    display: block !important;
+
+    color: #cbbbd5 !important;
+
+    font-size: 7px !important;
+    line-height: 1 !important;
+
+    opacity: .55 !important;
+
+    transform: translateY(1px);
+}
+
+#tablaHistorias.dataTable thead .sorting_asc:before {
+    color: #52266E !important;
+    opacity: 1 !important;
+}
+
+#tablaHistorias.dataTable thead .sorting_desc:after {
+    color: #52266E !important;
+    opacity: 1 !important;
+}
+
+
+/* =========================================================
    FILAS
 ========================================================= */
 
-#tablaModulos tbody td {
+#tablaHistorias tbody td {
     padding-top: 12px !important;
     padding-bottom: 12px !important;
 
@@ -232,20 +268,20 @@
     border-top: 1px solid #e5e7eb;
 }
 
-#tablaModulos tbody tr:first-child td {
+#tablaHistorias tbody tr:first-child td {
     border-top: none;
 }
 
-#tablaModulos tbody tr:hover {
+#tablaHistorias tbody tr:hover {
     background: #fcf8ff;
 }
 
 
 /* =========================================================
-   MÓDULO
+   HISTORIA / MASCOTA
 ========================================================= */
 
-.modulo-icon {
+.historia-icon {
     width: 34px;
     height: 34px;
     min-width: 34px;
@@ -263,13 +299,13 @@
     color: #52266E;
 }
 
-.modulo-icon i {
+.historia-icon i {
     color: #52266E !important;
-
     font-size: 14px;
 }
 
-.modulo-name {
+.mascota-name,
+.pet-name {
     color: #111827 !important;
 
     font-size: 14px;
@@ -279,7 +315,7 @@
     line-height: 1.2;
 }
 
-.modulo-id {
+.hc-code {
     margin-top: 2px;
 
     color: #9ca3af !important;
@@ -293,95 +329,30 @@
 
 
 /* =========================================================
-   RUTA
+   DATOS SECUNDARIOS
 ========================================================= */
 
-.ruta-badge {
-    display: inline-block;
-
-    padding: 4px 10px;
-
-    background: #f0e6f6;
-
-    border-radius: 999px;
-
-    color: #52266E;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   DATO VACÍO / SECUNDARIO
-========================================================= */
-
-.dato-muted {
+.dato-muted,
+.text-muted-vet {
     color: #6b7280 !important;
+    font-size: 13px;
 }
 
 
 /* =========================================================
-   ESTADO
+   DESCRIPCIÓN / OBSERVACIÓN
 ========================================================= */
 
-.badge-estado {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 4px 10px;
-
-    border-radius: 999px;
-
-    font-size: 12px;
-
-    font-weight: 700;
-}
-
-.badge-estado.activo {
-    background: #dcfce7;
-
-    color: #15803d;
-}
-
-.badge-estado.inactivo {
-    background: #fee2e2;
-
-    color: #b91c1c;
+.descripcion-hc,
+.observacion-hc {
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.45;
 }
 
 
 /* =========================================================
-   COLUMNA ACCIONES
-========================================================= */
-
-#tablaModulos th:last-child,
-#tablaModulos td:last-child {
-    width: 150px !important;
-    min-width: 150px !important;
-
-    white-space: nowrap !important;
-
-    text-align: center !important;
-}
-
-.acciones-wrap {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 4px;
-}
-
-
-/* =========================================================
-   BOTONES ACCIONES
+   BOTONES DE ACCIÓN
 ========================================================= */
 
 .btn-action {
@@ -393,14 +364,12 @@
     margin: 0 2px;
 
     display: inline-flex !important;
-
     align-items: center;
     justify-content: center;
 
     vertical-align: middle;
 
     border: none;
-
     border-radius: 8px;
 
     text-decoration: none !important;
@@ -410,8 +379,20 @@
 
 .btn-action:hover {
     text-decoration: none !important;
-
     transform: translateY(-1px);
+}
+
+
+/* VER */
+
+.btn-view {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.btn-view:hover {
+    background: #bfdbfe;
+    color: #1e40af;
 }
 
 
@@ -419,44 +400,38 @@
 
 .btn-edit {
     background: #fef3c7;
-
     color: #92400e;
 }
 
 .btn-edit:hover {
     background: #fde68a;
-
     color: #78350f;
 }
 
 
-/* DESACTIVAR */
+/* TRATAMIENTO */
 
-.btn-desactivar {
-    background: #fee2e2;
-
-    color: #b91c1c;
-}
-
-.btn-desactivar:hover {
-    background: #fecaca;
-
-    color: #991b1b;
-}
-
-
-/* ACTIVAR */
-
-.btn-activar {
+.btn-treatment {
     background: #dcfce7;
-
     color: #15803d;
 }
 
-.btn-activar:hover {
+.btn-treatment:hover {
     background: #bbf7d0;
-
     color: #166534;
+}
+
+
+/* ELIMINAR */
+
+.btn-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+    color: #991b1b;
 }
 
 
@@ -464,104 +439,61 @@
    DATATABLE
 ========================================================= */
 
-#tablaModulos_wrapper {
-    width: 100% !important;
-
-    height: auto !important;
-    max-height: none !important;
-
-    padding: 0 !important;
-    margin: 0 !important;
-
-    overflow: visible !important;
-}
-
-
-/* OCULTAMOS BUSCADOR Y LENGTH DE DATATABLE */
-
-#tablaModulos_wrapper .dataTables_filter,
-#tablaModulos_wrapper .dataTables_length {
+#tablaHistorias_wrapper .dataTables_filter,
+#tablaHistorias_wrapper .dataTables_length {
     display: none !important;
 }
 
+#tablaHistorias_wrapper {
+    width: 100%;
 
-/* =========================================================
-   EVITAR DOBLE SCROLL
-========================================================= */
-
-#tablaModulos_wrapper,
-#tablaModulos_wrapper > .row,
-#tablaModulos_wrapper > .row > div {
-    max-height: none !important;
-}
-
-#tablaModulos_wrapper .dataTables_scroll,
-#tablaModulos_wrapper .dataTables_scrollBody {
-    height: auto !important;
-
-    max-height: none !important;
-
-    overflow-y: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 
 /* =========================================================
    FOOTER DATATABLE
-   INFO IZQUIERDA + PAGINACIÓN DERECHA
 ========================================================= */
 
-#tablaModulos_wrapper > .row:last-child {
-    width: 100% !important;
+#tablaHistorias_wrapper > .row:last-child {
+    width: 100%;
 
     margin: 0 !important;
 
-    padding: 12px 14px 16px !important;
+    padding: 14px 14px 16px !important;
 
     display: flex !important;
-
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-
     align-items: center !important;
 }
 
+#tablaHistorias_wrapper > .row:last-child > div {
+    padding: 0 !important;
 
-/* COLUMNA INFORMACIÓN */
-
-#tablaModulos_wrapper > .row:last-child > div:first-child {
     display: flex !important;
-
     align-items: center !important;
+}
+
+#tablaHistorias_wrapper > .row:last-child > div:first-child {
     justify-content: flex-start !important;
-
-    padding: 0 !important;
 }
 
-
-/* COLUMNA PAGINACIÓN */
-
-#tablaModulos_wrapper > .row:last-child > div:last-child {
-    display: flex !important;
-
-    align-items: center !important;
+#tablaHistorias_wrapper > .row:last-child > div:last-child {
     justify-content: flex-end !important;
-
-    padding: 0 !important;
 }
 
 
 /* =========================================================
-   INFORMACIÓN "MOSTRANDO..."
+   INFORMACIÓN DATATABLE
 ========================================================= */
 
-#tablaModulos_wrapper .dataTables_info {
+#tablaHistorias_wrapper .dataTables_info {
     height: 32px;
 
     padding: 0 !important;
     margin: 0 !important;
 
     display: flex !important;
-
     align-items: center !important;
 
     color: #9ca3af !important;
@@ -571,8 +503,6 @@
     font-weight: 500 !important;
 
     line-height: 32px !important;
-
-    white-space: nowrap !important;
 }
 
 
@@ -580,51 +510,61 @@
    PAGINACIÓN
 ========================================================= */
 
-#tablaModulos_wrapper .dataTables_paginate {
+#tablaHistorias_wrapper .dataTables_paginate {
+    height: 32px;
+
     padding: 0 !important;
     margin: 0 !important;
 
     float: none !important;
 
     display: flex !important;
+
+    align-items: center !important;
+    justify-content: flex-end !important;
+}
+
+#tablaHistorias_wrapper .dataTables_paginate .pagination {
+    height: 32px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
     align-items: center !important;
     justify-content: flex-end !important;
 
-    white-space: nowrap !important;
+    gap: 4px !important;
 }
 
-/* CONTENEDOR PAGINACIÓN */
+#tablaHistorias_wrapper .dataTables_paginate .paginate_button {
+    height: 32px;
 
-#tablaModulos_wrapper .dataTables_paginate .pagination {
-    margin: 0 !important;
     padding: 0 !important;
+    margin: 0 !important;
 
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
 
     align-items: center !important;
 
-    gap: 4px !important;
+    background: transparent !important;
 
-    list-style: none !important;
+    border: none !important;
+
+    box-shadow: none !important;
 }
 
 
-/* CADA ITEM */
+/* =========================================================
+   LINKS PAGINACIÓN
+========================================================= */
 
-#tablaModulos_wrapper .dataTables_paginate .page-item {
-    margin: 0 !important;
-    padding: 0 !important;
-
-    display: inline-flex !important;
-}
-
-
-
-/* PAGINATE BUTTON */
-
-#tablaModulos_wrapper .dataTables_paginate .page-link {
+#tablaHistorias_wrapper
+.dataTables_paginate
+.pagination
+.page-item
+.page-link {
     min-width: 32px !important;
     height: 32px !important;
 
@@ -632,6 +572,7 @@
     margin: 0 !important;
 
     display: flex !important;
+
     align-items: center !important;
     justify-content: center !important;
 
@@ -640,111 +581,120 @@
     border: none !important;
     border-radius: 8px !important;
 
+    outline: none !important;
+
     color: #52266E !important;
 
     font-size: 12px !important;
+
     font-weight: 600 !important;
 
     line-height: 1 !important;
-
-    text-decoration: none !important;
 
     box-shadow: none !important;
 
     transition: all .18s ease;
 }
 
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item:not(.active):not(.disabled)
-.page-link:hover {
 
+/* HOVER */
+
+#tablaHistorias_wrapper
+.dataTables_paginate
+.paginate_button:not(.active):not(.disabled)
+.page-link:hover {
     background: #f4ebf8 !important;
 
     color: #52266E !important;
 }
 
 
-/* =========================================================
-   PÁGINA ACTIVA
-   1, 2, 3...
-========================================================= */
+/* ANTERIOR / SIGUIENTE */
 
-#tablaModulos_wrapper
+#tablaHistorias_wrapper
 .dataTables_paginate
-.page-item.active
-.page-link {
-
-    width: 32px !important;
-    min-width: 32px !important;
-    height: 32px !important;
-
-    padding: 0 !important;
-
-    background: #52266E !important;
-
-    border: none !important;
-    border-radius: 8px !important;
-
-    color: #ffffff !important;
-
-    font-weight: 700 !important;
-
-    box-shadow:
-        0 3px 8px rgba(82, 38, 110, .20) !important;
-}
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item.active
-.page-link:hover {
-
-    background: #52266E !important;
-
-    color: #ffffff !important;
-}
-
-
-/* =========================================================
-   ANTERIOR Y SIGUIENTE
-========================================================= */
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item.previous
+.paginate_button.previous
 .page-link,
 
-#tablaModulos_wrapper
+#tablaHistorias_wrapper
 .dataTables_paginate
-.page-item.next
+.paginate_button.next
 .page-link {
-
     width: auto !important;
+
     min-width: auto !important;
+
+    height: 32px !important;
 
     padding: 0 8px !important;
 
     background: transparent !important;
 
-    color: #52266E !important;
-
     border: none !important;
 
+    color: #52266E !important;
+
     font-size: 12px !important;
+
     font-weight: 600 !important;
+
+    box-shadow: none !important;
 }
 
 
-/* =========================================================
-   DESHABILITADO
-========================================================= */
+/* PÁGINA ACTUAL */
 
-#tablaModulos_wrapper
+#tablaHistorias_wrapper
 .dataTables_paginate
-.page-item.disabled
+.paginate_button.active
 .page-link {
+    width: 32px !important;
 
+    min-width: 32px !important;
+
+    height: 32px !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: #52266E !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    color: #ffffff !important;
+
+    font-size: 12px !important;
+
+    font-weight: 700 !important;
+
+    box-shadow: 0 3px 8px rgba(82, 38, 110, .20) !important;
+}
+
+#tablaHistorias_wrapper
+.dataTables_paginate
+.paginate_button.active
+.page-link:hover {
+    background: #52266E !important;
+
+    color: #ffffff !important;
+}
+
+
+/* PAGINACIÓN DESHABILITADA */
+
+#tablaHistorias_wrapper
+.dataTables_paginate
+.paginate_button.disabled
+.page-link {
     background: transparent !important;
+
+    border: none !important;
 
     color: #c9b9cf !important;
 
@@ -755,59 +705,18 @@
     box-shadow: none !important;
 }
 
+#tablaHistorias_wrapper
+.page-item:first-child
+.page-link,
 
-/* =========================================================
-   COMPATIBILIDAD DATATABLES
-========================================================= */
-
-#tablaModulos_wrapper .paginate_button {
+#tablaHistorias_wrapper
+.page-item:last-child
+.page-link {
     border: none !important;
 
-    background: transparent !important;
-
-    padding: 0 !important;
-
-    margin: 0 !important;
-
-    box-shadow: none !important;
-}
-
-
-/* ACTIVO - COMPATIBILIDAD */
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.paginate_button.current,
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.paginate_button.current:hover {
-
-    width: 32px !important;
-    min-width: 32px !important;
-    height: 32px !important;
-
-    padding: 0 !important;
-
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    background: #52266E !important;
-
-    background-image: none !important;
-
-    border: none !important;
     border-radius: 8px !important;
-
-    color: #ffffff !important;
-
-    font-size: 12px !important;
-    font-weight: 700 !important;
-
-    box-shadow:
-        0 3px 8px rgba(82, 38, 110, .20) !important;
 }
+
 
 /* =========================================================
    BOTONES EXPORTACIÓN
@@ -817,6 +726,7 @@
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     margin: 0 !important;
@@ -861,13 +771,11 @@
 
 #botonesExportacion .buttons-excel {
     background: #dcfce7 !important;
-
     color: #15803d !important;
 }
 
 #botonesExportacion .buttons-excel:hover {
     background: #bbf7d0 !important;
-
     color: #166534 !important;
 }
 
@@ -876,13 +784,11 @@
 
 #botonesExportacion .buttons-pdf {
     background: #fee2e2 !important;
-
     color: #b91c1c !important;
 }
 
 #botonesExportacion .buttons-pdf:hover {
     background: #fecaca !important;
-
     color: #991b1b !important;
 }
 
@@ -891,13 +797,11 @@
 
 #botonesExportacion .buttons-print {
     background: #dbeafe !important;
-
     color: #1d4ed8 !important;
 }
 
 #botonesExportacion .buttons-print:hover {
     background: #bfdbfe !important;
-
     color: #1e40af !important;
 }
 
@@ -932,9 +836,7 @@
 
 .vet-alert-icon {
     width: 48px;
-
     height: 48px;
-
     min-width: 48px;
 
     border-radius: 50%;
@@ -973,83 +875,13 @@
 
 
 /* =========================================================
-   ALERTA ERROR
+   MODAL ELIMINAR HISTORIA CLÍNICA
 ========================================================= */
 
-.vet-alert-danger {
-    width: 100%;
-
-    background: linear-gradient(135deg, #fff5f5, #fff0f0);
-
-    border: 1px solid #ffd6d6;
+.modal-eliminar-historia .modal-content {
+    border: none;
 
     border-radius: 16px;
-
-    padding: 18px 22px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 16px;
-
-    box-shadow: 0 6px 18px rgba(220, 38, 38, .06);
-
-    margin-bottom: 25px;
-
-    animation: fadeIn .35s ease;
-}
-
-.vet-alert-danger-icon {
-    width: 48px;
-
-    height: 48px;
-
-    min-width: 48px;
-
-    border-radius: 50%;
-
-    background: #dc2626;
-
-    color: #ffffff;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    font-size: 18px;
-
-    box-shadow: 0 4px 10px rgba(220, 38, 38, .20);
-}
-
-.vet-alert-danger-content h5 {
-    margin: 0;
-
-    color: #991b1b;
-
-    font-size: 15px;
-
-    font-weight: 800;
-}
-
-.vet-alert-danger-content p {
-    margin: 3px 0 0;
-
-    color: #4b5563;
-
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   MODAL CAMBIAR ESTADO
-========================================================= */
-
-#modalEstadoModulo .modal-content {
-    border: none !important;
-
-    border-radius: 16px !important;
 
     overflow: hidden;
 
@@ -1057,9 +889,9 @@
 }
 
 
-/* ANIMACIÓN MODAL */
+/* ANIMACIÓN */
 
-#modalEstadoModulo.fade .modal-dialog {
+.modal-eliminar-historia.fade .modal-dialog {
     transform: translateY(-12px) scale(.97);
 
     transition:
@@ -1067,103 +899,147 @@
         opacity .25s ease;
 }
 
-#modalEstadoModulo.show .modal-dialog {
+.modal-eliminar-historia.show .modal-dialog {
     transform: none;
 }
 
 
 /* =========================================================
-   HEADER MODAL
+   MODAL HEADER
 ========================================================= */
 
-#modalEstadoModulo .modal-header {
+.modal-eliminar-historia .modal-header {
     padding: 16px 20px;
 
     display: flex;
 
     align-items: center;
 
-    background: #52266E;
+    background: #ffffff;
 
-    border-bottom: none;
-
-    color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-#modalEstadoModulo .modal-title {
+.modal-eliminar-historia .modal-title {
     margin: 0;
 
-    color: #ffffff;
+    color: #1f2937;
 
     font-size: 17px;
 
     font-weight: 700;
 }
 
-#modalEstadoModulo .close {
+.modal-eliminar-historia .close {
     margin: -4px -3px -4px auto;
 
     padding: 5px;
 
-    color: #ffffff !important;
+    color: #6b7280;
 
     font-size: 25px;
 
-    opacity: 1;
+    opacity: .75;
 
     text-shadow: none;
+
+    transition: all .2s ease;
+}
+
+.modal-eliminar-historia .close:hover {
+    color: #1f2937;
+
+    opacity: 1;
+
+    transform: scale(1.08);
 }
 
 
 /* =========================================================
-   BODY MODAL
+   MODAL BODY
 ========================================================= */
 
-#modalEstadoModulo .modal-body {
-    padding: 28px 30px 26px;
+.modal-eliminar-historia .modal-body {
+    padding: 30px 32px 26px;
 
     background: #ffffff;
 
     text-align: center;
 }
 
-#iconoEstadoModulo {
-    color: #d8c2e8;
 
-    font-size: 42px;
+/* ICONO ELIMINAR */
 
-    margin-bottom: 16px;
+.modal-delete-icon {
+    width: 64px;
+
+    height: 64px;
+
+    margin: 4px auto 26px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #fff1f1;
+
+    border-radius: 50%;
+
+    color: #e74c3c;
+
+    font-size: 23px;
+
+    box-shadow: 0 0 0 8px #fff7f7;
 }
 
-#textoEstadoModulo {
-    margin-bottom: 5px;
+
+/* PREGUNTA */
+
+.modal-delete-question {
+    margin: 0 0 10px;
 
     color: #6b7280;
 
     font-size: 14px;
 }
 
-#nombreEstadoModulo {
-    margin-bottom: 18px;
+
+/* NOMBRE / HISTORIA */
+
+.modal-delete-name {
+    margin-bottom: 22px;
+
+    padding: 4px 16px;
+
+    display: inline-block;
+
+    max-width: 100%;
+
+    background: #f3ecf8;
+
+    border-radius: 999px;
 
     color: #52266E;
 
     font-size: 18px;
 
     font-weight: 800;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
 
-/* =========================================================
-   CAJA INFORMATIVA MODAL
-========================================================= */
+/* ADVERTENCIA */
 
-#boxEstadoModulo {
+.modal-delete-warning {
     width: 100%;
 
-    margin-top: 18px;
-
-    padding: 11px 14px;
+    padding: 14px 16px;
 
     display: flex;
 
@@ -1171,48 +1047,63 @@
 
     gap: 10px;
 
-    border-radius: 10px;
+    background: #fff8f7;
+
+    border: 1px solid #fde2df;
+
+    border-left: 3px solid #e74c3c;
+
+    border-radius: 9px;
+
+    color: #4b5563;
+
+    font-size: 13px;
+
+    line-height: 1.55;
 
     text-align: left;
 }
 
-#iconoInfoModulo {
+.modal-delete-warning i {
     margin-top: 2px;
 
-    flex-shrink: 0;
-
-    font-size: 14px;
+    color: #e74c3c;
 }
 
-#mensajeInfoModulo {
-    margin: 0;
+.modal-delete-warning strong {
+    color: #1f2937;
 
-    font-size: 12.5px;
-
-    line-height: 1.55;
+    font-weight: 700;
 }
 
 
 /* =========================================================
-   FOOTER MODAL
+   MODAL FOOTER
 ========================================================= */
 
-#modalEstadoModulo .modal-footer {
+.modal-eliminar-historia .modal-footer {
     padding: 14px 20px;
 
     display: flex;
 
     justify-content: flex-end;
 
-    gap: 10px;
+    gap: 8px;
 
     background: #ffffff;
 
-    border-top: 1px solid #eeeeee;
+    border-top: 1px solid #f0f0f0;
 }
 
-#modalEstadoModulo .btn-light {
+
+/* CANCELAR */
+
+.btn-modal-cancelar {
     padding: 8px 14px;
+
+    background: transparent;
+
+    border: 1px solid transparent;
 
     border-radius: 8px;
 
@@ -1221,11 +1112,25 @@
     font-size: 13px;
 
     font-weight: 600;
+
+    transition: all .2s ease;
 }
 
-#modalEstadoModulo .btn-danger,
-#modalEstadoModulo .btn-success {
-    padding: 8px 15px;
+.btn-modal-cancelar:hover {
+    background: #f3f4f6;
+
+    color: #4b5563;
+}
+
+
+/* ELIMINAR */
+
+.btn-modal-eliminar {
+    padding: 8px 16px;
+
+    background: #e74c3c;
+
+    border: 1px solid #e74c3c;
 
     border-radius: 8px;
 
@@ -1240,11 +1145,18 @@
     transition: all .2s ease;
 }
 
-#modalEstadoModulo .btn-danger:hover,
-#modalEstadoModulo .btn-success:hover {
+.btn-modal-eliminar:hover {
+    background: #d94232;
+
+    border-color: #d94232;
+
     color: #ffffff !important;
 
+    text-decoration: none;
+
     transform: translateY(-1px);
+
+    box-shadow: 0 4px 10px rgba(231, 76, 60, .20);
 }
 
 
@@ -1253,7 +1165,6 @@
 ========================================================= */
 
 @keyframes fadeIn {
-
     from {
         opacity: 0;
         transform: translateY(-8px);
@@ -1276,13 +1187,13 @@
         padding: 15px;
     }
 
-    #tablaModulos_wrapper > .row:last-child {
+    #tablaHistorias_wrapper > .row:last-child {
         display: block !important;
 
         padding: 12px 10px 14px !important;
     }
 
-    #tablaModulos_wrapper > .row:last-child > div {
+    #tablaHistorias_wrapper > .row:last-child > div {
         width: 100% !important;
 
         max-width: 100% !important;
@@ -1292,7 +1203,7 @@
         justify-content: center !important;
     }
 
-    #tablaModulos_wrapper .dataTables_info {
+    #tablaHistorias_wrapper .dataTables_info {
         justify-content: center !important;
 
         margin-bottom: 6px !important;
@@ -1300,18 +1211,14 @@
         text-align: center !important;
     }
 
-    #tablaModulos_wrapper .dataTables_paginate {
+    #tablaHistorias_wrapper .dataTables_paginate {
         width: 100%;
 
         justify-content: center !important;
     }
 
-    #tablaModulos_wrapper .dataTables_paginate .pagination {
+    #tablaHistorias_wrapper .dataTables_paginate .pagination {
         justify-content: center !important;
-
-        flex-direction: row !important;
-
-        flex-wrap: nowrap !important;
     }
 
     #botonesExportacion .dt-buttons {
@@ -1324,88 +1231,15 @@
 
 @media (max-width: 480px) {
 
-    #modalEstadoModulo .modal-body {
+    .modal-eliminar-historia .modal-body {
         padding: 24px 20px 20px;
     }
 
-    #modalEstadoModulo .modal-footer {
+    .modal-eliminar-historia .modal-footer {
         flex-direction: column-reverse;
     }
 
-    #modalEstadoModulo .modal-footer .btn {
+    .modal-eliminar-historia .modal-footer .btn {
         width: 100%;
     }
-}
-
-/* =========================================================
-   CORRECCIÓN TIPOGRAFÍA PAGINACIÓN
-========================================================= */
-
-#tablaModulos_wrapper .dataTables_paginate,
-#tablaModulos_wrapper .dataTables_paginate *,
-#tablaModulos_wrapper .dataTables_paginate .page-link,
-#tablaModulos_wrapper .dataTables_paginate .paginate_button {
-
-    font-family: "Nunito", sans-serif !important;
-
-    font-size: 12px !important;
-
-    font-weight: 600 !important;
-}
-
-
-/* Anterior y Siguiente */
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.paginate_button.previous,
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.paginate_button.next,
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item.previous
-.page-link,
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item.next
-.page-link {
-
-    font-family: "Nunito", sans-serif !important;
-
-    font-size: 12px !important;
-
-    font-weight: 600 !important;
-}
-
-
-/* Números */
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-link {
-
-    font-family: "Nunito", sans-serif !important;
-
-    font-size: 12px !important;
-
-    font-weight: 600 !important;
-}
-
-
-/* Página activa */
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item.active
-.page-link {
-
-    font-family: "Nunito", sans-serif !important;
-
-    font-size: 12px !important;
-
-    font-weight: 700 !important;
 }
