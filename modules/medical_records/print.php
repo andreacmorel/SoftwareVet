@@ -1,17 +1,27 @@
 <?php
 
-// Incluye la conexión a la base de datos
 require_once '../../settings/conexion.php';
-
-// Incluye la validación de acceso según la ruta/perfil
 require_once '../../app/validateRoute.php';
+require_once __DIR__ . '/models/MedicalRecordModel.php';
 
 
-// Verifica si se pidió generar PDF mediante el parámetro ?pdf
+/* =========================================================
+   VALIDAR MASCOTA
+========================================================= */
+
+$id_mascota = (int)($_GET['id'] ?? 0);
+
+if ($id_mascota <= 0) {
+    die("ID de mascota no válido.");
+}
+
+
+/* =========================================================
+   PDF
+========================================================= */
+
 $generarPDF = isset($_GET['pdf']);
 
-
-// Si se solicitó PDF, carga Dompdf y activa el buffer de salida
 if ($generarPDF) {
 
     require_once '../../vendor/autoload.php';
@@ -20,193 +30,68 @@ if ($generarPDF) {
 }
 
 
-// Obtiene el ID de la historia clínica desde la URL
-$id = (int)($_GET['id'] ?? 0);
+/* =========================================================
+   MODELO
+========================================================= */
+
+$model = new MedicalRecordModel($conexion);
 
 
-// Valida que el ID sea correcto
-if ($id <= 0) {
+/* =========================================================
+   DATOS DE LA MASCOTA
+========================================================= */
 
-    die("ID de historia clínica no válido.");
+$mascota = $model->getPetClinicalData($id_mascota);
+
+if (!$mascota) {
+    die("Mascota no encontrada.");
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| OBTENER HISTORIA CLÍNICA
-|--------------------------------------------------------------------------
-*/
+/* =========================================================
+   HISTORIAL DE ATENCIONES
+========================================================= */
 
-$stmt = $conexion->prepare("
-
-    SELECT
-        h.id_historia_clinica,
-        h.fecha,
-        h.descripcion,
-        h.observacion,
-
-        m.id_mascota,
-        m.nombre_mascota,
-        m.sexo,
-        m.peso,
-        m.color,
-        m.edad,
-        m.unidad_edad,
-
-        e.nombre_especie,
-        e.raza,
-
-        p.nombre_persona,
-        p.apellido_persona,
-        p.telefono,
-        p.email
-
-    FROM historia_clinica h
-
-    INNER JOIN mascota m
-        ON h.id_mascota = m.id_mascota
-
-    LEFT JOIN especie e
-        ON m.id_especie = e.id_especie
-
-    INNER JOIN cliente c
-        ON m.id_cliente = c.id_cliente
-
-    INNER JOIN persona p
-        ON c.id_persona = p.id_persona
-
-    WHERE h.id_historia_clinica = ?
-
-");
+$turnos = $model->getPetAppointments($id_mascota);
 
 
-// Vincula el ID
-$stmt->bind_param("i", $id);
-
-
-// Ejecuta la consulta
-$stmt->execute();
-
-
-// Obtiene el resultado
-$res = $stmt->get_result();
-
-
-// Si no encuentra la historia clínica
-if ($res->num_rows == 0) {
-
-    die("Historia clínica no encontrada.");
-}
-
-
-// Guarda los datos
-$hc = $res->fetch_assoc();
-
-
-// Cierra la consulta
-$stmt->close();
-
-
-/*
-|--------------------------------------------------------------------------
-| PREPARAR EDAD DE LA MASCOTA
-|--------------------------------------------------------------------------
-|
-| Permite mostrar:
-|
-| 1 día
-| 2 días
-| 1 mes
-| 5 meses
-| 1 año
-| 4 años
-|
-*/
+/* =========================================================
+   PREPARAR EDAD
+========================================================= */
 
 $edadMascota = 'Sin especificar';
 
+if (!empty($mascota['edad'])) {
 
-if (!empty($hc['edad'])) {
+    $numeroEdad = $mascota['edad'];
 
-    $numeroEdad = $hc['edad'];
+    $unidadEdad = $mascota['unidad_edad'] ?? '';
 
-    $unidadEdad = $hc['unidad_edad'] ?? '';
-
-
-    // Singular
     if ($numeroEdad == 1) {
 
         if ($unidadEdad == 'dias') {
-
             $unidadEdad = 'día';
-
         } elseif ($unidadEdad == 'meses') {
-
             $unidadEdad = 'mes';
-
         } elseif ($unidadEdad == 'años') {
-
             $unidadEdad = 'año';
         }
 
     } else {
 
-        // Plural
         if ($unidadEdad == 'dias') {
-
             $unidadEdad = 'días';
-
         } elseif ($unidadEdad == 'meses') {
-
             $unidadEdad = 'meses';
-
         } elseif ($unidadEdad == 'años') {
-
             $unidadEdad = 'años';
         }
     }
 
-
     $edadMascota = $numeroEdad . ' ' . $unidadEdad;
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| OBTENER TRATAMIENTOS
-|--------------------------------------------------------------------------
-*/
-
-$stmtTrat = $conexion->prepare("
-
-    SELECT
-        t.duracion,
-        t.dosis,
-        t.descripcion
-
-    FROM detalle_historia_clinica dh
-
-    INNER JOIN tratamientos t
-        ON dh.id_tratamiento = t.id_tratamiento
-
-    WHERE dh.id_historia_clinica = ?
-
-");
-
-
-// Vincula el ID
-$stmtTrat->bind_param("i", $id);
-
-
-// Ejecuta la consulta
-$stmtTrat->execute();
-
-
-// Obtiene los tratamientos
-$tratamientos = $stmtTrat->get_result();
-
 ?>
-
 
 <!DOCTYPE html>
 
@@ -216,12 +101,10 @@ $tratamientos = $stmtTrat->get_result();
 
     <meta charset="UTF-8">
 
-    <title>Historia Clínica</title>
+    <title>
+        Historia Clínica - <?= htmlspecialchars($mascota['nombre_mascota']) ?>
+    </title>
 
-
-    <!-- =====================================================
-         CSS SOLO PARA LA VISTA EN PANTALLA
-    ====================================================== -->
 
     <?php if (!$generarPDF): ?>
 
@@ -239,33 +122,28 @@ $tratamientos = $stmtTrat->get_result();
 
 
     <!-- =====================================================
-         CSS DEL DOCUMENTO / PDF
-         Se mantiene dentro del archivo para Dompdf
+         ESTILO DEL DOCUMENTO / PDF
     ====================================================== -->
 
     <style>
-
-        /* =========================================================
-           DOCUMENTO GENERAL
-        ========================================================= */
 
         body {
 
             font-family: DejaVu Sans, Arial, sans-serif;
 
-            color: #1f2937;
+            color: #29212e;
 
             margin: 22px 30px;
 
-            font-size: 12px;
+            font-size: 11px;
 
             line-height: 1.5;
         }
 
 
-        /* =========================================================
+        /* ================================================
            ENCABEZADO
-        ========================================================= */
+        ================================================= */
 
         .header {
 
@@ -283,37 +161,35 @@ $tratamientos = $stmtTrat->get_result();
         }
 
 
-        .header_one {
+        .system-info {
 
-            font-size: 10px;
+            color: #574d5d;
 
-            color: #7b8494;
+            font-size: 9px;
 
             line-height: 1.6;
         }
 
 
-        .logo-title {
+        .document-title {
 
-            font-family: DejaVu Sans, Arial, sans-serif;
+            margin-top: 4px;
+
+            color: #52266E;
 
             font-size: 23px;
 
-            font-weight: 700;
+            font-weight: bold;
 
-            color: #52266E;
+            text-align: center;
 
             text-transform: uppercase;
 
             letter-spacing: 1px;
-
-            text-align: center;
-
-            margin-top: 4px;
         }
 
 
-        .badge-hc {
+        .record-number {
 
             position: absolute;
 
@@ -321,187 +197,311 @@ $tratamientos = $stmtTrat->get_result();
 
             right: 0;
 
-            background: #f3e8ff;
+            padding: 5px 9px;
+
+            color: #52266E;
+
+            background: #f5eff8;
 
             border: 1px solid #e7d7f5;
 
             border-radius: 6px;
 
-            color: #52266E;
+            font-size: 9px;
 
-            font-size: 10px;
-
-            font-weight: 700;
-
-            padding: 5px 9px;
+            font-weight: bold;
         }
 
 
-        /* =========================================================
+        /* ================================================
            SECCIONES
-        ========================================================= */
+        ================================================= */
 
         .section {
 
             margin-top: 18px;
-
-            page-break-inside: avoid;
         }
 
 
-        .section h3 {
+        .section-title {
+
+            margin: 0 0 10px 0;
+
+            padding-bottom: 6px;
 
             color: #52266E;
 
-            font-size: 11px;
+            border-bottom: 1px solid #e9dcef;
 
-            font-weight: 700;
+            font-size: 10px;
+
+            font-weight: bold;
 
             text-transform: uppercase;
 
             letter-spacing: .5px;
-
-            border-bottom: 1px solid #e9dcef;
-
-            padding-bottom: 6px;
-
-            margin: 0 0 10px 0;
         }
 
 
-        /* =========================================================
-           DATOS EN DOS COLUMNAS
-        ========================================================= */
+        /* ================================================
+           INFORMACIÓN MASCOTA
+        ================================================= */
 
-        .grid {
-
-            display: grid;
-
-            grid-template-columns: repeat(2, 1fr);
-
-            gap: 7px 25px;
-        }
-
-
-        .item {
-
-            font-size: 12px;
-
-            color: #374151;
-
-            padding: 2px 0;
-        }
-
-
-        .label {
-
-            font-weight: 700;
-
-            color: #6b7280;
-        }
-
-
-        /* =========================================================
-           DESCRIPCIÓN / OBSERVACIÓN
-        ========================================================= */
-
-        .box {
-
-            border: 1px solid #eadff0;
-
-            border-left: 3px solid #52266E;
-
-            border-radius: 6px;
-
-            padding: 11px 13px;
-
-            background: #fcf9fe;
-
-            color: #374151;
-
-            font-size: 12px;
-
-            line-height: 1.6;
-
-            min-height: 28px;
-        }
-
-
-        /* =========================================================
-           TRATAMIENTOS
-        ========================================================= */
-
-        .table {
+        .info-table {
 
             width: 100%;
 
             border-collapse: collapse;
-
-            margin-top: 8px;
         }
 
 
-        .table th {
+        .info-table td {
 
-            background: #f7f0fa;
+            width: 25%;
 
-            color: #52266E;
-
-            text-align: left;
-
-            padding: 8px 9px;
-
-            font-size: 10px;
-
-            font-weight: 700;
-
-            text-transform: uppercase;
-
-            letter-spacing: .3px;
-
-            border: 1px solid #e7d7f5;
-        }
-
-
-        .table td {
-
-            padding: 8px 9px;
-
-            border: 1px solid #ece5f0;
-
-            color: #374151;
-
-            font-size: 11px;
+            padding: 5px 10px 5px 0;
 
             vertical-align: top;
         }
 
 
-        /* =========================================================
-           SIN TRATAMIENTOS
-        ========================================================= */
+        .info-label {
 
-        .no-tratamientos {
+            display: block;
 
-            background: #fcf9fe;
+            margin-bottom: 2px;
+
+            color: #52266E;
+
+            font-size: 8px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            letter-spacing: .3px;
+        }
+
+
+        .info-value {
+
+            color: #29212e;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        /* ================================================
+           PROPIETARIO
+        ================================================= */
+
+        .owner-box {
+
+            padding: 10px 12px;
+
+            background: #faf7fb;
+
+            border: 1px solid #eadff0;
+
+            border-left: 3px solid #52266E;
+
+            border-radius: 5px;
+        }
+
+
+        .owner-name {
+
+            color: #29212e;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        /* ================================================
+           ATENCIÓN
+        ================================================= */
+
+        .attention {
+
+            margin-bottom: 15px;
+
+            border: 1px solid #e7dfea;
+
+            border-left: 3px solid #52266E;
+
+            border-radius: 6px;
+
+            page-break-inside: avoid;
+        }
+
+
+        .attention-header {
+
+            padding: 9px 11px;
+
+            background: #faf7fb;
+
+            border-bottom: 1px solid #e7dfea;
+        }
+
+
+        .attention-date {
+
+            color: #29212e;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        .attention-professional {
+
+            margin-top: 3px;
+
+            color: #574d5d;
+
+            font-size: 9px;
+        }
+
+
+        .attention-professional strong {
+
+            color: #29212e;
+        }
+
+
+        .attention-body {
+
+            padding: 11px 13px;
+        }
+
+
+        /* ================================================
+           DATOS CLÍNICOS
+        ================================================= */
+
+        .clinical-block {
+
+            margin-bottom: 11px;
+        }
+
+
+        .clinical-block:last-child {
+
+            margin-bottom: 0;
+        }
+
+
+        .clinical-label {
+
+            margin-bottom: 3px;
+
+            color: #52266E;
+
+            font-size: 8px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            letter-spacing: .4px;
+        }
+
+
+        .clinical-text {
+
+            color: #29212e;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+        }
+
+
+        /* ================================================
+           TRATAMIENTO
+        ================================================= */
+
+        .treatment {
+
+            padding: 8px 10px;
+
+            background: #faf7fb;
+
+            border: 1px solid #eadff0;
+
+            border-radius: 5px;
+        }
+
+
+        /* ================================================
+           MONTO
+        ================================================= */
+
+        .amount {
+
+            margin-top: 11px;
+
+            padding-top: 8px;
+
+            border-top: 1px solid #e7dfea;
+
+            text-align: right;
+        }
+
+
+        .amount-label {
+
+            margin-right: 8px;
+
+            color: #574d5d;
+
+            font-size: 8px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+        }
+
+
+        .amount-value {
+
+            color: #52266E;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        /* ================================================
+           SIN ATENCIONES
+        ================================================= */
+
+        .empty {
+
+            padding: 18px;
+
+            color: #574d5d;
+
+            background: #faf7fb;
 
             border: 1px dashed #d8c2e8;
-
-            color: #6b7280;
-
-            padding: 12px;
 
             border-radius: 6px;
 
             text-align: center;
-
-            font-size: 11px;
         }
 
 
-        /* =========================================================
-           PIE DEL DOCUMENTO
-        ========================================================= */
+        /* ================================================
+           PIE
+        ================================================= */
 
         .footer {
 
@@ -511,17 +511,13 @@ $tratamientos = $stmtTrat->get_result();
 
             border-top: 1px solid #eee1f6;
 
-            font-size: 9px;
+            color: #746a79;
 
-            color: #9ca3af;
+            font-size: 8px;
 
             text-align: center;
         }
 
-
-        /* =========================================================
-           IMPRESIÓN
-        ========================================================= */
 
         @media print {
 
@@ -539,20 +535,17 @@ $tratamientos = $stmtTrat->get_result();
 <body>
 
 
-<!-- =====================================================
-     BOTONES DE LA VISTA
-     NO APARECEN EN EL PDF
-===================================================== -->
+<!-- =========================================================
+     BOTONES
+========================================================= -->
 
 <?php if (!$generarPDF): ?>
 
     <div class="acciones-pantalla">
 
 
-        <!-- VOLVER -->
-
         <a
-            href="index.php"
+            href="show.php?id=<?= $id_mascota ?>"
             class="btn-volver"
         >
 
@@ -563,10 +556,8 @@ $tratamientos = $stmtTrat->get_result();
         </a>
 
 
-        <!-- DESCARGAR PDF -->
-
         <a
-            href="print.php?id=<?= $hc['id_historia_clinica'] ?>&pdf=1"
+            href="print.php?id=<?= $id_mascota ?>&pdf=1"
             class="btn-descargar-pdf"
         >
 
@@ -583,22 +574,20 @@ $tratamientos = $stmtTrat->get_result();
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      ENCABEZADO
-===================================================== -->
+========================================================= -->
 
 <div class="header">
 
     <div class="header-top">
 
 
-        <!-- Código de historia clínica -->
+        <div class="record-number">
 
-        <div class="badge-hc">
-
-            HC-<?= str_pad(
-                $hc['id_historia_clinica'],
-                5,
+            HC-M<?= str_pad(
+                $id_mascota,
+                4,
                 '0',
                 STR_PAD_LEFT
             ) ?>
@@ -606,25 +595,24 @@ $tratamientos = $stmtTrat->get_result();
         </div>
 
 
-        <!-- Información del sistema -->
-
-        <div class="header_one">
+        <div class="system-info">
 
             <div>
                 VetSys - Software Veterinario
             </div>
 
             <div>
+
                 Fecha de emisión:
+
                 <?= date('d/m/Y H:i') ?>
+
             </div>
 
         </div>
 
 
-        <!-- Título -->
-
-        <div class="logo-title">
+        <div class="document-title">
 
             Historia Clínica
 
@@ -637,387 +625,437 @@ $tratamientos = $stmtTrat->get_result();
 
 
 
-<!-- =====================================================
-     DATOS DE LA CONSULTA
-===================================================== -->
+<!-- =========================================================
+     DATOS DEL PACIENTE
+========================================================= -->
 
 <div class="section">
 
-    <h3>Datos de la consulta</h3>
+    <div class="section-title">
 
-
-    <div class="grid">
-
-
-        <div class="item">
-
-            <span class="label">
-                Fecha:
-            </span>
-
-            <?= date(
-                'd/m/Y',
-                strtotime($hc['fecha'])
-            ) ?>
-
-        </div>
-
-
-        <div class="item">
-
-            <span class="label">
-                Código mascota:
-            </span>
-
-            M-<?= str_pad(
-                $hc['id_mascota'],
-                4,
-                '0',
-                STR_PAD_LEFT
-            ) ?>
-
-        </div>
-
+        Información del paciente
 
     </div>
+
+
+    <table class="info-table">
+
+        <tr>
+
+
+            <td>
+
+                <span class="info-label">
+                    Nombre
+                </span>
+
+                <span class="info-value">
+
+                    <?= htmlspecialchars(
+                        $mascota['nombre_mascota']
+                    ) ?>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="info-label">
+                    Especie
+                </span>
+
+                <span class="info-value">
+
+                    <?= htmlspecialchars(
+                        $mascota['nombre_especie']
+                    ) ?>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="info-label">
+                    Raza
+                </span>
+
+                <span class="info-value">
+
+                    <?= !empty($mascota['raza'])
+                        ? htmlspecialchars($mascota['raza'])
+                        : 'Sin especificar'
+                    ?>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="info-label">
+                    Sexo
+                </span>
+
+                <span class="info-value">
+
+                    <?php
+
+                    if ($mascota['sexo'] == 'M') {
+
+                        echo 'Macho';
+
+                    } elseif ($mascota['sexo'] == 'H') {
+
+                        echo 'Hembra';
+
+                    } else {
+
+                        echo htmlspecialchars(
+                            $mascota['sexo'] ?? 'Sin especificar'
+                        );
+                    }
+
+                    ?>
+
+                </span>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+
+            <td>
+
+                <span class="info-label">
+                    Edad
+                </span>
+
+                <span class="info-value">
+
+                    <?= htmlspecialchars($edadMascota) ?>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="info-label">
+                    Peso
+                </span>
+
+                <span class="info-value">
+
+                    <?= isset($mascota['peso']) &&
+                        $mascota['peso'] !== ''
+                        ? htmlspecialchars($mascota['peso']) . ' kg'
+                        : 'Sin especificar'
+                    ?>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="info-label">
+                    Color
+                </span>
+
+                <span class="info-value">
+
+                    <?= !empty($mascota['color'])
+                        ? htmlspecialchars($mascota['color'])
+                        : 'Sin especificar'
+                    ?>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="info-label">
+                    Código
+                </span>
+
+                <span class="info-value">
+
+                    M-<?= str_pad(
+                        $id_mascota,
+                        4,
+                        '0',
+                        STR_PAD_LEFT
+                    ) ?>
+
+                </span>
+
+            </td>
+
+
+        </tr>
+
+    </table>
 
 </div>
 
 
 
-<!-- =====================================================
-     DATOS DE LA MASCOTA
-===================================================== -->
+<!-- =========================================================
+     PROPIETARIO
+========================================================= -->
 
 <div class="section">
 
-    <h3>Datos de la mascota</h3>
+    <div class="section-title">
 
-
-    <div class="grid">
-
-
-        <!-- Nombre -->
-
-        <div class="item">
-
-            <span class="label">
-                Nombre:
-            </span>
-
-            <?= !empty($hc['nombre_mascota'])
-                ? htmlspecialchars($hc['nombre_mascota'])
-                : 'Sin especificar'
-            ?>
-
-        </div>
-
-
-        <!-- Especie y raza -->
-
-        <div class="item">
-
-            <span class="label">
-                Especie / Raza:
-            </span>
-
-            <?= !empty($hc['nombre_especie'])
-                ? htmlspecialchars($hc['nombre_especie'])
-                : 'Sin especificar'
-            ?>
-
-            /
-
-            <?= !empty($hc['raza'])
-                ? htmlspecialchars($hc['raza'])
-                : 'Sin especificar'
-            ?>
-
-        </div>
-
-
-        <!-- Sexo -->
-
-        <div class="item">
-
-            <span class="label">
-                Sexo:
-            </span>
-
-            <?php
-
-            if ($hc['sexo'] == 'M') {
-
-                echo 'Macho';
-
-            } elseif ($hc['sexo'] == 'H') {
-
-                echo 'Hembra';
-
-            } else {
-
-                echo 'Sin especificar';
-            }
-
-            ?>
-
-        </div>
-
-
-        <!-- Peso -->
-
-        <div class="item">
-
-            <span class="label">
-                Peso:
-            </span>
-
-            <?= !empty($hc['peso'])
-                ? htmlspecialchars($hc['peso']) . ' kg'
-                : 'Sin especificar'
-            ?>
-
-        </div>
-
-
-        <!-- Edad -->
-
-        <div class="item">
-
-            <span class="label">
-                Edad:
-            </span>
-
-            <?= htmlspecialchars($edadMascota) ?>
-
-        </div>
-
-
-        <!-- Color -->
-
-        <div class="item">
-
-            <span class="label">
-                Color:
-            </span>
-
-            <?= !empty($hc['color'])
-                ? htmlspecialchars($hc['color'])
-                : 'Sin especificar'
-            ?>
-
-        </div>
-
+        Propietario
 
     </div>
 
-</div>
 
+    <div class="owner-box">
 
-
-<!-- =====================================================
-     DATOS DEL PROPIETARIO
-===================================================== -->
-
-<div class="section">
-
-    <h3>Datos del propietario</h3>
-
-
-    <div class="grid">
-
-
-        <!-- Cliente -->
-
-        <div class="item">
-
-            <span class="label">
-                Cliente:
-            </span>
+        <div class="owner-name">
 
             <?= htmlspecialchars(
-                $hc['apellido_persona']
-                . ', '
-                . $hc['nombre_persona']
+                $mascota['nombre_persona']
+                . ' '
+                . $mascota['apellido_persona']
             ) ?>
 
         </div>
 
-
-        <!-- Teléfono -->
-
-        <div class="item">
-
-            <span class="label">
-                Teléfono:
-            </span>
-
-            <?= !empty($hc['telefono'])
-                ? htmlspecialchars($hc['telefono'])
-                : 'Sin especificar'
-            ?>
-
-        </div>
-
-
-        <!-- Email -->
-
-        <div class="item">
-
-            <span class="label">
-                Email:
-            </span>
-
-            <?= !empty($hc['email'])
-                ? htmlspecialchars($hc['email'])
-                : 'Sin especificar'
-            ?>
-
-        </div>
-
-
     </div>
 
 </div>
 
 
 
-<!-- =====================================================
-     DESCRIPCIÓN CLÍNICA
-===================================================== -->
+<!-- =========================================================
+     HISTORIAL
+========================================================= -->
 
 <div class="section">
 
-    <h3>Descripción clínica</h3>
+    <div class="section-title">
 
-
-    <div class="box">
-
-        <?= !empty($hc['descripcion'])
-            ? nl2br(htmlspecialchars($hc['descripcion']))
-            : 'Sin descripción'
-        ?>
+        Historial de atenciones
 
     </div>
 
-</div>
+
+    <?php if (!empty($turnos)) { ?>
+
+
+        <?php foreach ($turnos as $turno) { ?>
+
+
+            <div class="attention">
+
+
+                <!-- CABECERA -->
+
+                <div class="attention-header">
+
+
+                    <div class="attention-date">
+
+                        <?= date(
+                            'd/m/Y',
+                            strtotime($turno['fecha'])
+                        ) ?>
+
+                        -
+
+                        <?= substr(
+                            $turno['hora'],
+                            0,
+                            5
+                        ) ?>
+
+                        hs
+
+                    </div>
+
+
+                    <div class="attention-professional">
+
+                        Profesional:
+
+                        <strong>
+
+                            <?= htmlspecialchars(
+                                $turno['profesional']
+                            ) ?>
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
 
 
 
-<!-- =====================================================
-     OBSERVACIÓN
-===================================================== -->
+                <!-- CUERPO -->
 
-<div class="section">
-
-    <h3>Observación</h3>
+                <div class="attention-body">
 
 
-    <div class="box">
+                    <!-- MOTIVO -->
 
-        <?= !empty($hc['observacion'])
-            ? nl2br(htmlspecialchars($hc['observacion']))
-            : 'Sin observaciones'
-        ?>
+                    <div class="clinical-block">
 
-    </div>
+                        <div class="clinical-label">
 
-</div>
+                            Motivo de consulta
 
+                        </div>
 
 
-<!-- =====================================================
-     TRATAMIENTOS
-===================================================== -->
+                        <div class="clinical-text">
 
-<div class="section">
-
-    <h3>Tratamientos</h3>
-
-
-    <?php if (
-        $tratamientos &&
-        $tratamientos->num_rows > 0
-    ) { ?>
-
-
-        <table class="table">
-
-
-            <thead>
-
-                <tr>
-
-                    <th>Duración</th>
-
-                    <th>Dosis</th>
-
-                    <th>Descripción</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-
-                <?php while (
-                    $t = $tratamientos->fetch_assoc()
-                ) { ?>
-
-
-                    <tr>
-
-
-                        <td>
-
-                            <?= !empty($t['duracion'])
-                                ? htmlspecialchars($t['duracion'])
-                                : 'Sin especificar'
+                            <?= !empty($turno['motivo'])
+                                ? nl2br(
+                                    htmlspecialchars(
+                                        $turno['motivo']
+                                    )
+                                )
+                                : 'Sin motivo registrado'
                             ?>
 
-                        </td>
+                        </div>
+
+                    </div>
 
 
-                        <td>
 
-                            <?= !empty($t['dosis'])
-                                ? htmlspecialchars($t['dosis'])
-                                : 'Sin especificar'
+                    <!-- ATENCIÓN -->
+
+                    <div class="clinical-block">
+
+                        <div class="clinical-label">
+
+                            Atención realizada
+
+                        </div>
+
+
+                        <div class="clinical-text">
+
+                            <?= !empty(
+                                $turno['detalle_atencion']
+                            )
+                                ? nl2br(
+                                    htmlspecialchars(
+                                        $turno['detalle_atencion']
+                                    )
+                                )
+                                : 'Sin detalle registrado'
                             ?>
 
-                        </td>
+                        </div>
+
+                    </div>
 
 
-                        <td>
 
-                            <?= !empty($t['descripcion'])
-                                ? htmlspecialchars($t['descripcion'])
-                                : 'Sin descripción'
+                    <!-- TRATAMIENTO -->
+
+                    <div class="clinical-block treatment">
+
+                        <div class="clinical-label">
+
+                            Tratamiento / Indicaciones
+
+                        </div>
+
+
+                        <div class="clinical-text">
+
+                            <?= !empty($turno['tratamiento'])
+                                ? nl2br(
+                                    htmlspecialchars(
+                                        $turno['tratamiento']
+                                    )
+                                )
+                                : 'Sin tratamiento registrado'
                             ?>
 
-                        </td>
+                        </div>
+
+                    </div>
 
 
-                    </tr>
+
+                    <!-- MONTO -->
+
+                    <div class="amount">
+
+                        <span class="amount-label">
+
+                            Monto total
+
+                        </span>
 
 
-                <?php } ?>
+                        <span class="amount-value">
+
+                            <?php
+
+                            if (
+                                isset($turno['monto_total']) &&
+                                $turno['monto_total'] !== null
+                            ) {
+
+                                echo '$ ' .
+                                    number_format(
+                                        (float)$turno['monto_total'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    );
+
+                            } else {
+
+                                echo 'Sin registrar';
+                            }
+
+                            ?>
+
+                        </span>
+
+                    </div>
 
 
-            </tbody>
+                </div>
 
 
-        </table>
+            </div>
+
+
+        <?php } ?>
 
 
     <?php } else { ?>
 
 
-        <div class="no-tratamientos">
+        <div class="empty">
 
-            No se registraron tratamientos para esta consulta.
+            No se registran atenciones veterinarias
+            completadas para esta mascota.
 
         </div>
 
@@ -1029,13 +1067,18 @@ $tratamientos = $stmtTrat->get_result();
 
 
 
-<!-- =====================================================
-     PIE DEL DOCUMENTO
-===================================================== -->
+<!-- =========================================================
+     PIE
+========================================================= -->
 
 <div class="footer">
 
     VetSys · Software de Gestión Veterinaria
+
+    <br>
+
+    Historia clínica de
+    <?= htmlspecialchars($mascota['nombre_mascota']) ?>
 
 </div>
 
@@ -1048,68 +1091,56 @@ $tratamientos = $stmtTrat->get_result();
 <?php
 
 
-// Cierra la consulta de tratamientos
-$stmtTrat->close();
-
-
-/*
-|--------------------------------------------------------------------------
-| GENERACIÓN DEL PDF
-|--------------------------------------------------------------------------
-*/
+/* =========================================================
+   GENERAR PDF
+========================================================= */
 
 if ($generarPDF) {
 
 
-    // Obtiene todo el HTML generado anteriormente
     $html = ob_get_clean();
 
 
-    // Opciones de Dompdf
     $options = new Dompdf\Options();
 
 
-    // Permite cargar recursos remotos
     $options->set(
         'isRemoteEnabled',
         true
     );
 
 
-    // Crea Dompdf
     $dompdf = new Dompdf\Dompdf(
         $options
     );
 
 
-    // Carga el HTML
     $dompdf->loadHtml(
         $html
     );
 
 
-    // Tamaño de hoja
     $dompdf->setPaper(
         'A4',
         'portrait'
     );
 
 
-    // Genera el PDF
     $dompdf->render();
 
 
-    // Envía el PDF al navegador
+    $nombreMascota = preg_replace(
+        '/[^A-Za-z0-9_-]/',
+        '_',
+        $mascota['nombre_mascota']
+    );
+
+
     $dompdf->stream(
 
-        'Historia_Clinica_HC_'
-        . str_pad(
-            $hc['id_historia_clinica'],
-            5,
-            '0',
-            STR_PAD_LEFT
-        )
-        . '.pdf',
+        'Historia_Clinica_' .
+        $nombreMascota .
+        '.pdf',
 
         [
             'Attachment' => true
@@ -1117,9 +1148,7 @@ if ($generarPDF) {
     );
 
 
-    // Finaliza la ejecución
     exit;
 }
-
 
 ?>

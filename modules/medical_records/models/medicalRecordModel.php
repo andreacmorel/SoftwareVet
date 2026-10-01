@@ -9,18 +9,26 @@ class MedicalRecordModel{
         $this->conexion = $conexion;
     }
 
-    public function getAll($buscar, $fecha_desde, $fecha_hasta){
-        
-    $where = "WHERE h.activo = 1";
+  public function getAll($buscar = ''){
+
+    $where = "WHERE m.activo = 1";
+
     $params = [];
     $types = "";
 
+
+    /* =====================================================
+       BUSCADOR
+    ===================================================== */
+
     if (!empty($buscar)) {
+
         $where .= " AND (
-            m.nombre_mascota LIKE ? OR
-            h.descripcion LIKE ? OR
-            h.observacion LIKE ? OR
-            h.id_historia_clinica LIKE ?
+            m.nombre_mascota LIKE ?
+            OR p.nombre_persona LIKE ?
+            OR p.apellido_persona LIKE ?
+            OR e.nombre_especie LIKE ?
+            OR e.raza LIKE ?
         )";
 
         $busqueda = "%$buscar%";
@@ -29,47 +37,73 @@ class MedicalRecordModel{
         $params[] = $busqueda;
         $params[] = $busqueda;
         $params[] = $busqueda;
+        $params[] = $busqueda;
 
-        $types .= "ssss";
+        $types = "sssss";
     }
 
-    if (!empty($fecha_desde)) {
-        $where .= " AND h.fecha >= ?";
-        $params[] = $fecha_desde;
-        $types .= "s";
-    }
 
-    if (!empty($fecha_hasta)) {
-        $where .= " AND h.fecha <= ?";
-        $params[] = $fecha_hasta;
-        $types .= "s";
-    }
+    /* =====================================================
+       LISTADO DE MASCOTAS
+       UNA SOLA FILA POR MASCOTA
+    ===================================================== */
 
     $sql = "
-        SELECT 
-            h.id_historia_clinica,
-            h.descripcion,
-            h.fecha,
-            h.observacion,
-            m.nombre_mascota
-        FROM historia_clinica h
-        INNER JOIN mascota m ON h.id_mascota = m.id_mascota
+        SELECT
+            m.id_mascota,
+            m.nombre_mascota,
+
+            e.nombre_especie,
+            e.raza,
+
+            CONCAT(
+                p.nombre_persona,
+                ' ',
+                p.apellido_persona
+            ) AS propietario
+
+        FROM mascota m
+
+        INNER JOIN cliente c
+            ON m.id_cliente = c.id_cliente
+
+        INNER JOIN persona p
+            ON c.id_persona = p.id_persona
+
+        INNER JOIN especie e
+            ON m.id_especie = e.id_especie
+
         $where
-        ORDER BY h.fecha DESC
+
+        ORDER BY m.nombre_mascota ASC
     ";
 
-    if ($params) {
+
+    /* =====================================================
+       EJECUTAR
+    ===================================================== */
+
+    if (!empty($params)) {
+
         $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param($types, ...$params);
+
+        $stmt->bind_param(
+            $types,
+            ...$params
+        );
+
         $stmt->execute();
+
         $result = $stmt->get_result();
+
         $stmt->close();
 
         return $result;
     }
 
+
     return $this->conexion->query($sql);
-    }
+}
 
     public function create($fecha, $descripcion, $observacion, $idMascota, $tDuraciones, $tDosis, $tDescs){
     // Inicia la transacción
@@ -207,5 +241,115 @@ class MedicalRecordModel{
         ";
 
         return mysqli_query($this->conexion, $sqlDelete);
+    }
+
+
+public function getPetClinicalData($id_mascota){
+
+    $id_mascota = (int)$id_mascota;
+
+    $stmt = $this->conexion->prepare("
+        SELECT
+            m.id_mascota,
+            m.nombre_mascota,
+            m.fecha_nacimiento,
+            m.edad,
+            m.unidad_edad,
+            m.color,
+            m.peso,
+            m.sexo,
+
+            e.nombre_especie,
+            e.raza,
+
+            p.nombre_persona,
+            p.apellido_persona
+
+        FROM mascota m
+
+        INNER JOIN cliente c
+            ON m.id_cliente = c.id_cliente
+
+        INNER JOIN persona p
+            ON c.id_persona = p.id_persona
+
+        INNER JOIN especie e
+            ON m.id_especie = e.id_especie
+
+        WHERE m.id_mascota = ?
+
+        LIMIT 1
+    ");
+
+    $stmt->bind_param("i", $id_mascota);
+
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    $mascota = $resultado->fetch_assoc();
+
+    $stmt->close();
+
+    return $mascota;
+}
+
+public function getPetAppointments($id_mascota){
+
+    $id_mascota = (int)$id_mascota;
+
+    $stmt = $this->conexion->prepare("
+        SELECT
+            t.id_turno,
+            t.fecha,
+            t.hora,
+            t.motivo,
+            t.detalle_atencion,
+            t.tratamiento,
+            t.monto_total,
+
+            CONCAT(
+                p.nombre_persona,
+                ' ',
+                p.apellido_persona
+            ) AS profesional
+
+        FROM turnos t
+
+        INNER JOIN profesional pr
+            ON t.id_profesional = pr.id_profesional
+
+        INNER JOIN persona p
+            ON pr.id_persona = p.id_persona
+
+        WHERE t.id_mascota = ?
+
+        AND t.estado = 'completado'
+
+        ORDER BY
+            t.fecha DESC,
+            t.hora DESC
+    ");
+
+    $stmt->bind_param(
+        "i",
+        $id_mascota
+    );
+
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    $turnos = [];
+
+    while ($fila = $resultado->fetch_assoc()) {
+
+        $turnos[] = $fila;
+
+    }
+
+    $stmt->close();
+
+    return $turnos;
     }
 }

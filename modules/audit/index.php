@@ -41,7 +41,7 @@ $resultado = mysqli_query($conexion, $sql);
     <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/index_style.css" rel="stylesheet">
     <link href="/SoftwareVet/css/indexaudit.css" rel="stylesheet">
-    <link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 

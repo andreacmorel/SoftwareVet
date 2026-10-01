@@ -57,6 +57,24 @@ if(isset($_GET['deleted'])) { ?>
 <?php } ?>
 
 <?php
+if(isset($_GET['completed'])) { ?>
+
+    <div class="vet-alert-success">
+
+        <div class="vet-alert-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <div class="vet-alert-content">
+            <h5>Atención registrada</h5>
+            <p>La atención veterinaria fue registrada correctamente.</p>
+        </div>
+
+    </div>
+
+<?php } ?>
+
+<?php
 // Mensaje de error cuando se intenta modificar un turno cancelado o completado
 if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
     <div class="vet-alert-error">
@@ -311,7 +329,59 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
                                     );
                                 ?>
 
+                                <!-- =============================================
+                                    REGISTRAR ATENCIÓN
+                                ============================================== -->
 
+                                <?php if ($estadoAccion === 'en_atencion') { ?>
+
+                                    <button
+                                        type="button"
+                                        class="btn-action btn-atender"
+                                        data-toggle="modal"
+                                        data-target="#modalFinalizarConsulta"
+
+                                        data-id="<?= $t->id_turno ?>"
+
+                                        data-mascota="<?= htmlspecialchars(
+                                            $t->mascota,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+
+                                        data-duenio="<?= htmlspecialchars(
+                                            $t->duenio,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+
+                                        data-profesional="<?= htmlspecialchars(
+                                            $t->profesional,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+
+                                        data-fecha="<?= date(
+                                            'd/m/Y',
+                                            strtotime($t->fecha)
+                                        ) ?>"
+
+                                        data-hora="<?= substr($t->hora, 0, 5) ?>"
+
+                                        data-motivo="<?= htmlspecialchars(
+                                            $t->motivo,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+
+                                        title="Registrar atención"
+                                    >
+
+                                        <i class="fas fa-stethoscope"></i>
+
+                                    </button>
+
+                                <?php } ?>
                                 <?php if (!$turnoCerrado) { ?>
 
                                     <!-- EDITAR -->
@@ -359,6 +429,307 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
                 </tbody>
             </table>
         </div>
+    </div>
+
+</div>
+
+<!-- =========================================================
+     MODAL FINALIZAR CONSULTA
+========================================================= -->
+
+<div class="modal fade" id="modalFinalizarConsulta" tabindex="-1"
+    role="dialog" aria-labelledby="modalFinalizarConsultaLabel" aria-hidden="true">
+
+    <div
+        class="modal-dialog modal-dialog-centered modal-lg"
+        role="document"
+    >
+
+        <div class="modal-content modal-consulta-content">
+
+
+            <!-- HEADER -->
+
+            <div class="modal-header modal-consulta-header">
+
+                <div>
+
+                    <h5
+                        class="modal-title"
+                        id="modalFinalizarConsultaLabel"
+                    >
+                        <i class="fas fa-stethoscope mr-2"></i>
+                        Finalizar consulta
+                    </h5>
+
+                    <div class="modal-consulta-subtitle">
+                        Registrar atención veterinaria
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Cerrar"
+                >
+
+                    <span aria-hidden="true">
+                        &times;
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- FORMULARIO -->
+
+            <form
+                action="complete.php"
+                method="POST"
+                id="formFinalizarConsulta"
+            >
+
+                <input
+                    type="hidden"
+                    name="id_turno"
+                    id="consultaIdTurno"
+                >
+
+
+                <div class="modal-body">
+
+
+                    <!-- INFORMACIÓN DEL TURNO -->
+
+                    <div class="consulta-info-card">
+
+                        <div class="consulta-mascota">
+
+                            <div class="consulta-paw">
+
+                                <i class="fas fa-paw"></i>
+
+                            </div>
+
+                            <div>
+
+                                <div class="consulta-label">
+                                    Mascota
+                                </div>
+
+                                <div
+                                    class="consulta-mascota-nombre"
+                                    id="consultaMascota"
+                                >
+                                </div>
+
+                                <div
+                                    class="consulta-duenio"
+                                    id="consultaDuenio"
+                                >
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row mt-3">
+
+
+                            <div class="col-md-4">
+
+                                <div class="consulta-label">
+                                    Profesional
+                                </div>
+
+                                <div
+                                    class="consulta-dato"
+                                    id="consultaProfesional"
+                                >
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+
+                                <div class="consulta-label">
+                                    Fecha
+                                </div>
+
+                                <div
+                                    class="consulta-dato"
+                                    id="consultaFecha"
+                                >
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+
+                                <div class="consulta-label">
+                                    Hora
+                                </div>
+
+                                <div
+                                    class="consulta-dato"
+                                    id="consultaHora"
+                                >
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="consulta-motivo mt-3">
+
+                            <div class="consulta-label">
+                                Motivo de consulta
+                            </div>
+
+                            <div
+                                class="consulta-dato"
+                                id="consultaMotivo"
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUÉ SE LE REALIZÓ -->
+
+                    <div class="form-group mt-4">
+
+                        <label for="detalleAtencion">
+
+                            Qué se le realizó
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <textarea
+                            name="detalle_atencion"
+                            id="detalleAtencion"
+                            class="form-control consulta-textarea"
+                            rows="4"
+                            maxlength="1000"
+                            required
+                            placeholder="Ej: Se realizó examen físico, control de temperatura, limpieza de herida..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- TRATAMIENTO -->
+
+                    <div class="form-group">
+
+                        <label for="tratamientoConsulta">
+
+                            Tratamiento / Indicaciones
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <textarea
+                            name="tratamiento"
+                            id="tratamientoConsulta"
+                            class="form-control consulta-textarea"
+                            rows="4"
+                            maxlength="1000"
+                            required
+                            placeholder="Ej: Antibiótico cada 12 horas durante 7 días..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- MONTO -->
+
+                    <div class="form-group mb-0">
+
+                        <label for="montoTotalConsulta">
+
+                            Monto total
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+
+                        <div class="input-group consulta-monto">
+
+                            <div class="input-group-prepend">
+
+                                <span class="input-group-text">
+                                    $
+                                </span>
+
+                            </div>
+
+
+                            <input
+                                type="number"
+                                name="monto_total"
+                                id="montoTotalConsulta"
+                                class="form-control"
+                                min="0"
+                                step="0.01"
+                                required
+                                placeholder="0.00"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-modal-cancelar"
+                        data-dismiss="modal"
+                    >
+
+                        <i class="fas fa-times mr-1"></i>
+
+                        Cancelar
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-finalizar-consulta"
+                    >
+
+                        <i class="fas fa-check mr-1"></i>
+
+                        Guardar y finalizar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
 
 </div>
@@ -587,6 +958,66 @@ $(document).ready(function () {
     });
 
 });
+
+/* =========================================================
+   MODAL FINALIZAR CONSULTA
+========================================================= */
+
+$('#modalFinalizarConsulta').on(
+    'show.bs.modal',
+    function (event) {
+
+        const boton = $(event.relatedTarget);
+
+        const id = boton.data('id');
+        const mascota = boton.data('mascota');
+        const duenio = boton.data('duenio');
+        const profesional = boton.data('profesional');
+        const fecha = boton.data('fecha');
+        const hora = boton.data('hora');
+        const motivo = boton.data('motivo');
+
+
+        /* ID DEL TURNO */
+
+        $('#consultaIdTurno').val(id);
+
+
+        /* DATOS VISUALES */
+
+        $('#consultaMascota').text(mascota);
+
+        $('#consultaDuenio').text(
+            'Propietario: ' + duenio
+        );
+
+        $('#consultaProfesional').text(
+            profesional
+        );
+
+        $('#consultaFecha').text(
+            fecha
+        );
+
+        $('#consultaHora').text(
+            hora + ' hs'
+        );
+
+        $('#consultaMotivo').text(
+            motivo || 'Sin motivo registrado'
+        );
+
+
+        /* LIMPIAR CAMPOS */
+
+        $('#detalleAtencion').val('');
+
+        $('#tratamientoConsulta').val('');
+
+        $('#montoTotalConsulta').val('');
+
+    }
+);
 </script>
 
 </body>
