@@ -32,7 +32,7 @@ CREATE TABLE `auditoria` (
   `datos_nuevos` text,
   `fecha` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_auditoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `auditoria` (
 
 LOCK TABLES `auditoria` WRITE;
 /*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
-INSERT INTO `auditoria` VALUES (1,1,'Mascotas','Modificación',22,'Nombre: chuchi | Fecha nacimiento: 2020-08-10 | Sexo: H | Peso: 15.00 | Color: marrón | Edad: 6 | Unidad edad: años | Especie: 1 | Cliente: 1','Nombre: chuchi | Fecha nacimiento: 2020-08-10 | Sexo: H | Peso: 15.00 | Color: marrón | Edad: 7 | Unidad edad: años | Especie: 1 | Cliente: 1','2026-09-02 17:48:55'),(2,1,'Turnos','Modificación',15,'Fecha: 2026-07-02 | Hora: 18:00:00 | Motivo: prueba | Profesional: manuel brunel | Mascota: Bruni | Estado: pendiente','Fecha: 2026-09-03 | Hora: 18:00:00 | Motivo: holahola | Profesional: manuel brunel | Mascota: Bruni | Estado: pendiente','2026-09-02 19:10:07'),(3,1,'Turnos','Cambio de estado',15,'Estado: confirmado','Estado: en_atencion','2026-09-03 16:05:28'),(4,1,'Turnos','Cambio de estado',15,'','','2026-09-03 16:10:05'),(5,1,'Turnos','Cambio de estado',16,'Estado: Pendiente','Estado: Confirmado','2026-09-03 16:11:43'),(6,1,'Turnos','Cambio de estado',16,'Estado: Confirmado','Estado: En atencion','2026-09-03 16:11:45'),(7,1,'Mascotas','Modificación',24,'Nombre: Bruno | Fecha nacimiento: 2019-06-23 | Sexo: M | Peso: 3500.00 | Color: negro | Edad: 7 | Unidad edad: años | Especie: 3 | Cliente: 10','Nombre: Bruno | Fecha nacimiento: 2019-06-23 | Sexo: M | Peso: 3500.00 | Color: negro | Edad: 8 | Unidad edad: años | Especie: 3 | Cliente: 10','2026-09-04 17:56:08'),(8,1,'Turnos','Cambio de estado',18,'Estado: Pendiente','Estado: Confirmado','2026-09-04 17:56:39');
+INSERT INTO `auditoria` VALUES (1,1,'Mascotas','Modificación',22,'Nombre: chuchi | Fecha nacimiento: 2020-08-10 | Sexo: H | Peso: 15.00 | Color: marrón | Edad: 6 | Unidad edad: años | Especie: 1 | Cliente: 1','Nombre: chuchi | Fecha nacimiento: 2020-08-10 | Sexo: H | Peso: 15.00 | Color: marrón | Edad: 7 | Unidad edad: años | Especie: 1 | Cliente: 1','2026-09-02 17:48:55'),(2,1,'Turnos','Modificación',15,'Fecha: 2026-07-02 | Hora: 18:00:00 | Motivo: prueba | Profesional: manuel brunel | Mascota: Bruni | Estado: pendiente','Fecha: 2026-09-03 | Hora: 18:00:00 | Motivo: holahola | Profesional: manuel brunel | Mascota: Bruni | Estado: pendiente','2026-09-02 19:10:07'),(3,1,'Turnos','Cambio de estado',15,'Estado: confirmado','Estado: en_atencion','2026-09-03 16:05:28'),(4,1,'Turnos','Cambio de estado',15,'','','2026-09-03 16:10:05'),(5,1,'Turnos','Cambio de estado',16,'Estado: Pendiente','Estado: Confirmado','2026-09-03 16:11:43'),(6,1,'Turnos','Cambio de estado',16,'Estado: Confirmado','Estado: En atencion','2026-09-03 16:11:45'),(7,1,'Mascotas','Modificación',24,'Nombre: Bruno | Fecha nacimiento: 2019-06-23 | Sexo: M | Peso: 3500.00 | Color: negro | Edad: 7 | Unidad edad: años | Especie: 3 | Cliente: 10','Nombre: Bruno | Fecha nacimiento: 2019-06-23 | Sexo: M | Peso: 3500.00 | Color: negro | Edad: 8 | Unidad edad: años | Especie: 3 | Cliente: 10','2026-09-04 17:56:08'),(8,1,'Turnos','Cambio de estado',18,'Estado: Pendiente','Estado: Confirmado','2026-09-04 17:56:39'),(9,1,'Mascotas','Modificación',23,'Nombre: Samantha | Fecha nacimiento: 2012-09-01 | Sexo: H | Peso: 30.00 | Color: Blanco | Edad: 14 | Unidad edad: años | Especie: 1 | Cliente: 9','Nombre: Samantha | Fecha nacimiento: 2012-09-10 | Sexo: H | Peso: 20.00 | Color: Blanco | Edad: 14 | Unidad edad: años | Especie: 1 | Cliente: 9','2026-09-04 19:47:14'),(10,1,'Mascotas','Modificación',28,'Nombre: pruebacombo | Fecha nacimiento: 2026-09-01 | Sexo: H | Peso: 20.00 | Color: gris | Edad: 1 | Unidad edad: años | Especie: 13 | Cliente: 10','Nombre: pruebacombo | Fecha nacimiento: 2026-09-01 | Sexo: H | Peso: 20.00 | Color: gris | Edad: 1 | Unidad edad: años | Especie: 2 | Cliente: 10','2026-09-28 17:08:45'),(11,1,'Turnos','Modificación',22,'Fecha: 2026-09-21 | Hora: 12:00:00 | Motivo: Pulgas | Profesional: Rocio Morel | Mascota: Bruni | Estado: pendiente','Fecha: 2026-09-29 | Hora: 12:00:00 | Motivo: Pulgass | Profesional: Rocio Morel | Mascota: Bruni | Estado: pendiente','2026-09-29 00:11:29'),(12,1,'Turnos','Modificación',23,'Fecha: 2026-09-30 | Hora: 08:00:00 | Motivo: ejemplo | Profesional: prueba prueba | Mascota: jrjr | Estado: pendiente','Fecha: 2026-09-30 | Hora: 08:00:00 | Motivo: ejemplo1 | Profesional: prueba prueba | Mascota: jrjr | Estado: pendiente','2026-09-29 00:13:34'),(13,1,'Turnos','Modificación',23,'Fecha: 2026-09-30 | Hora: 08:00:00 | Motivo: ejemplo1 | Profesional: prueba prueba | Mascota: jrjr | Estado: pendiente','Fecha: 2026-09-30 | Hora: 08:00:00 | Motivo: ejemplo1 | Profesional: Rocio Morel | Mascota: jrjr | Estado: pendiente','2026-09-29 00:13:46'),(14,1,'Turnos','Modificación',23,'Fecha: 2026-09-30 | Hora: 08:00:00 | Motivo: ejemplo1 | Profesional: Rocio Morel | Mascota: jrjr | Estado: pendiente','Fecha: 2026-09-30 | Hora: 08:00:00 | Motivo: ejemplo1 | Profesional: Rocio Morel | Mascota: Emily | Estado: pendiente','2026-09-29 00:15:09'),(15,1,'Turnos','Cambio de estado',23,'Estado: Pendiente','Estado: Completado','2026-09-29 00:36:12'),(16,1,'Turnos','Cambio de estado',22,'Estado: Pendiente','Estado: Cancelado','2026-09-29 00:36:18'),(17,1,'Turnos','Cambio de estado',21,'Estado: Pendiente','Estado: Confirmado','2026-09-29 00:39:56'),(18,1,'Turnos','Finalización de consulta',16,'Estado: en_atencion','Estado: Completado | Detalle de atención: control | Tratamiento: antibiotico | Monto total: $14,00','2026-09-30 16:28:28'),(19,1,'Turnos','Cambio de estado',21,'Estado: Confirmado','Estado: En atencion','2026-09-30 16:45:18'),(20,1,'Turnos','Finalización de consulta',21,'Estado: en_atencion','Estado: Completado | Detalle de atención: control | Tratamiento: analgesico | Monto total: $19.999,99','2026-09-30 17:07:16'),(21,1,'Turnos','Cambio de estado',17,'Estado: Pendiente','Estado: Confirmado','2026-10-01 18:23:12'),(22,1,'Turnos','Cambio de estado',18,'Estado: Confirmado','Estado: En atencion','2026-10-01 18:23:16');
 /*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,7 +59,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`id_cliente`),
   KEY `id_persona` (`id_persona`),
   CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id_persona`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,1,1),(6,13,1),(8,16,0),(9,19,1),(10,20,1);
+INSERT INTO `cliente` VALUES (1,1,1),(6,13,1),(8,16,0),(9,19,1),(10,20,1),(11,21,1),(12,22,1),(13,23,1),(14,26,1),(15,27,1);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +88,7 @@ CREATE TABLE `detalle_historia_clinica` (
   KEY `id_tratamiento` (`id_tratamiento`),
   CONSTRAINT `detalle_historia_clinica_ibfk_1` FOREIGN KEY (`id_historia_clinica`) REFERENCES `historia_clinica` (`id_historia_clinica`),
   CONSTRAINT `detalle_historia_clinica_ibfk_2` FOREIGN KEY (`id_tratamiento`) REFERENCES `tratamientos` (`id_tratamiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `detalle_historia_clinica` (
 
 LOCK TABLES `detalle_historia_clinica` WRITE;
 /*!40000 ALTER TABLE `detalle_historia_clinica` DISABLE KEYS */;
-INSERT INTO `detalle_historia_clinica` VALUES (1,1,1),(2,2,2);
+INSERT INTO `detalle_historia_clinica` VALUES (1,1,1),(2,2,2),(3,7,3);
 /*!40000 ALTER TABLE `detalle_historia_clinica` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +122,7 @@ CREATE TABLE `domicilio` (
   KEY `fk_domicilio_profesional` (`id_profesional`),
   CONSTRAINT `domicilio_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
   CONSTRAINT `fk_domicilio_profesional` FOREIGN KEY (`id_profesional`) REFERENCES `profesional` (`id_profesional`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `domicilio` (
 
 LOCK TABLES `domicilio` WRITE;
 /*!40000 ALTER TABLE `domicilio` DISABLE KEYS */;
-INSERT INTO `domicilio` VALUES (2,'ejemplo','ejemplo','1234','12',1,NULL,1),(6,'ejemplo','Rivadavia','200','',NULL,7,1),(9,'independencia','Cordoba','557','12',6,NULL,1),(13,'independencia','caca','123','',NULL,10,1),(14,'independencia','Cordoba','557','34',9,NULL,1),(15,'independencia','Cordoba','557','',10,NULL,1);
+INSERT INTO `domicilio` VALUES (2,'ejemplo','ejemplo','1234','12',1,NULL,1),(6,'ejemplo','Rivadavia','200','',NULL,7,1),(9,'independencia','Cordoba','557','12',6,NULL,1),(13,'independencia','caca','123','',NULL,10,1),(14,'independencia','Cordoba','557','34',9,NULL,1),(15,'independencia','Cordoba','557','',10,NULL,1),(16,'nosenose','nose','1234','',NULL,11,1),(17,'pruebabarrio','prueba','1234','',NULL,12,1),(18,'','Cordoba','557','',15,NULL,1);
 /*!40000 ALTER TABLE `domicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +148,7 @@ CREATE TABLE `especie` (
   `raza` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `activo` tinyint DEFAULT '1',
   PRIMARY KEY (`id_especie`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +157,7 @@ CREATE TABLE `especie` (
 
 LOCK TABLES `especie` WRITE;
 /*!40000 ALTER TABLE `especie` DISABLE KEYS */;
-INSERT INTO `especie` VALUES (1,'Canino','Labrador',1),(2,'Canino','Caniche',1),(3,'Felino','Siames',1),(5,'Canino','Border collie',0),(6,'Aaaa','Aaaa',0),(7,'Aaaa','Asdsada',0),(8,'Aaaaaaaaaaaaa','Aaaaaaaaaaaaaaa',0),(9,'Ddddddd','Ddddddddddddd',0),(10,'Prueba','Prueba',0),(11,'Ave','Loro',0);
+INSERT INTO `especie` VALUES (1,'Canino','Labrador',1),(2,'Canino','Caniche',1),(3,'Felino','Siames',1),(5,'Canino','Border collie',0),(6,'Aaaa','Aaaa',0),(7,'Aaaa','Asdsada',0),(8,'Aaaaaaaaaaaaa','Aaaaaaaaaaaaaaa',0),(9,'Ddddddd','Ddddddddddddd',0),(10,'Prueba','Prueba',0),(11,'Ave','Loro',0),(12,'Canino','Dachshund',0),(13,'Canino','Pequines',1);
 /*!40000 ALTER TABLE `especie` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,7 +178,7 @@ CREATE TABLE `historia_clinica` (
   PRIMARY KEY (`id_historia_clinica`),
   KEY `id_mascota` (`id_mascota`),
   CONSTRAINT `historia_clinica_ibfk_1` FOREIGN KEY (`id_mascota`) REFERENCES `mascota` (`id_mascota`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -187,7 +187,7 @@ CREATE TABLE `historia_clinica` (
 
 LOCK TABLES `historia_clinica` WRITE;
 /*!40000 ALTER TABLE `historia_clinica` DISABLE KEYS */;
-INSERT INTO `historia_clinica` VALUES (1,'2026-04-30','control de vomitos',1,'se encuentra bien',1),(2,'2026-05-05','control',5,'prueba',0),(4,'2026-09-04','Control de diarrea explosiva',23,'cola sucia',1);
+INSERT INTO `historia_clinica` VALUES (1,'2026-04-30','control de vomitos',1,'se encuentra bien',1),(2,'2026-05-05','control',5,'prueba',0),(4,'2026-09-04','Control de diarrea explosiva',23,'cola sucia',1),(5,'2026-09-17','prueba',1,'',1),(6,'2026-09-17','prueba',24,'',1),(7,'2026-09-18','Revision herida en la pata',1,'El paciente observa una pata rota',1),(8,'2026-09-25','aaaaaaa',26,'',1);
 /*!40000 ALTER TABLE `historia_clinica` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +215,7 @@ CREATE TABLE `mascota` (
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `mascota_ibfk_1` FOREIGN KEY (`id_especie`) REFERENCES `especie` (`id_especie`),
   CONSTRAINT `mascota_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +224,7 @@ CREATE TABLE `mascota` (
 
 LOCK TABLES `mascota` WRITE;
 /*!40000 ALTER TABLE `mascota` DISABLE KEYS */;
-INSERT INTO `mascota` VALUES (1,2,1,NULL,3,'meses','Blanco','Bruni',15.00,'M',1),(5,1,1,'2021-11-10',2,'años','Negro','Polo',15.00,'M',1),(20,1,6,NULL,NULL,NULL,'','prueba',10.00,'M',0),(21,3,1,'2026-07-03',NULL,NULL,'','ejemplo',10.00,'H',0),(22,1,1,'2020-08-10',7,'años','marrón','chuchi',15.00,'H',1),(23,1,9,'2012-09-01',14,'años','Blanco','Samantha',30.00,'H',1),(24,3,10,'2019-06-23',8,'años','negro','Bruno',3500.00,'M',1);
+INSERT INTO `mascota` VALUES (1,2,1,NULL,3,'meses','Blanco','Bruni',15.00,'M',1),(5,1,1,'2021-11-10',2,'años','Negro','Polo',15.00,'M',1),(20,1,6,NULL,NULL,NULL,'','prueba',10.00,'M',0),(21,3,1,'2026-07-03',NULL,NULL,'','ejemplo',10.00,'H',0),(22,1,1,'2020-08-10',7,'años','marrón','chuchi',15.00,'H',1),(23,1,9,'2012-09-10',14,'años','Blanco','Samantha',20.00,'H',1),(24,3,10,'2019-06-23',8,'años','negro','Bruno',3500.00,'M',1),(25,3,1,'2003-09-01',26,'años','marrón','Emily',10.00,'H',1),(26,1,10,'2026-09-01',1,'años','','aaaa',10.00,'M',1),(27,1,13,'2026-09-22',NULL,NULL,'','pruebaaa',2.00,'M',1),(28,2,10,'2026-09-01',1,'años','gris','pruebacombo',20.00,'H',1),(29,2,1,'2015-06-20',11,'años','Blanco','pequeño',11.00,'M',1),(30,3,11,'2026-09-24',NULL,NULL,'','jrjr',1.00,'M',0);
 /*!40000 ALTER TABLE `mascota` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -296,7 +296,7 @@ CREATE TABLE `perfil_modulo` (
   KEY `id_modulo` (`id_modulo`),
   CONSTRAINT `perfil_modulo_ibfk_1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`),
   CONSTRAINT `perfil_modulo_ibfk_2` FOREIGN KEY (`id_modulo`) REFERENCES `modulo` (`id_modulo`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,7 +305,7 @@ CREATE TABLE `perfil_modulo` (
 
 LOCK TABLES `perfil_modulo` WRITE;
 /*!40000 ALTER TABLE `perfil_modulo` DISABLE KEYS */;
-INSERT INTO `perfil_modulo` VALUES (17,2,2),(18,2,8),(19,2,6),(20,2,10),(21,2,1),(22,2,11),(23,2,9),(24,2,5),(25,2,7),(26,2,3),(27,2,4),(48,7,2),(49,7,10),(50,7,1),(51,7,3),(52,8,1),(53,2,13);
+INSERT INTO `perfil_modulo` VALUES (17,2,2),(18,2,8),(19,2,6),(20,2,10),(21,2,1),(22,2,11),(23,2,9),(24,2,5),(25,2,7),(26,2,3),(27,2,4),(52,8,1),(53,2,13),(64,7,11),(65,7,2),(66,7,8),(67,7,6),(68,7,10),(69,7,1),(70,7,9),(71,7,5),(72,7,7),(73,7,13),(74,7,3),(75,7,4);
 /*!40000 ALTER TABLE `perfil_modulo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -324,7 +324,7 @@ CREATE TABLE `persona` (
   `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `activo` tinyint DEFAULT '1',
   PRIMARY KEY (`id_persona`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -333,7 +333,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'Andrea','Morel','3704010101','andreacmorel@gmail.com',1),(9,'Rocio','Morel','3704101020','rociomorel@gmail.com',1),(13,'Gabriela','Vera','3704716209','gabrielavera@gmail.com',1),(16,'camila','morel','3704550319','',0),(17,'aaaaaaaaaaaaaa','aaaaaaaaaaa','3704550319','camilamorel@gmail.com',1),(18,'manuel','brunel','3704302101','manu@gmail.com',1),(19,'Daniela','Morel','3704758690','danielaloka@gmail.com',1),(20,'Hector','Villalba','3704567897','hector15v@gmail.com',1);
+INSERT INTO `persona` VALUES (1,'Andrea','Morel','3704010101','andreacmorel@gmail.com',1),(9,'Rocio','Morel','3704101020','rociomorel@gmail.com',1),(13,'Gabriela','Vera','3704716209','gabrielavera@gmail.com',1),(16,'camila','morel','3704550319','',0),(17,'aaaaaaaaaaaaaa','aaaaaaaaaaa','3704550319','camilamorel@gmail.com',1),(18,'manuel','brunel','3704302101','manu@gmail.com',1),(19,'Daniela','Morel','3704758690','danielaloka@gmail.com',1),(20,'Hector','Villalba','3704567897','hector15v@gmail.com',1),(21,'prueb','prueb','3704030303','',1),(22,'hola','hola','3704939393','',1),(23,'roberto','ayala','3704030303','',1),(24,'Pablo','Morel','37040505050','pablom@gmail.com',1),(25,'prueba','prueba','3704505050','prueba@gmail.com',1),(26,'aaa','aaaa','434234234','',1),(27,'prueba','pruebaa','03704550319','prueba@gmail.com',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -351,7 +351,7 @@ CREATE TABLE `profesional` (
   PRIMARY KEY (`id_profesional`),
   KEY `id_persona` (`id_persona`),
   CONSTRAINT `profesional_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id_persona`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,7 +360,7 @@ CREATE TABLE `profesional` (
 
 LOCK TABLES `profesional` WRITE;
 /*!40000 ALTER TABLE `profesional` DISABLE KEYS */;
-INSERT INTO `profesional` VALUES (7,9,1),(10,18,0);
+INSERT INTO `profesional` VALUES (7,9,1),(10,18,0),(11,24,0),(12,25,0);
 /*!40000 ALTER TABLE `profesional` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -403,7 +403,7 @@ CREATE TABLE `tratamientos` (
   `dosis` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `descripcion` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`id_tratamiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -412,7 +412,7 @@ CREATE TABLE `tratamientos` (
 
 LOCK TABLES `tratamientos` WRITE;
 /*!40000 ALTER TABLE `tratamientos` DISABLE KEYS */;
-INSERT INTO `tratamientos` VALUES (1,'2 dias',NULL,'Medicamento de perro'),(2,'1 dia','1 comprimido cada 6 horas','medicamento');
+INSERT INTO `tratamientos` VALUES (1,'2 dias',NULL,'Medicamento de perro'),(2,'1 dia','1 comprimido cada 6 horas','medicamento'),(3,'10','1 cada 8 hs','Ibuprofeno');
 /*!40000 ALTER TABLE `tratamientos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -430,6 +430,9 @@ CREATE TABLE `turnos` (
   `hora` time NOT NULL,
   `fecha` date NOT NULL,
   `motivo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `detalle_atencion` text COLLATE utf8mb4_general_ci,
+  `tratamiento` text COLLATE utf8mb4_general_ci,
+  `monto_total` decimal(10,2) DEFAULT NULL,
   `estado` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'pendiente',
   `id_tipo_turno` int DEFAULT NULL,
   `duracion_minutos` int DEFAULT '30',
@@ -441,7 +444,7 @@ CREATE TABLE `turnos` (
   CONSTRAINT `fk_turnos_tipo` FOREIGN KEY (`id_tipo_turno`) REFERENCES `tipos_turno` (`id_tipo`),
   CONSTRAINT `turnos_ibfk_1` FOREIGN KEY (`id_profesional`) REFERENCES `profesional` (`id_profesional`),
   CONSTRAINT `turnos_ibfk_2` FOREIGN KEY (`id_mascota`) REFERENCES `mascota` (`id_mascota`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -450,7 +453,7 @@ CREATE TABLE `turnos` (
 
 LOCK TABLES `turnos` WRITE;
 /*!40000 ALTER TABLE `turnos` DISABLE KEYS */;
-INSERT INTO `turnos` VALUES (12,7,1,'09:00:00','2026-06-03','pruebaaa','completado',NULL,30,1),(13,7,1,'07:00:00','2026-06-03','aaaaaaa','completado',NULL,30,1),(14,10,1,'18:00:00','2026-07-02','prueba','cancelado',NULL,30,1),(15,10,1,'18:00:00','2026-09-03','holahola','completado',NULL,30,1),(16,10,21,'20:00:00','2026-09-04','prueba','en_atencion',NULL,30,1),(17,7,23,'08:30:00','2026-09-07','diarrea explosiva','pendiente',NULL,30,1),(18,7,24,'17:00:00','2026-09-08','consulta','confirmado',NULL,30,1);
+INSERT INTO `turnos` VALUES (12,7,1,'09:00:00','2026-06-03','pruebaaa',NULL,NULL,NULL,'completado',NULL,30,1),(13,7,1,'07:00:00','2026-06-03','aaaaaaa',NULL,NULL,NULL,'completado',NULL,30,1),(14,10,1,'18:00:00','2026-07-02','prueba',NULL,NULL,NULL,'cancelado',NULL,30,1),(15,10,1,'18:00:00','2026-09-03','holahola',NULL,NULL,NULL,'completado',NULL,30,1),(16,10,21,'20:00:00','2026-09-04','prueba','control','antibiotico',14.00,'completado',NULL,30,1),(17,7,23,'08:30:00','2026-09-07','diarrea explosiva',NULL,NULL,NULL,'confirmado',NULL,30,1),(18,7,24,'17:00:00','2026-09-08','consulta',NULL,NULL,NULL,'en_atencion',NULL,30,1),(19,10,1,'08:00:00','2026-09-18','prueba',NULL,NULL,NULL,'pendiente',NULL,30,1),(20,10,20,'15:00:00','2026-09-19','prueba',NULL,NULL,NULL,'pendiente',NULL,30,1),(21,7,25,'10:30:00','2026-09-21','Molestia en la pata delantera derecha','control','analgesico',19999.99,'completado',NULL,30,1),(22,7,1,'12:00:00','2026-09-29','Pulgass',NULL,NULL,NULL,'cancelado',NULL,30,1),(23,7,25,'08:00:00','2026-09-30','ejemplo1',NULL,NULL,NULL,'completado',NULL,30,1);
 /*!40000 ALTER TABLE `turnos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -472,7 +475,7 @@ CREATE TABLE `usuario` (
   `nombre` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `apellido` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -481,7 +484,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'andrea','$2y$10$haUM4h2yhf9BEqtK96JXPe2qDsz.Mk8jM984iyJ1sfBWsKzB/np12',NULL,'andreamorelucp@gmail.com',1,2,'andrea','morel'),(6,'gabriela','$2y$10$WsV/hSScMED7AfbAZtJwT.MUcEW0Fgb0JEuE1Ziv4UgZMU5O2VW3C','dbcfb853ea3309f3ca58f641bc0ac4fe613548d24129c7d10c97763e7cdd86a6','gabrielabetianavera@gmail.com',1,7,'gabriela','vera');
+INSERT INTO `usuario` VALUES (1,'andrea','$2y$10$haUM4h2yhf9BEqtK96JXPe2qDsz.Mk8jM984iyJ1sfBWsKzB/np12','3a60e3413052e03d79c75af7af2e5c41da38f08739b625b7ad26063af7df32be','andreamorelucp@gmail.com',1,2,'andrea','morel'),(6,'gabriela','$2y$10$WsV/hSScMED7AfbAZtJwT.MUcEW0Fgb0JEuE1Ziv4UgZMU5O2VW3C','9e0363ba668a83f6e981ee2316f48fbb1b8f439fe58dd88d4762e7afa62756f7','gabrielabetianavera@gmail.com',1,7,'gabriela','vera'),(9,'prueba','$2y$10$ijgQGh.LdQvCJJUyHMruT.5gJ08eshnRFBKGxhAlps6GauQs3Wh4.',NULL,'prueba@gmail.com',1,8,'prueba','prueba'),(10,'aaaa','$2y$10$OvL6Tn2Wj80OooDCoxl18OmrvCgjiORRJ43utq8sj/pCw1Tf/zkUC',NULL,'pruebaaa@gmail.com',1,8,'aaa','aaaa');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -494,4 +497,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-04 18:08:54
+-- Dump completed on 2026-10-01 19:17:19
