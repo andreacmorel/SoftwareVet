@@ -8,184 +8,91 @@ require_once '../../app/menu.php';
 <html lang="es">
 
 <head>
-
     <meta charset="utf-8">
-
     <title>Historia Clínica</title>
-
-    <!-- Font Awesome -->
-    <link
-        href="../../vendor/fontawesome-free/css/all.min.css"
-        rel="stylesheet"
-    >
-
-    <!-- SB Admin -->
-    <link
-        href="../../css/sb-admin-2.min.css"
-        rel="stylesheet"
-    >
-
-    <!-- Estilos Historia Clínica -->
-    <link
-        href="../../css/style_medicalrecord.css"
-        rel="stylesheet"
-    >
-
-    <!-- DataTables -->
-    <link rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-
-<link rel="stylesheet"
-      href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-
+    <link href="../../vendor/fontawesome-free/css/all.min.css"rel="stylesheet">
+    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/style_medicalrecord.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
-
 
 <body>
 
-
-<!-- =========================================================
-     BREADCRUMB
-========================================================= -->
-
 <div class="vetsys-breadcrumb-container">
-
     <ol class="vetsys-breadcrumb">
-
         <li class="breadcrumb-item">
-
             <a href="/SoftwareVet/app/inicio.php">
-
                 <i class="fas fa-home"></i>
                 Inicio
-
             </a>
-
         </li>
-
 
         <li class="breadcrumb-item active">
-
             Historia Clínica
-
         </li>
-
     </ol>
-
 </div>
 
 
-
-<!-- =========================================================
-     CONTENIDO
-========================================================= -->
-
 <div class="container-fluid">
 
-
-    <!-- =====================================================
-         ENCABEZADO
-    ====================================================== -->
-
-    <div
-        class="d-flex justify-content-between align-items-center flex-wrap mb-4"
-    >
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
 
         <div>
-
             <h1 class="h3 page-title">
-
                 <i class="fas fa-notes-medical mr-2"></i>
-
                 Historia Clínica
-
             </h1>
 
-
             <div class="page-subtitle">
-
                 Historial clínico de mascotas
-
             </div>
 
         </div>
+    </div>
 
+<form method="GET" class="filter-card">
 
-        <!-- BOTONES DATATABLE -->
+    <div class="row align-items-end">
 
-        <div id="botonesExportacion"></div>
+        <div class="col-md-8">
+
+            <label>Buscar</label>
+
+            <input type="text" name="buscar" class="form-control"
+                placeholder="Buscar por mascota, propietario, especie o raza..."
+                value="<?= htmlspecialchars($buscar ?? '') ?>">
+
+        </div>
+
+        <div class="col-md-1 px-1">
+
+            <button type="submit"
+                    class="btn btn-filtro btn-block">
+
+                <i class="fas fa-search"></i>
+
+            </button>
+
+        </div>
+
+        <div class="col-md-3 pl-2">
+
+            <div id="botonesExportacion"></div>
+
+        </div>
 
     </div>
 
+</form>
 
-
-    <!-- =====================================================
-         FILTRO
-    ====================================================== -->
-
-    <form
-        method="GET"
-        class="filter-card"
-    >
-
-        <div class="row align-items-end">
-
-
-            <!-- BUSCAR -->
-
-            <div class="col-md-10">
-
-                <label>
-                    Buscar
-                </label>
-
-                <input
-                    type="text"
-                    name="buscar"
-                    class="form-control"
-                    placeholder="Buscar por mascota, propietario, especie o raza..."
-                    value="<?= htmlspecialchars($buscar ?? '') ?>"
-                >
-
-            </div>
-
-
-            <!-- BOTÓN -->
-
-            <div class="col-md-2">
-
-                <button
-                    type="submit"
-                    class="btn btn-filtro"
-                    title="Buscar"
-                >
-
-                    <i class="fas fa-search"></i>
-
-                </button>
-
-            </div>
-
-
-        </div>
-
-    </form>
-
-
-
-    <!-- =====================================================
-         TABLA
-    ====================================================== -->
 
     <div class="table-card">
 
         <div class="table-responsive">
 
-            <table
-                class="table table-hover"
-                width="100%"
-                id="tablaHistorias"
-            >
+            <table class="table table-hover" width="100%" id="tablaHistorias">
 
                 <thead>
 
@@ -345,30 +252,28 @@ require_once '../../app/menu.php';
                             <!-- =============================
                                  ACCIONES
                             ============================== -->
+                                <td class="text-center align-middle">
 
-                            <td class="text-center align-middle">
+                                    <div class="action-buttons">
 
+                                        <div class="tooltip-action">
 
-                                <div class="action-buttons">
+                                            <a href="show.php?id=<?= $h->id_mascota ?>"
+                                            class="btn-action btn-view">
 
+                                                <i class="fas fa-eye"></i>
 
-                                    <!-- VER HISTORIA -->
+                                            </a>
 
-                                    <a
-                                        href="show.php?id=<?= $h->id_mascota ?>"
-                                        class="btn-action btn-view"
-                                        title="Ver historia clínica"
-                                    >
+                                            <span class="tooltip-action-text">
+                                                Ver historia clínica
+                                            </span>
 
-                                        <i class="fas fa-eye"></i>
+                                        </div>
 
-                                    </a>
+                                    </div>
 
-
-                                </div>
-
-
-                            </td>
+                                </td>
 
 
                         </tr>

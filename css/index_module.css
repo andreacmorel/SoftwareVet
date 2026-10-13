@@ -88,53 +88,53 @@
    BOTÓN FILTRO
 ========================================================= */
 
-.btn-filtro {
-    width: 75px;
-    height: 38px;
+/* =========================================================
+   BOTÓN BUSCAR
+========================================================= */
 
-    background: #6c757d !important;
-    color: #ffffff !important;
+.btn-filtro{
 
-    border: 1px solid #6c757d !important;
-    border-radius: 8px !important;
+    width:70px;
+    height:38px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding:0 !important;
 
-    box-shadow: none !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    transition: all .2s ease;
+    background:#52266E !important;
+    color:#fff !important;
+
+    border:1px solid #52266E !important;
+    border-radius:8px !important;
+
+    transition:.2s;
+
 }
 
-.btn-filtro i {
-    color: #ffffff !important;
-    font-size: 14px;
+.btn-filtro i{
+
+    font-size:14px;
+    color:#fff !important;
+
 }
 
-.btn-filtro:hover {
-    background: #5c636a !important;
-    border-color: #5c636a !important;
-    color: #ffffff !important;
+.btn-filtro:hover{
 
-    transform: translateY(-2px);
+    background:#3f1d55 !important;
+    border-color:#3f1d55 !important;
 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .15) !important;
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(82,38,110,.18);
+
 }
 
-.btn-filtro:active {
-    background: #565e64 !important;
-    border-color: #565e64 !important;
+.btn-filtro:focus{
 
-    transform: translateY(0);
+    box-shadow:0 0 0 3px rgba(82,38,110,.18);
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .12) !important;
-}
-
-.btn-filtro:focus {
-    color: #ffffff !important;
-
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, .18) !important;
 }
 
 
@@ -159,7 +159,6 @@
 
 /* =========================================================
    TABLE RESPONSIVE
-   SOLO SCROLL HORIZONTAL
 ========================================================= */
 
 .table-card .table-responsive {
@@ -316,7 +315,7 @@
 
 
 /* =========================================================
-   DATO VACÍO / SECUNDARIO
+   DATO VACÍO
 ========================================================= */
 
 .dato-muted {
@@ -477,7 +476,7 @@
 }
 
 
-/* OCULTAMOS BUSCADOR Y LENGTH DE DATATABLE */
+/* OCULTAR BUSCADOR Y LENGTH */
 
 #tablaModulos_wrapper .dataTables_filter,
 #tablaModulos_wrapper .dataTables_length {
@@ -507,43 +506,52 @@
 
 /* =========================================================
    FOOTER DATATABLE
-   INFO IZQUIERDA + PAGINACIÓN DERECHA
+   ESPACIO ENTRE TABLA Y PAGINACIÓN
 ========================================================= */
 
-#tablaModulos_wrapper > .row:last-child {
+#tablaModulos_wrapper .row:last-child {
     width: 100% !important;
 
     margin: 0 !important;
 
-    padding: 12px 14px 16px !important;
+    padding: 22px 14px 20px !important;
 
     display: flex !important;
 
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-
     align-items: center !important;
+
+    justify-content: space-between !important;
+
+    border-top: 1px solid #f0f0f0;
+
+    min-height: 68px;
 }
 
 
-/* COLUMNA INFORMACIÓN */
+/* =========================================================
+   COLUMNA INFORMACIÓN
+========================================================= */
 
-#tablaModulos_wrapper > .row:last-child > div:first-child {
+#tablaModulos_wrapper .row:last-child > div:first-child {
     display: flex !important;
 
     align-items: center !important;
+
     justify-content: flex-start !important;
 
     padding: 0 !important;
 }
 
 
-/* COLUMNA PAGINACIÓN */
+/* =========================================================
+   COLUMNA PAGINACIÓN
+========================================================= */
 
-#tablaModulos_wrapper > .row:last-child > div:last-child {
+#tablaModulos_wrapper .row:last-child > div:last-child {
     display: flex !important;
 
     align-items: center !important;
+
     justify-content: flex-end !important;
 
     padding: 0 !important;
@@ -551,7 +559,7 @@
 
 
 /* =========================================================
-   INFORMACIÓN "MOSTRANDO..."
+   INFORMACIÓN
 ========================================================= */
 
 #tablaModulos_wrapper .dataTables_info {
@@ -565,6 +573,8 @@
     align-items: center !important;
 
     color: #9ca3af !important;
+
+    font-family: "Nunito", sans-serif !important;
 
     font-size: 12px !important;
 
@@ -582,25 +592,32 @@
 
 #tablaModulos_wrapper .dataTables_paginate {
     padding: 0 !important;
+
     margin: 0 !important;
 
     float: none !important;
 
     display: flex !important;
+
     align-items: center !important;
+
     justify-content: flex-end !important;
 
     white-space: nowrap !important;
 }
 
-/* CONTENEDOR PAGINACIÓN */
+
+/* CONTENEDOR */
 
 #tablaModulos_wrapper .dataTables_paginate .pagination {
     margin: 0 !important;
+
     padding: 0 !important;
 
     display: flex !important;
+
     flex-direction: row !important;
+
     flex-wrap: nowrap !important;
 
     align-items: center !important;
@@ -615,34 +632,44 @@
 
 #tablaModulos_wrapper .dataTables_paginate .page-item {
     margin: 0 !important;
+
     padding: 0 !important;
 
     display: inline-flex !important;
 }
 
 
-
-/* PAGINATE BUTTON */
+/* =========================================================
+   BOTONES PAGINACIÓN
+========================================================= */
 
 #tablaModulos_wrapper .dataTables_paginate .page-link {
     min-width: 32px !important;
+
     height: 32px !important;
 
     padding: 0 9px !important;
+
     margin: 0 !important;
 
     display: flex !important;
+
     align-items: center !important;
+
     justify-content: center !important;
 
     background: transparent !important;
 
     border: none !important;
+
     border-radius: 8px !important;
 
     color: #52266E !important;
 
+    font-family: "Nunito", sans-serif !important;
+
     font-size: 12px !important;
+
     font-weight: 600 !important;
 
     line-height: 1 !important;
@@ -653,6 +680,11 @@
 
     transition: all .18s ease;
 }
+
+
+/* =========================================================
+   HOVER
+========================================================= */
 
 #tablaModulos_wrapper
 .dataTables_paginate
@@ -667,7 +699,6 @@
 
 /* =========================================================
    PÁGINA ACTIVA
-   1, 2, 3...
 ========================================================= */
 
 #tablaModulos_wrapper
@@ -676,7 +707,9 @@
 .page-link {
 
     width: 32px !important;
+
     min-width: 32px !important;
+
     height: 32px !important;
 
     padding: 0 !important;
@@ -684,24 +717,19 @@
     background: #52266E !important;
 
     border: none !important;
+
     border-radius: 8px !important;
 
     color: #ffffff !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
 
     font-weight: 700 !important;
 
     box-shadow:
         0 3px 8px rgba(82, 38, 110, .20) !important;
-}
-
-#tablaModulos_wrapper
-.dataTables_paginate
-.page-item.active
-.page-link:hover {
-
-    background: #52266E !important;
-
-    color: #ffffff !important;
 }
 
 
@@ -720,18 +748,42 @@
 .page-link {
 
     width: auto !important;
+
     min-width: auto !important;
 
-    padding: 0 8px !important;
+    height: 32px !important;
+
+    padding: 0 9px !important;
 
     background: transparent !important;
 
-    color: #52266E !important;
+    color: #6c757d !important;
 
     border: none !important;
 
+    font-family: "Nunito", sans-serif !important;
+
     font-size: 12px !important;
+
     font-weight: 600 !important;
+}
+
+
+/* HOVER ANTERIOR / SIGUIENTE */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.page-item.previous:not(.disabled)
+.page-link:hover,
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.page-item.next:not(.disabled)
+.page-link:hover {
+
+    background: #f4f4f5 !important;
+
+    color: #52525b !important;
 }
 
 
@@ -746,7 +798,7 @@
 
     background: transparent !important;
 
-    color: #c9b9cf !important;
+    color: #c9c9c9 !important;
 
     opacity: 1 !important;
 
@@ -761,6 +813,7 @@
 ========================================================= */
 
 #tablaModulos_wrapper .paginate_button {
+
     border: none !important;
 
     background: transparent !important;
@@ -770,10 +823,14 @@
     margin: 0 !important;
 
     box-shadow: none !important;
+
+    font-family: "Nunito", sans-serif !important;
 }
 
 
-/* ACTIVO - COMPATIBILIDAD */
+/* =========================================================
+   ACTIVO - COMPATIBILIDAD
+========================================================= */
 
 #tablaModulos_wrapper
 .dataTables_paginate
@@ -784,13 +841,17 @@
 .paginate_button.current:hover {
 
     width: 32px !important;
+
     min-width: 32px !important;
+
     height: 32px !important;
 
     padding: 0 !important;
 
     display: inline-flex !important;
+
     align-items: center !important;
+
     justify-content: center !important;
 
     background: #52266E !important;
@@ -798,109 +859,130 @@
     background-image: none !important;
 
     border: none !important;
+
     border-radius: 8px !important;
 
     color: #ffffff !important;
 
+    font-family: "Nunito", sans-serif !important;
+
     font-size: 12px !important;
+
     font-weight: 700 !important;
 
     box-shadow:
         0 3px 8px rgba(82, 38, 110, .20) !important;
 }
 
+
 /* =========================================================
    BOTONES EXPORTACIÓN
 ========================================================= */
 
-#botonesExportacion {
-    display: flex;
+/* =========================================================
+   BOTONES EXPORTACIÓN
+========================================================= */
 
-    align-items: center;
-    justify-content: center;
+.dt-buttons{
 
-    margin: 0 !important;
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    margin:0 !important;
+
 }
 
-#botonesExportacion .dt-buttons {
-    display: flex;
+.dt-buttons .dt-button{
 
-    align-items: center;
+    height:38px !important;
 
-    gap: 8px;
+    padding:0 12px !important;
 
-    margin: 0 !important;
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+
+    border:none !important;
+    border-radius:8px !important;
+
+    background-image:none !important;
+
+    font-size:12px !important;
+    font-weight:700 !important;
+
+    white-space:nowrap;
+
+    box-shadow:none !important;
+
+    transition:.18s;
+
+    margin:0 !important;
+
 }
 
-#botonesExportacion .dt-button {
-    margin: 0 !important;
+.dt-buttons .dt-button i{
 
-    padding: 8px 13px !important;
+    margin-right:5px;
 
-    border: none !important;
-
-    border-radius: 8px !important;
-
-    background-image: none !important;
-
-    font-size: 12px !important;
-
-    font-weight: 700 !important;
-
-    box-shadow: none !important;
-
-    transition: all .18s ease;
 }
 
-#botonesExportacion .dt-button:hover {
-    transform: translateY(-1px);
+.dt-buttons .dt-button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(0,0,0,.10);
+
 }
 
+/* Excel */
 
-/* EXCEL */
+.dt-buttons .buttons-excel{
 
-#botonesExportacion .buttons-excel {
-    background: #dcfce7 !important;
+    background:#dcfce7 !important;
+    color:#15803d !important;
 
-    color: #15803d !important;
 }
 
-#botonesExportacion .buttons-excel:hover {
-    background: #bbf7d0 !important;
+.dt-buttons .buttons-excel:hover{
 
-    color: #166534 !important;
+    background:#bbf7d0 !important;
+    color:#166534 !important;
+
 }
-
 
 /* PDF */
 
-#botonesExportacion .buttons-pdf {
-    background: #fee2e2 !important;
+.dt-buttons .buttons-pdf{
 
-    color: #b91c1c !important;
+    background:#fee2e2 !important;
+    color:#b91c1c !important;
+
 }
 
-#botonesExportacion .buttons-pdf:hover {
-    background: #fecaca !important;
+.dt-buttons .buttons-pdf:hover{
 
-    color: #991b1b !important;
+    background:#fecaca !important;
+    color:#991b1b !important;
+
 }
 
+/* Imprimir */
 
-/* IMPRIMIR */
+.dt-buttons .buttons-print{
 
-#botonesExportacion .buttons-print {
-    background: #dbeafe !important;
+    background:#dbeafe !important;
+    color:#1d4ed8 !important;
 
-    color: #1d4ed8 !important;
 }
 
-#botonesExportacion .buttons-print:hover {
-    background: #bfdbfe !important;
+.dt-buttons .buttons-print:hover{
 
-    color: #1e40af !important;
+    background:#bfdbfe !important;
+    color:#1e40af !important;
+
 }
-
 
 /* =========================================================
    ALERTA ÉXITO
@@ -946,6 +1028,7 @@
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     font-size: 18px;
@@ -1016,6 +1099,7 @@
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     font-size: 18px;
@@ -1057,7 +1141,7 @@
 }
 
 
-/* ANIMACIÓN MODAL */
+/* ANIMACIÓN */
 
 #modalEstadoModulo.fade .modal-dialog {
     transform: translateY(-12px) scale(.97);
@@ -1155,7 +1239,7 @@
 
 
 /* =========================================================
-   CAJA INFORMATIVA MODAL
+   CAJA INFORMATIVA
 ========================================================= */
 
 #boxEstadoModulo {
@@ -1256,11 +1340,13 @@
 
     from {
         opacity: 0;
+
         transform: translateY(-8px);
     }
 
     to {
         opacity: 1;
+
         transform: translateY(0);
     }
 }
@@ -1276,13 +1362,21 @@
         padding: 15px;
     }
 
-    #tablaModulos_wrapper > .row:last-child {
-        display: block !important;
+    #tablaModulos_wrapper .row:last-child {
 
-        padding: 12px 10px 14px !important;
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        gap: 10px !important;
+
+        padding: 18px 10px 16px !important;
+
+        min-height: auto !important;
     }
 
-    #tablaModulos_wrapper > .row:last-child > div {
+    #tablaModulos_wrapper .row:last-child > div {
+
         width: 100% !important;
 
         max-width: 100% !important;
@@ -1293,20 +1387,23 @@
     }
 
     #tablaModulos_wrapper .dataTables_info {
+
         justify-content: center !important;
 
-        margin-bottom: 6px !important;
+        margin-bottom: 2px !important;
 
         text-align: center !important;
     }
 
     #tablaModulos_wrapper .dataTables_paginate {
-        width: 100%;
+
+        width: 100% !important;
 
         justify-content: center !important;
     }
 
     #tablaModulos_wrapper .dataTables_paginate .pagination {
+
         justify-content: center !important;
 
         flex-direction: row !important;
@@ -1315,6 +1412,7 @@
     }
 
     #botonesExportacion .dt-buttons {
+
         flex-wrap: wrap;
 
         justify-content: center;
@@ -1325,17 +1423,21 @@
 @media (max-width: 480px) {
 
     #modalEstadoModulo .modal-body {
+
         padding: 24px 20px 20px;
     }
 
     #modalEstadoModulo .modal-footer {
+
         flex-direction: column-reverse;
     }
 
     #modalEstadoModulo .modal-footer .btn {
+
         width: 100%;
     }
 }
+
 
 /* =========================================================
    CORRECCIÓN TIPOGRAFÍA PAGINACIÓN
@@ -1354,7 +1456,7 @@
 }
 
 
-/* Anterior y Siguiente */
+/* ANTERIOR Y SIGUIENTE */
 
 #tablaModulos_wrapper
 .dataTables_paginate
@@ -1379,10 +1481,12 @@
     font-size: 12px !important;
 
     font-weight: 600 !important;
+
+    color: #6c757d !important;
 }
 
 
-/* Números */
+/* NÚMEROS */
 
 #tablaModulos_wrapper
 .dataTables_paginate
@@ -1396,7 +1500,7 @@
 }
 
 
-/* Página activa */
+/* PÁGINA ACTIVA */
 
 #tablaModulos_wrapper
 .dataTables_paginate
@@ -1408,4 +1512,420 @@
     font-size: 12px !important;
 
     font-weight: 700 !important;
+}
+
+/* =========================================================
+   ESPACIADO FOOTER DATATABLE - AJUSTE DEFINITIVO
+========================================================= */
+
+#tablaModulos_wrapper .dataTables_info {
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+
+    padding-left: 8px !important;
+
+    margin: 0 !important;
+
+    height: auto !important;
+
+    line-height: 20px !important;
+
+    display: block !important;
+}
+
+
+#tablaModulos_wrapper .dataTables_paginate {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+
+    padding-right: 8px !important;
+
+    margin: 0 !important;
+
+    height: auto !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: flex-end !important;
+}
+
+
+/* El contenedor que contiene información + paginación */
+
+#tablaModulos_wrapper .row:last-child {
+    min-height: 72px !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+}
+
+
+/* Evita que Bootstrap/DataTables vuelva a aplastar el footer */
+
+#tablaModulos_wrapper .row:last-child > div {
+    min-height: 72px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    padding: 0 !important;
+}
+
+
+/* Información izquierda */
+
+#tablaModulos_wrapper .row:last-child > div:first-child {
+    justify-content: flex-start !important;
+}
+
+
+/* Paginación derecha */
+
+#tablaModulos_wrapper .row:last-child > div:last-child {
+    justify-content: flex-end !important;
+}
+
+/* =========================================================
+   PAGINACIÓN - AJUSTE FINAL VETSYS
+========================================================= */
+
+/* CONTENEDOR DE LA PAGINACIÓN */
+
+#tablaModulos_wrapper .dataTables_paginate {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-right: 8px !important;
+
+    margin: 0 !important;
+
+    float: none !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+}
+
+
+/* =========================================================
+   BOTONES NATIVOS DE DATATABLES
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button {
+
+    min-width: 32px !important;
+    height: 32px !important;
+
+    margin: 0 !important;
+    padding: 0 9px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: transparent !important;
+
+    border: none !important;
+    border-radius: 8px !important;
+
+    color: #52266E !important;
+
+    font-family: "Nunito", sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+
+    line-height: 1 !important;
+
+    box-shadow: none !important;
+
+    text-decoration: none !important;
+}
+
+
+/* =========================================================
+   ANTERIOR
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.previous {
+
+    min-width: auto !important;
+
+    margin-right: 12px !important;
+
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+
+    color: #6c757d !important;
+}
+
+
+/* =========================================================
+   SIGUIENTE
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.next {
+
+    min-width: auto !important;
+
+    margin-left: 12px !important;
+
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+
+    color: #6c757d !important;
+}
+
+
+/* =========================================================
+   NÚMEROS
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button:not(.previous):not(.next) {
+
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+}
+
+
+/* =========================================================
+   PÁGINA ACTIVA
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.current,
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.current:hover {
+
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+
+    padding: 0 !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: #52266E !important;
+    background-image: none !important;
+
+    border: none !important;
+    border-radius: 8px !important;
+
+    color: #ffffff !important;
+
+    font-family: "Nunito", sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+
+    box-shadow:
+        0 3px 8px rgba(82, 38, 110, .20) !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   HOVER ANTERIOR / SIGUIENTE
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.previous:hover,
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.next:hover {
+
+    background: #f4f4f5 !important;
+
+    border: none !important;
+
+    color: #6c757d !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   HOVER NÚMEROS
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button:not(.previous):not(.next):not(.current):hover {
+
+    background: #f4ebf8 !important;
+
+    border: none !important;
+
+    color: #52266E !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   DESHABILITADO
+========================================================= */
+
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.disabled,
+#tablaModulos_wrapper
+.dataTables_paginate
+.paginate_button.disabled:hover {
+
+    background: transparent !important;
+
+    border: none !important;
+
+    color: #9ca3af !important;
+
+    opacity: 1 !important;
+
+    cursor: default !important;
+
+    box-shadow: none !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   ESPACIO DEL FOOTER
+========================================================= */
+
+#tablaModulos_wrapper > .row:last-child {
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 12px 14px 16px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+}
+
+
+/* INFORMACIÓN "MOSTRANDO..." */
+
+#tablaModulos_wrapper
+.dataTables_info {
+
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    padding-left: 8px !important;
+
+    margin: 0 !important;
+
+    color: #9ca3af !important;
+
+    font-family: "Nunito", sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+
+/* =========================================================
+   ESPACIO INFERIOR
+========================================================= */
+
+#tablaModulos_wrapper {
+    padding-bottom: 12px !important;
+}
+
+/* =========================================================
+   TOOLTIPS
+========================================================= */
+
+.tooltip-action{
+
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+
+}
+
+.tooltip-action-text{
+
+    position:absolute;
+
+    bottom:calc(100% + 8px);
+
+    left:50%;
+
+    transform:translateX(-50%) translateY(4px);
+
+    background:#1f2937;
+    color:#fff;
+
+    padding:7px 10px;
+
+    border-radius:7px;
+
+    font-size:11px;
+    font-weight:600;
+
+    white-space:nowrap;
+
+    opacity:0;
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:.18s;
+
+    z-index:99999;
+
+    box-shadow:0 5px 14px rgba(0,0,0,.18);
+
+}
+
+.tooltip-action-text::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:100%;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:5px solid #1f2937;
+
+}
+
+.tooltip-action:hover .tooltip-action-text{
+
+    opacity:1;
+    visibility:visible;
+
+    transform:translateX(-50%) translateY(0);
+
 }

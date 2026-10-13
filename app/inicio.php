@@ -518,7 +518,7 @@ while (
                             <i class="fas fa-file-pdf"></i>
                         </button>
 
-                        <button type="button"class="btn btn-sm btn-outline-success"
+                        <button type="button" class="btn btn-sm btn-outline-success"
                             title="Exportar Excel"
                             onclick="exportarTurnosEstadoExcel()">
                             <i class="fas fa-file-excel"></i>
@@ -690,7 +690,7 @@ while (
 
                         </button>
 
-                        <button type="button" class="btn btn-sm btn-outline-success"title="Exportar Excel"
+                        <button type="button" class="btn btn-sm btn-outline-success" title="Exportar Excel"
                             onclick="exportarMascotasHistoriasExcel()">
 
                             <i class="fas fa-file-excel"></i>
@@ -720,17 +720,23 @@ while (
 
 </div>
 
-<!-- jQuery -->
-<script src="../../vendor/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- SB Admin 2 -->
-<script src="../../js/sb-admin-2.min.js"></script>
+
+<!-- ====================================================== -->
+<!-- SCRIPTS                                                -->
+<!-- Orden: librerías -> datos (dashboardData) -> archivos   -->
+<!-- que usan esos datos (charts, export_pdf, export_excel) -->
+<!-- ====================================================== -->
+
+<!-- jQuery, Bootstrap y SB Admin 2 -->
+<script src="/SoftwareVet/vendor/jquery/jquery.min.js"></script>
+<script src="/SoftwareVet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/SoftwareVet/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/SoftwareVet/js/sb-admin-2.min.js"></script>
+
 <!-- Gráficos -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Exportación PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- Tablas dentro del PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <!-- Exportación Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -740,86 +746,45 @@ while (
      * ==========================================================
      * DATOS DEL DASHBOARD
      * ==========================================================
-     * Este objeto funciona como puente entre PHP y JavaScript.
+     * Puente entre PHP y JavaScript: los datos que salen de la
+     * base de datos se convierten con json_encode().
      *
-     * Los datos se obtienen previamente desde la base de datos
-     * mediante PHP y se convierten a un formato que JavaScript
-     * puede interpretar utilizando json_encode().
+     * Los usan:
+     * - charts.js       -> gráficos
+     * - export_pdf.js   -> reportes PDF
+     * - export_excel.js -> archivos Excel
      *
-     * Estos datos después son utilizados por:
-     *
-     * - charts.js       → para generar los gráficos.
-     * - export_pdf.js   → para generar los reportes PDF.
-     * - export_excel.js → para generar los archivos Excel.
-     * 
-     * json_encode() convierte los datos de PHP a un formato que JavaScript puede interpretar.
+     * IMPORTANTE: este bloque tiene que ir ANTES de esos tres
+     * archivos, porque ellos lo leen apenas se cargan.
      */
-const dashboardData = {
-        /*
-         * ------------------------------------------------------
-         * TURNOS POR ESTADO
-         * ------------------------------------------------------
-         *
-         * Guarda la cantidad de turnos correspondientes 
-         *  a cada uno de los estados disponibles en el sistema.
-         */
-    turnosEstado: {
-        pendientes: <?= json_encode($pendientes) ?>,
-        confirmados: <?= json_encode($confirmados) ?>,
-        enAtencion: <?= json_encode($enAtencion) ?>,
-        completados: <?= json_encode($completados) ?>,
-        cancelados: <?= json_encode($cancelados) ?>
-    },
-    /*
-         * ------------------------------------------------------
-         * TURNOS POR MES
-         * ------------------------------------------------------
-         *
-         * mesesTurnos contiene los nombres de los meses.
-         *
-         * cantidadTurnosMes contiene la cantidad de turnos
-         * registrados en cada uno de esos meses.
-         */
+    const dashboardData = {
 
-        // Meses que aparecen en el gráfico
-    mesesTurnos: <?= json_encode($mesesTurnos) ?>,
-    // Cantidad de turnos correspondiente a cada mes
-    cantidadTurnosMes: <?= json_encode($cantidadTurnosMes) ?>,
-    /*
-         * ------------------------------------------------------
-         * HISTORIAS CLÍNICAS POR MES
-         * ------------------------------------------------------
-         *
-         * Contiene los meses y la cantidad de historias
-         * clínicas registradas durante cada mes.
-         */
+        // Turnos por estado
+        turnosEstado: {
+            pendientes:  <?= json_encode($pendientes) ?>,
+            confirmados: <?= json_encode($confirmados) ?>,
+            enAtencion:  <?= json_encode($enAtencion) ?>,
+            completados: <?= json_encode($completados) ?>,
+            cancelados:  <?= json_encode($cancelados) ?>
+        },
 
-        // Meses que aparecen en el gráfico de historias clínicas
-    mesesHistorias: <?= json_encode($mesesHistorias) ?>,
-     // Cantidad de historias clínicas correspondiente a cada mes
-    cantidadHistoriasMes: <?= json_encode($cantidadHistoriasMes) ?>,
-    /*
-         * ------------------------------------------------------
-         * MASCOTAS CON MÁS REGISTROS CLÍNICOS
-         * ------------------------------------------------------
-         *
-         * Guarda los nombres de las mascotas y la cantidad
-         * de registros clínicos que posee cada una.
-         */
+        // Turnos por mes
+        mesesTurnos:       <?= json_encode($mesesTurnos) ?>,
+        cantidadTurnosMes: <?= json_encode($cantidadTurnosMes) ?>,
 
-        // Nombres de las mascotas
-    nombresMascotasHistorias: <?= json_encode($nombresMascotasHistorias) ?>,
-    // Cantidad de registros clínicos de cada mascota
-    cantidadHistoriasMascotas: <?= json_encode($cantidadHistoriasMascotas) ?>
+        // Historias clínicas por mes
+        mesesHistorias:       <?= json_encode($mesesHistorias) ?>,
+        cantidadHistoriasMes: <?= json_encode($cantidadHistoriasMes) ?>,
 
-};
-
+        // Mascotas con más registros clínicos
+        nombresMascotasHistorias:  <?= json_encode($nombresMascotasHistorias) ?>,
+        cantidadHistoriasMascotas: <?= json_encode($cantidadHistoriasMascotas) ?>
+    };
 </script>
 
-
-<!-- Donde estan los gráficos -->
-<script src="../js/dashboard/charts.js"></script>
+<!-- Donde están los gráficos -->
+<script src="/SoftwareVet/js/dashboard/charts.js"></script>
 <!-- Funciones para exportar PDF -->
-<script src="../js/dashboard/export_pdf.js"></script>
+<script src="/SoftwareVet/js/dashboard/export_pdf.js"></script>
 <!-- Funciones para exportar Excel -->
-<script src="../js/dashboard/export_excel.js"></script>
+<script src="/SoftwareVet/js/dashboard/export_excel.js"></script>

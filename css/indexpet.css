@@ -1,241 +1,373 @@
-﻿ .page-title {
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 2px;
-        }
-
-        .page-title i {
-            color: #52266E;
-        }
-
-        .page-subtitle {
-            color: #9ca3af;
-            font-size: 14px;
-        }
-
-        .btn-purple {
-            background: #52266E;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .btn-purple:hover {
-            background: #3f1d55;
-            color: white;
-        }
-
-        .badge-total {
-            background: white;
-            color: #52266E;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,.08);
-        }
-
-        .mascota-edad {
-            color: #111827;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .filter-card {
-            background: white;
-            border-radius: 15px;
-            padding: 18px 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            margin-top: 25px;
-            margin-bottom: 25px;
-        }
-
-        .filter-card label {
-            color: #52266E;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .filter-card .form-control {
-            border-radius: 8px;
-            border: 1px solid #d8c2e8;
-            font-size: 14px;
-        }
-
-        .table-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.06);
-            overflow: hidden;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        thead th {
-            background: #fbf7ff;
-            color: #52266E;
-            font-size: 12px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #eee1f6 !important;
-            font-weight: 800;
-        }
-
-        tbody td {
-            vertical-align: middle !important;
-            font-size: 14px;
-            color: #374151;
-        }
-
-        tbody tr:hover {
-            background: #fcf8ff;
-        }
-
-        .pet-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: #fff3df;
-            color: #f97316;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-
-        .pet-name {
-            font-weight: 800;
-            color: #111827;
-        }
-
-        .pet-id {
-            color: #9ca3af;
-            font-size: 12px;
-        }
-
-        .badge-raza {
-            background: #ead7f7;
-            color: #52266E;
-            padding: 4px 9px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-macho {
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-hembra {
-            background: #fce7f3;
-            color: #be185d;
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .btn-action {
-            width: 31px;
-            height: 31px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            margin: 0 2px;
-        }
-
-        .btn-view {
-            background: #e0f2fe;
-            color: #0284c7;
-        }
-
-        .btn-edit {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .btn-delete {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .pagination .page-link {
-            color: #52266E;
-            border-radius: 8px;
-            margin: 0 2px;
-        }
-
-        .pagination .active .page-link {
-            background: #52266E;
-            border-color: #52266E;
-            color: white;
-        }
-        .vet-alert-success{
-    width:100%;
-    background:linear-gradient(135deg,#f6fffa,#eefcf4);
-    border:1px solid #d7f3e3;
-    border-radius:16px;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    box-shadow:0 6px 18px rgba(25,135,84,.08);
-    margin-bottom:25px;
-    animation:fadeIn .35s ease;
+﻿.page-title {
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 2px;
 }
 
-.vet-alert-icon{
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    background:#198754;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    box-shadow:0 4px 10px rgba(25,135,84,.25);
+.page-title i {
+    color: #52266E;
 }
 
-.vet-alert-content h5{
-    margin:0;
-    font-size:15px;
-    font-weight:800;
-    color:#166534;
+.page-subtitle {
+    color: #9ca3af;
+    font-size: 14px;
 }
 
-.vet-alert-content p{
-    margin:3px 0 0;
-    color:#4b5563;
-    font-size:14px;
+.btn-purple {
+    background: #52266E;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
+.btn-purple:hover {
+    background: #3f1d55;
+    color: white;
+}
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
+.badge-total {
+    background: white;
+    color: #52266E;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.mascota-edad {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 /* =========================================================
-   BOTÓN FILTRO - GRIS
-========================================================= */
+   FILTROS
+   ========================================================= */
+
+.filter-card {
+    background: white;
+    border-radius: 15px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.filter-card label {
+    color: #52266E;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.filter-card .form-control {
+    border-radius: 8px;
+    border: 1px solid #d8c2e8;
+    font-size: 14px;
+}
+
+/* =========================================================
+   TABLA
+   ========================================================= */
+
+.table-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+thead th {
+    background: #fbf7ff;
+    color: #52266E;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #eee1f6 !important;
+    font-weight: 800;
+}
+
+tbody td {
+    vertical-align: middle !important;
+    font-size: 14px;
+    color: #374151;
+}
+
+tbody tr:hover {
+    background: #fcf8ff;
+}
+
+/* =========================================================
+   ICONO DE MASCOTA
+   ========================================================= */
+
+.pet-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #fff3df;
+    color: #f97316;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.pet-name {
+    font-weight: 800;
+    color: #111827;
+}
+
+.pet-id {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge-raza {
+    background: #ead7f7;
+    color: #52266E;
+    padding: 4px 9px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-macho {
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 5px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-hembra {
+    background: #fce7f3;
+    color: #be185d;
+    padding: 5px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   BOTONES DE ACCIONES
+   ========================================================= */
+
+.btn-action {
+    width: 31px;
+    height: 31px;
+    margin: 0 2px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+.btn-action:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .10);
+}
+
+.btn-action:active {
+    transform: translateY(0);
+}
+
+/* =========================================================
+   TOOLTIP
+   ========================================================= */
+
+.tooltip-action {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tooltip-action-text {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+
+    background: #1e293b;
+    color: #fff;
+
+    padding: 7px 11px;
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    box-shadow: 0 5px 14px rgba(0, 0, 0, .18);
+
+    transition: opacity .18s ease, transform .18s ease;
+    z-index: 100;
+}
+
+.tooltip-action-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #1e293b;
+}
+
+.tooltip-action:hover .tooltip-action-text {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================================
+   VER
+   ========================================================= */
+
+.btn-view {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.btn-view:hover {
+    background: #bfdbfe;
+    color: #1e40af;
+}
+
+/* =========================================================
+   EDITAR
+   ========================================================= */
+
+.btn-edit {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.btn-edit:hover {
+    background: #fde68a;
+    color: #78350f;
+}
+
+/* =========================================================
+   ELIMINAR
+   ========================================================= */
+
+.btn-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+/* =========================================================
+   PAGINACIÓN
+   ========================================================= */
+
+.pagination .page-link {
+    color: #52266E;
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+.pagination .active .page-link {
+    background: #52266E;
+    border-color: #52266E;
+    color: white;
+}
+
+/* =========================================================
+   ALERTA ÉXITO
+   ========================================================= */
+
+.vet-alert-success {
+    width: 100%;
+    background: linear-gradient(135deg,#f6fffa,#eefcf4);
+    border: 1px solid #d7f3e3;
+    border-radius: 16px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 6px 18px rgba(25,135,84,.08);
+    margin-bottom: 25px;
+    animation: fadeIn .35s ease;
+}
+
+.vet-alert-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+    background: #198754;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(25,135,84,.25);
+}
+
+.vet-alert-content h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #166534;
+}
+
+.vet-alert-content p {
+    margin: 3px 0 0;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   BOTÓN FILTRO
+   ========================================================= */
 
 .btn-filtro {
     height: 38px;
-
-    background: #6c757d !important;
+    background: #52266E !important;
     color: #ffffff !important;
-
-    border: 1px solid #6c757d !important;
+    border: 1px solid #52266E !important;
     border-radius: 8px !important;
 
     display: flex;
@@ -243,63 +375,39 @@
     justify-content: center;
 
     box-shadow: none !important;
-
     transition: all 0.2s ease;
 }
 
-
-/* Lupa */
 .btn-filtro i {
     font-size: 14px;
     color: #ffffff !important;
 }
 
-
-/* HOVER */
 .btn-filtro:hover {
-    background: #5c636a !important;
-    border-color: #5c636a !important;
+    background: #3f1d55 !important;
+    border-color: #3f1d55 !important;
     color: #ffffff !important;
 
     transform: translateY(-2px);
-
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 10px rgba(82, 38, 110, 0.20) !important;
 }
 
-
-/* CLICK */
 .btn-filtro:active {
-    background: #565e64 !important;
-    border-color: #565e64 !important;
-
+    background: #351946 !important;
+    border-color: #351946 !important;
     transform: translateY(0);
-
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12) !important;
-}
-
-
-/* FOCUS */
-.btn-filtro:focus {
-    color: #ffffff !important;
-
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.18) !important;
 }
 
 /* =========================================================
-   MODAL ELIMINAR MASCOTA - VETSYS (versión mejorada)
-========================================================= */
+   MODAL ELIMINAR MASCOTA
+   ========================================================= */
 
 .modal-eliminar .modal-content {
     border: none;
     border-radius: 16px;
-
     overflow: hidden;
-
     box-shadow: 0 20px 55px rgba(31, 41, 55, 0.22);
 }
-
-
-/* Animación de entrada (respuesta a la acción de abrir) */
 
 .modal-eliminar.fade .modal-dialog {
     transform: translateY(-12px) scale(.97);
@@ -310,102 +418,73 @@
     transform: none;
 }
 
-
 /* =========================================================
-   HEADER (blanco: el protagonista es el icono rojo)
-========================================================= */
+   HEADER MODAL
+   ========================================================= */
 
 .modal-eliminar .modal-header {
     padding: 16px 20px;
-
     display: flex;
     align-items: center;
-
     background: #ffffff;
-
     border-bottom: 1px solid #f0f0f0;
 }
 
-
 .modal-eliminar .modal-title {
     margin: 0;
-
     display: flex;
     align-items: center;
-
     gap: 9px;
-
     color: #1f2937;
-
     font-size: 17px;
     font-weight: 700;
 }
 
-
-/* Sin triángulo de advertencia en el título: el icono central ya comunica la gravedad.
-   (Puedes borrar el <i> del HTML y quitar esta regla.) */
-
 .modal-eliminar .modal-title i {
     display: none;
 }
-
 
 /* Botón X */
 
 .modal-eliminar .close {
     margin: -4px -3px -4px auto;
     padding: 5px;
-
     color: #6b7280;
-
     font-size: 25px;
-
     opacity: .75;
-
     text-shadow: none;
-
     transition: all .2s ease;
 }
 
-
 .modal-eliminar .close:hover {
     color: #1f2937;
-
     opacity: 1;
-
     transform: scale(1.08);
 }
-
 
 .modal-eliminar .close:focus-visible {
     outline: 3px solid rgba(82, 38, 110, .30);
     outline-offset: 2px;
-
     border-radius: 6px;
 }
 
-
 /* =========================================================
    CUERPO
-========================================================= */
+   ========================================================= */
 
 .modal-eliminar .modal-body {
     padding: 30px 32px 26px;
-
     text-align: center;
-
     background: #ffffff;
 }
 
-
 /* =========================================================
-   ICONO DE ELIMINAR
-========================================================= */
+   ICONO ELIMINAR
+   ========================================================= */
 
 .modal-delete-icon {
     width: 64px;
     height: 64px;
-
     margin: 4px auto 26px;
 
     display: flex;
@@ -413,32 +492,25 @@
     justify-content: center;
 
     background: #fff1f1;
-
     border-radius: 50%;
 
-    /* anillo suave que da profundidad */
     box-shadow: 0 0 0 8px #fff7f7;
 
     color: #e74c3c;
-
     font-size: 23px;
 }
 
-
 /* =========================================================
    PREGUNTA
-========================================================= */
+   ========================================================= */
 
 .modal-delete-question {
     margin: 0 0 10px;
-
     color: #6b7280;
-
     font-size: 14px;
 }
 
-
-/* Nombre de la mascota (chip) */
+/* Nombre mascota */
 
 .modal-delete-name {
     margin-bottom: 22px;
@@ -449,11 +521,9 @@
     max-width: 100%;
 
     background: #f3ecf8;
-
     border-radius: 999px;
 
     color: #52266E;
-
     font-size: 18px;
     font-weight: 800;
 
@@ -462,187 +532,143 @@
     white-space: nowrap;
 }
 
-
 /* =========================================================
    ADVERTENCIA
-========================================================= */
+   ========================================================= */
 
 .modal-delete-warning {
     width: 100%;
-
     padding: 14px 16px;
 
     display: flex;
     align-items: flex-start;
-
     gap: 10px;
 
     background: #fff8f7;
-
     border: 1px solid #fde2df;
     border-left: 3px solid #e74c3c;
     border-radius: 9px;
 
     color: #4b5563;
-
     font-size: 13px;
     line-height: 1.55;
-
     text-align: left;
 }
 
-
 .modal-delete-warning i {
     margin-top: 2px;
-
     color: #e74c3c;
-
     font-size: 14px;
 }
 
-
 .modal-delete-warning strong {
     color: #1f2937;
-
     font-weight: 700;
 }
-
-
-/* Lista opcional de consecuencias */
 
 .modal-delete-warning ul {
     margin: 6px 0 0;
     padding-left: 18px;
 }
 
-
 .modal-delete-warning li {
     margin-bottom: 2px;
 }
 
-
 /* =========================================================
-   FOOTER DEL MODAL
-========================================================= */
+   FOOTER MODAL
+   ========================================================= */
 
 .modal-eliminar .modal-footer {
     padding: 14px 20px;
 
     display: flex;
     justify-content: flex-end;
-
     gap: 8px;
 
     background: #ffffff;
-
     border-top: 1px solid #f0f0f0;
 }
 
-
 /* =========================================================
-   CANCELAR (discreto)
-========================================================= */
+   CANCELAR
+   ========================================================= */
 
 .btn-modal-cancelar {
     padding: 8px 14px;
-
     background: transparent;
-
     border: 1px solid transparent;
     border-radius: 8px;
 
     color: #6b7280;
-
     font-size: 13px;
     font-weight: 600;
 
     transition: all .2s ease;
 }
 
-
 .btn-modal-cancelar:hover {
     background: #f3f4f6;
-
     color: #4b5563;
 }
-
-
-/* Sin X en Cancelar para que no compita con el botón de cerrar.
-   (Puedes borrar el <i> del HTML y quitar esta regla.) */
 
 .btn-modal-cancelar i {
     display: none;
 }
-
 
 .btn-modal-cancelar:focus-visible {
     outline: 3px solid rgba(107, 114, 128, .30);
     outline-offset: 2px;
 }
 
-
 /* =========================================================
-   CONFIRMAR ELIMINACIÓN (único botón fuerte)
-========================================================= */
+   CONFIRMAR ELIMINACIÓN
+   ========================================================= */
 
 .btn-modal-eliminar {
     padding: 8px 16px;
 
     background: #e74c3c;
-
     border: 1px solid #e74c3c;
     border-radius: 8px;
 
     color: #ffffff;
-
     font-size: 13px;
     font-weight: 700;
 
     transition: all .2s ease;
 }
 
-
 .btn-modal-eliminar:hover {
     background: #d94232;
-
     border-color: #d94232;
-
     color: #ffffff;
-
     text-decoration: none;
 
     transform: translateY(-1px);
-
     box-shadow: 0 4px 10px rgba(231, 76, 60, .20);
 }
-
 
 .btn-modal-eliminar:focus-visible {
     outline: 3px solid rgba(231, 76, 60, .35);
     outline-offset: 2px;
 }
 
-
 .btn-modal-eliminar:active {
     transform: translateY(0);
 }
 
-
 .btn-modal-eliminar:disabled,
 .btn-modal-eliminar.disabled {
     opacity: .5;
-
     cursor: not-allowed;
-
     transform: none;
-
     box-shadow: none;
 }
 
-
 /* =========================================================
    MOVIMIENTO REDUCIDO
-========================================================= */
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
     .modal-eliminar.fade .modal-dialog,
@@ -653,10 +679,9 @@
     }
 }
 
-
 /* =========================================================
    MÓVIL
-========================================================= */
+   ========================================================= */
 
 @media (max-width: 480px) {
     .modal-eliminar .modal-body {
@@ -671,9 +696,10 @@
         width: 100%;
     }
 }
+
 /* =========================================================
    BOTONES DE EXPORTACIÓN - DATATABLES
-========================================================= */
+   ========================================================= */
 
 .dt-buttons {
     margin-bottom: 12px;
@@ -681,19 +707,24 @@
     gap: 8px;
 }
 
-/* Base común (pisa el degradado y sombra por defecto de DataTables) */
+/* Base común */
+
 .dt-buttons .dt-button.buttons-excel,
 .dt-buttons .dt-button.buttons-pdf,
 .dt-buttons .dt-button.buttons-print {
     background-image: none !important;
     border: none !important;
     border-radius: 8px !important;
+
     font-size: 12px !important;
     font-weight: 700 !important;
+
     padding: 8px 14px !important;
     margin: 0 !important;
+
     box-shadow: none !important;
     opacity: 1 !important;
+
     transition: all .2s ease;
 }
 
@@ -705,31 +736,37 @@
     transform: translateY(-1px);
 }
 
-/* Excel: verde */
+/* Excel */
+
 .dt-buttons .dt-button.buttons-excel {
     background: #dcfce7 !important;
     color: #15803d !important;
 }
+
 .dt-buttons .dt-button.buttons-excel:hover {
     background: #bbf7d0 !important;
     color: #166534 !important;
 }
 
-/* PDF: rojo */
+/* PDF */
+
 .dt-buttons .dt-button.buttons-pdf {
     background: #fee2e2 !important;
     color: #b91c1c !important;
 }
+
 .dt-buttons .dt-button.buttons-pdf:hover {
     background: #fecaca !important;
     color: #991b1b !important;
 }
 
-/* Imprimir: azul */
+/* Imprimir */
+
 .dt-buttons .dt-button.buttons-print {
     background: #dbeafe !important;
     color: #1d4ed8 !important;
 }
+
 .dt-buttons .dt-button.buttons-print:hover {
     background: #bfdbfe !important;
     color: #1e40af !important;
@@ -737,34 +774,28 @@
 
 /* =========================================================
    DATATABLES - PAGINACIÓN VETSYS
-   Diseño minimalista
-========================================================= */
+   ========================================================= */
 
-/* Información: "Mostrando 1 a 10..." */
 .dataTables_wrapper .dataTables_info {
     padding-top: 15px !important;
     padding-left: 8px;
 
     color: #9ca3af !important;
-
     font-size: 12px !important;
     font-weight: 500;
 }
 
-
-/* Contenedor */
 .dataTables_wrapper .dataTables_paginate {
     padding-top: 10px !important;
     padding-right: 8px;
 
     display: flex;
     align-items: center;
-
     gap: 3px;
 }
 
-
 /* Botones generales */
+
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     min-width: 32px !important;
     height: 32px;
@@ -777,7 +808,6 @@
     justify-content: center;
 
     background: transparent !important;
-
     border: none !important;
     border-radius: 8px !important;
 
@@ -787,24 +817,20 @@
     font-weight: 600;
 
     box-shadow: none !important;
-
     transition: all .18s ease;
 }
 
-
 /* Hover */
+
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     background: #f4ebf8 !important;
-
     border: none !important;
-
     color: #52266E !important;
 }
 
-
 /* =========================================================
    PÁGINA ACTIVA
-========================================================= */
+   ========================================================= */
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
@@ -813,7 +839,6 @@
     height: 32px;
 
     background: #52266E !important;
-
     border: none !important;
     border-radius: 8px !important;
 
@@ -822,74 +847,167 @@
     box-shadow: 0 3px 8px rgba(82, 38, 110, .18) !important;
 }
 
-
 /* =========================================================
    ANTERIOR / SIGUIENTE
-========================================================= */
+   ========================================================= */
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.previous,
 .dataTables_wrapper .dataTables_paginate .paginate_button.next {
 
     padding: 0 10px !important;
-
     color: #52266E !important;
-
     font-weight: 600;
 }
 
-
-/* Hover anterior / siguiente */
 .dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover,
 .dataTables_wrapper .dataTables_paginate .paginate_button.next:hover {
 
     background: #f4ebf8 !important;
-
     color: #52266E !important;
 }
 
-
 /* =========================================================
    DESHABILITADOS
-========================================================= */
+   ========================================================= */
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
 
     background: transparent !important;
-
     color: #c4b8ca !important;
-
     cursor: default !important;
-
     box-shadow: none !important;
 }
 
-
 /* =========================================================
    PARTE INFERIOR
-========================================================= */
+   ========================================================= */
 
 .dataTables_wrapper {
     padding-bottom: 14px;
 }
 
-
 /* =========================================================
-   RESPONSIVE
-========================================================= */
+   RESPONSIVE DATATABLES
+   ========================================================= */
 
 @media (max-width: 768px) {
 
     .dataTables_wrapper .dataTables_info {
         text-align: center !important;
-
         padding: 12px 0 6px 0 !important;
     }
 
     .dataTables_wrapper .dataTables_paginate {
         justify-content: center;
-
-        padding: 5px 0 10px 0 !important;
+        padding: 5px 0 10px 0;
     }
 }
 
+/* =========================================================
+   DATOS NO REGISTRADOS
+   ========================================================= */
+
+.data-empty {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   FILTROS + EXPORTACIONES
+   ========================================================= */
+
+.filtros-exportacion {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;          /* permite que bajen de línea si no caben */
+    gap: 16px 24px;
+    width: 100%;
+}
+
+.filtros-principales {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 170px 170px 45px;
+    align-items: end;
+    gap: 15px;
+    flex: 1 1 560px;          /* base 560px, puede crecer y encoger */
+    min-width: 0;
+}
+
+.filtro-buscar {
+    min-width: 0;
+}
+
+.filtro-especie,
+.filtro-sexo {
+    width: 100%;              /* antes 180px fijo: ahora se adapta a la columna */
+}
+
+/* Contenedor de exportaciones */
+
+#botonesExportacion {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    margin-left: auto;        /* se queda a la derecha */
+}
+
+#botonesExportacion .dt-buttons {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin: 0 !important;
+}
+
+#botonesExportacion .dt-button {
+    height: 38px !important;
+    margin: 0 !important;
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    white-space: nowrap;
+}
+
+/* Cuando no cabe todo en una línea, los botones pasan abajo */
+@media (max-width: 1300px) {
+    #botonesExportacion {
+        flex: 1 1 100%;
+        justify-content: flex-end;
+        margin-left: 0;
+    }
+}
+
+/* Tablet / móvil */
+@media (max-width: 768px) {
+    .filtros-principales {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filtro-buscar {
+        grid-column: 1 / -1;
+    }
+
+    .btn-filtro {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    #botonesExportacion {
+        justify-content: stretch;
+    }
+
+    #botonesExportacion .dt-buttons {
+        width: 100%;
+    }
+
+    #botonesExportacion .dt-button {
+        flex: 1;
+    }
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}

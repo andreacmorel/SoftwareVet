@@ -143,8 +143,6 @@ require_once '../../app/menu.php';
             <div class="page-subtitle">Gestión del registro de clientes</div>
         </div>
 
-        <div id="botonesExportacion" class="mr-2"></div>
-
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple" title="Agregar cliente">
                 <i class="fas fa-plus"></i> Nuevo Cliente
@@ -156,17 +154,21 @@ require_once '../../app/menu.php';
     <form method="GET" class="filter-card">
         <div class="row align-items-end">
 
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <label>Buscar</label>
                 <input type="text"name="buscar"class="form-control"
                     placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
                     value="<?= htmlspecialchars($buscar) ?>">
             </div>
 
-            <div class="col-md-2 ">
+            <div class="col-md-1">
                 <button type="submit" class="btn btn-filtro btn-block">
                 <i class="fas fa-search"></i>
             </button>
+            </div>
+
+            <div class="col-md-3">
+                <div id="botonesExportacion"></div>
             </div>
         </div>
     </form>
@@ -232,10 +234,18 @@ require_once '../../app/menu.php';
                                 </td>
 
                                 <td class="text-center">
+                                    <div class="tooltip-action">
                                     <a href="edit.php?id=<?= $row->id_cliente ?>"
                                     class="btn-action btn-edit" title="Modificar">
                                         <i class="fas fa-pen"></i>
                                     </a>
+
+                                    <span class="tooltip-action-text">
+                                    Editar
+                                    </span>
+                                </div>
+
+                                <div class="tooltip-action">
 
                                     <button class="btn-action btn-delete"
                                         data-toggle="modal"
@@ -244,6 +254,10 @@ require_once '../../app/menu.php';
                                         data-nombre="<?=($row->nombre_persona . ' ' . $row->apellido_persona) ?>">
                                         <i class="fas fa-trash"></i>
                                     </button>
+                                    <span class="tooltip-action-text">
+                                        Eliminar
+                                    </span>
+                                </div>
                                 </td>
                             </tr>
                         <?php }

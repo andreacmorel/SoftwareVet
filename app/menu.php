@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../settings/conexion.php';
+require __DIR__ . '/../settings/conexion.php';
 
 /*
 | Obtiene la URL actual para identificar qué módulo está abierto.
@@ -7,22 +7,15 @@ require_once __DIR__ . '/../settings/conexion.php';
 $uri = $_SERVER['REQUEST_URI'] ?? '';
 
 /*
-| Función isActive()
-| Verifica si la ruta actual contiene la ruta recibida.
-| Si coincide, devuelve la clase CSS 'nav-active'.
-| Se utiliza para resaltar la opción activa del menú.
-| Ahora recibe $uri como parámetro en vez de usar global.
+| isActive(): devuelve 'nav-active' si la URL actual contiene la ruta recibida.
 */
 function isActive(string $path, string $uri): string {
-    return (str_contains($uri, $path)) ? 'nav-active' : '';
+    return str_contains($uri, $path) ? 'nav-active' : '';
 }
 
 /*
-| Función isOpen()
-| Recorre un conjunto de rutas y verifica si alguna coincide
-| con la URL actual. Si coincide devuelve 'show' para abrir
-| automáticamente el menú desplegable.
-| Ahora recibe $uri como parámetro en vez de usar global.
+| isOpen(): devuelve 'show' si alguna de las rutas coincide con la URL actual.
+| Se usa para abrir automáticamente el menú desplegable.
 */
 function isOpen(array $paths, string $uri): string {
     foreach ($paths as $p) {
@@ -33,47 +26,121 @@ function isOpen(array $paths, string $uri): string {
     return '';
 }
 
+/*
+| renderSubmenu(): dibuja un menú desplegable completo
+| (versión collapse + flyout para el modo solo íconos).
+| $bases = carpetas de módulos que, al estar abiertas, expanden el menú.
+| $badge = número a mostrar junto al título (0 = sin badge).
+*/
+function renderSubmenu(string $id, string $titulo, string $icono, array $items, array $bases, string $uri, int $badge = 0): void {
+    $open = isOpen($bases, $uri);
+    ?>
+    <li class="nav-item has-sub">
+        <a class="nav-link <?= $open ? '' : 'collapsed' ?>"
+           href="#"
+           data-toggle="collapse"
+           data-target="#<?= $id ?>"
+           aria-expanded="<?= $open ? 'true' : 'false' ?>"
+           aria-controls="<?= $id ?>"
+           data-label="<?= $titulo ?>">
+            <i class="fas fa-fw <?= $icono ?> nav-icon"></i>
+            <span class="nav-text"><?= $titulo ?></span>
+            <?php if ($badge > 0): ?>
+                <span class="menu-badge" title="<?= $badge ?> hoy"><?= $badge ?></span>
+            <?php endif; ?>
+        </a>
+
+        <div id="<?= $id ?>" class="collapse <?= $open ?>" data-parent="#accordionSidebar">
+            <div class="collapse-inner">
+                <?php foreach ($items as $item): ?>
+                    <a class="collapse-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
+                        <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <div class="icons-flyout">
+            <div class="flyout-title"><?= $titulo ?></div>
+            <?php foreach ($items as $item): ?>
+                <a class="flyout-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
+                    <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </li>
+    <?php
+}
 
 /*
 | Inicio de sesión
-| Verifica si existe una sesión activa. Si no existe,
-| la crea para poder acceder a los datos del usuario.
 */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 /*
-| Obtención del perfil del usuario
-| Recupera el nombre del perfil almacenado en la sesión.
-| Si por algún motivo no existe, muestra "Sin perfil"
-| como valor predeterminado.
+| Perfil del usuario (con escape para evitar XSS)
 */
-$nombrePerfil = $_SESSION['nombre_perfil'] ?? 'Sin perfil';
-
-/*
-| Seguridad de salida
-| Convierte caracteres especiales para evitar problemas
-| de visualización o posibles ataques XSS.
-*/
+$nombrePerfil       = $_SESSION['nombre_perfil'] ?? 'Sin perfil';
 $nombrePerfilSeguro = htmlspecialchars($nombrePerfil);
 
 /*
-| Definición centralizada de subitems de menús desplegables.
-| Centraliza los ítems para evitar duplicación entre collapse y flyout.
-| Si se agrega o modifica un ítem, solo se cambia en un lugar.
+| Visibilidad del bloque Administración.
+| Está DESACTIVADA por defecto (todos lo ven). Para ocultarlo a los perfiles
+| que no correspondan, poné $restringirAdmin = true y ajustá los nombres de
+| $perfilesAdmin tal cual figuran en tu tabla de perfiles.
+| Es solo visual: la seguridad real debe validarse en cada página del servidor.
+*/
+$restringirAdmin = false;
+$perfilesAdmin   = ['Administrador'];
+$mostrarAdmin    = !$restringirAdmin || in_array($nombrePerfil, $perfilesAdmin, true);
+
+$idPerfil = $_SESSION['id_perfil'];
+
+$sql = "
+SELECT
+    m.id_modulo,
+    m.nombre_modulo,
+    m.ruta,
+    m.icono,
+    m.categoria,
+    m.orden
+FROM modulo m
+INNER JOIN perfil_modulo pm
+    ON pm.id_modulo = m.id_modulo
+WHERE
+    pm.id_perfil = ?
+    AND m.estado = 1
+ORDER BY
+    m.categoria,
+    m.orden
+";
+
+$stmt = mysqli_prepare($conexion, $sql);
+
+mysqli_stmt_bind_param($stmt, "i", $idPerfil);
+
+mysqli_stmt_execute($stmt);
+
+$resultado = mysqli_stmt_get_result($stmt);
+
+$menu = [];
+
+while ($fila = mysqli_fetch_assoc($resultado)) {
+
+    $menu[$fila['categoria']][] = $fila;
+
+}
+/*
+| Definición centralizada de subitems.
 */
 $menuTurnos = [
-    ['path' => '/modules/appointments/index.php',     'icon' => 'fa-list-ul',      'label' => 'Listado'],
-    ['path' => '/modules/appointments/calendario.php','icon' => 'fa-calendar-alt', 'label' => 'Calendario'],
-    ['path' => '/modules/appointments/create.php',    'icon' => 'fa-plus-circle',  'label' => 'Nuevo Turno'],
-];
-
-$menuAdmin = [
-    ['path' => '/modules/users/index.php',          'icon' => 'fa-users',       'label' => 'Usuarios'],
-    ['path' => '/modules/profiles/index.php',       'icon' => 'fa-user-shield', 'label' => 'Perfiles'],
-    ['path' => '/modules/system_modules/index.php', 'icon' => 'fa-layer-group', 'label' => 'Módulos'],
-    ['path' => '/modules/audit/index.php',          'icon' => 'fa-clipboard-list', 'label' => 'Auditoría'],
+    [
+        'path'  => '/modules/appointments/index.php',
+        'icon'  => 'fa-list-ul',
+        'label' => 'Listado de Turnos'
+    ]
 ];
 
 ?>
@@ -90,13 +157,6 @@ $menuAdmin = [
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
     <link href="/SoftwareVet/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/SoftwareVet/css/style_menu.css" rel="stylesheet">
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var m = localStorage.getItem('sidebarMode');
-            if (m && m !== 'full') document.body.setAttribute('data-sidebar', m);
-        });
-    </script>
 </head>
 
 <body id="page-top" data-sidebar="full">
@@ -118,140 +178,130 @@ $menuAdmin = [
         <hr class="sidebar-divider">
 
         <li class="nav-item">
-            <a class="nav-link <?= isActive('/php/inicio', $uri) ?>" href="/SoftwareVet/app/inicio.php" data-label="Dashboard">
+            <a class="nav-link <?= isActive('/app/inicio.php', $uri) ?>" href="/SoftwareVet/app/inicio.php" data-label="Dashboard">
                 <i class="fas fa-fw fa-th-large nav-icon"></i>
-                <span>Dashboard</span>
+                <span class="nav-text">Dashboard</span>
             </a>
         </li>
 
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading">Gestión</div>
+       <hr class="sidebar-divider">
 
-        <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/pets/', $uri) ?>" href="/SoftwareVet/modules/pets/index.php" data-label="Mascotas">
-                <i class="fas fa-fw fa-paw nav-icon"></i>
-                <span>Mascotas</span>
-            </a>
-        </li>
+<div class="sidebar-heading">Gestión</div>
 
-        <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/clients/', $uri) ?>" href="/SoftwareVet/modules/clients/index.php" data-label="Clientes">
-                <i class="fas fa-fw fa-users nav-icon"></i>
-                <span>Clientes</span>
-            </a>
-        </li>
+<?php
+if (!empty($menu['Gestión'])):
 
-        <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/professionals/', $uri) ?>" href="/SoftwareVet/modules/professionals/index.php" data-label="Profesionales">
-                <i class="fas fa-fw fa-user-md nav-icon"></i>
-                <span>Profesionales</span>
-            </a>
-        </li>
+    foreach ($menu['Gestión'] as $modulo):
+?>
 
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading">Agenda</div>
+<li class="nav-item <?= isActive(parse_url($modulo['ruta'], PHP_URL_PATH), $uri) ?>">
 
-        <?php
-        $turnosOpen = isOpen(['/modules/appointments/'], $uri);
-        $turnosPaths = array_column($menuTurnos, 'path');
-        ?>
+    <a class="nav-link"
+       href="<?= htmlspecialchars($modulo['ruta']) ?>"
+       data-label="<?= htmlspecialchars($modulo['nombre_modulo']) ?>">
 
-        <li class="nav-item has-sub">
+        <i class="fas fa-fw <?= htmlspecialchars($modulo['icono']) ?> nav-icon"></i>
 
-            <a class="nav-link <?= $turnosOpen ? '' : 'collapsed' ?>"
-                href="#"
-                data-toggle="collapse"
-                data-target="#collapseTurnos"
-                aria-expanded="<?= $turnosOpen ? 'true' : 'false' ?>"
-                aria-controls="collapseTurnos"
-                data-label="Turnos">
+        <span class="nav-text">
+            <?= htmlspecialchars($modulo['nombre_modulo']) ?>
+        </span>
 
-                <i class="fas fa-fw fa-calendar-check nav-icon"></i>
-                <span>Turnos</span>
-            </a>
+    </a>
 
-            <div id="collapseTurnos" class="collapse <?= $turnosOpen ?>" data-parent="#accordionSidebar">
-                <div class="collapse-inner">
-                    <?php foreach ($menuTurnos as $item): ?>
-                        <a class="collapse-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
-                            <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+</li>
 
-            <div class="icons-flyout">
-                <div class="flyout-title">Turnos</div>
-                <?php foreach ($menuTurnos as $item): ?>
-                    <a class="flyout-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
-                        <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-        </li>
+<?php
+    endforeach;
 
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading">Clínica</div>
+endif;
+?>
 
-        <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/medical_records/', $uri) ?>" href="/SoftwareVet/modules/medical_records/index.php" data-label="Historia Clínica">
-                <i class="fas fa-fw fa-stethoscope nav-icon"></i>
-                <span>Historia Clínica</span>
-            </a>
-        </li>
+<hr class="sidebar-divider">
 
-        <li class="nav-item">
-            <a class="nav-link <?= isActive('/modules/species/', $uri) ?>" href="/SoftwareVet/modules/species/index.php" data-label="Especies">
-                <i class="fas fa-fw fa-dna nav-icon"></i>
-                <span>Especies</span>
-            </a>
-        </li>
+<div class="sidebar-heading">Atención</div>
 
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading">Administración</div>
+<?php if (!empty($menu['Atención'])): ?>
 
-        <?php
-        $adminOpen = isOpen([
-            '/modules/users/',
-            '/modules/profiles/',
-            '/modules/system_modules/'
-        ], $uri);
-        ?>
+<?php foreach ($menu['Atención'] as $modulo): ?>
 
-        <li class="nav-item has-sub">
+<li class="nav-item <?= isActive(parse_url($modulo['ruta'], PHP_URL_PATH), $uri) ?>">
 
-            <a class="nav-link <?= $adminOpen ? '' : 'collapsed' ?>"
-                href="#"
-                data-toggle="collapse"
-                data-target="#collapseAdministracion"
-                aria-expanded="<?= $adminOpen ? 'true' : 'false' ?>"
-                aria-controls="collapseAdministracion"
-                data-label="Administración">
+    <a class="nav-link"
+       href="<?= htmlspecialchars($modulo['ruta']) ?>"
+       data-label="<?= htmlspecialchars($modulo['nombre_modulo']) ?>">
 
-                <i class="fas fa-fw fa-sliders-h nav-icon"></i>
-                <span>Administración</span>
-            </a>
+        <i class="fas fa-fw <?= htmlspecialchars($modulo['icono']) ?> nav-icon"></i>
 
-            <div id="collapseAdministracion" class="collapse <?= $adminOpen ?>" data-parent="#accordionSidebar">
-                <div class="collapse-inner">
-                    <?php foreach ($menuAdmin as $item): ?>
-                        <a class="collapse-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
-                            <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+        <span class="nav-text">
+            <?= htmlspecialchars($modulo['nombre_modulo']) ?>
+        </span>
 
-            <!-- Flyout para el modo solo íconos (antes faltaba) -->
-            <div class="icons-flyout">
-                <div class="flyout-title">Administración</div>
-                <?php foreach ($menuAdmin as $item): ?>
-                    <a class="flyout-item <?= isActive($item['path'], $uri) ?>" href="/SoftwareVet<?= $item['path'] ?>">
-                        <i class="fas fa-fw <?= $item['icon'] ?>"></i> <?= $item['label'] ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-        </li>
+    </a>
+
+</li>
+
+<?php endforeach; ?>
+
+<?php endif; ?>
+<hr class="sidebar-divider">
+
+<div class="sidebar-heading">
+    Administración
+</div>
+
+<?php if (!empty($menu['Administración'])): ?>
+
+<?php foreach ($menu['Administración'] as $modulo): ?>
+
+<li class="nav-item <?= isActive(parse_url($modulo['ruta'], PHP_URL_PATH), $uri) ?>">
+
+    <a class="nav-link"
+       href="<?= htmlspecialchars($modulo['ruta']) ?>"
+       data-label="<?= htmlspecialchars($modulo['nombre_modulo']) ?>">
+
+        <i class="fas fa-fw <?= htmlspecialchars($modulo['icono']) ?> nav-icon"></i>
+
+        <span class="nav-text">
+            <?= htmlspecialchars($modulo['nombre_modulo']) ?>
+        </span>
+
+    </a>
+
+</li>
+
+<?php endforeach; ?>
+
+<?php endif; ?>
+
+
+
+<hr class="sidebar-divider">
+
+<div class="sidebar-heading">Soporte</div>
+
+<?php if (!empty($menu['Soporte'])): ?>
+
+<?php foreach ($menu['Soporte'] as $modulo): ?>
+
+<li class="nav-item <?= isActive(parse_url($modulo['ruta'], PHP_URL_PATH), $uri) ?>">
+
+    <a class="nav-link"
+       href="<?= htmlspecialchars($modulo['ruta']) ?>"
+       data-label="<?= htmlspecialchars($modulo['nombre_modulo']) ?>">
+
+        <i class="fas fa-fw <?= htmlspecialchars($modulo['icono']) ?> nav-icon"></i>
+
+        <span class="nav-text">
+            <?= htmlspecialchars($modulo['nombre_modulo']) ?>
+        </span>
+
+    </a>
+
+</li>
+
+<?php endforeach; ?>
+
+<?php endif; ?>
 
     </ul>
 
@@ -264,46 +314,13 @@ $menuAdmin = [
             $usuarioNombre = htmlspecialchars($_SESSION['usuario'] ?? 'Usuario');
 
             // Filtra partes vacías (espacios dobles, etc.) antes de obtener iniciales.
-            $partes = array_filter(explode(' ', $usuarioNombre), fn($p) => $p !== '');
+            $partes       = array_filter(explode(' ', $usuarioNombre), fn($p) => $p !== '');
             $inicialesArr = array_map(fn($p) => strtoupper($p[0]), array_values($partes));
-            $iniciales = implode('', array_slice($inicialesArr, 0, 2));
+            $iniciales    = implode('', array_slice($inicialesArr, 0, 2));
 
             if (!$iniciales) {
                 $iniciales = strtoupper(substr($usuarioNombre, 0, 2));
             }
-
-            $notifTurnos = [];
-
-            if (isset($conexion)) {
-                $stmtNotif = $conexion->prepare("
-                    SELECT t.hora, t.motivo, t.estado, m.nombre_mascota,
-                    CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional
-                    FROM turnos t
-                    INNER JOIN mascota m     ON t.id_mascota = m.id_mascota
-                    INNER JOIN profesional p ON t.id_profesional = p.id_profesional
-                    INNER JOIN persona per   ON p.id_persona = per.id_persona
-                    WHERE t.fecha = CURDATE()
-                    AND t.estado IN ('pendiente','confirmado','en_atencion')
-                    ORDER BY t.hora ASC
-                    LIMIT 8
-                ");
-
-                if ($stmtNotif && $stmtNotif->execute()) {
-                    $resNotif = $stmtNotif->get_result();
-                    while ($n = $resNotif->fetch_object()) {
-                        $notifTurnos[] = $n;
-                    }
-                    $stmtNotif->close();
-                }
-            }
-
-            $notifCount = count($notifTurnos);
-
-            $estadoColors = [
-                'pendiente'   => '#f6c23e',
-                'confirmado'  => '#36b9cc',
-                'en_atencion' => '#4e73df',
-            ];
             ?>
 
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 shadow">
@@ -360,9 +377,7 @@ $menuAdmin = [
                                     </div>
                                     <div>
                                         <div class="user-nombre"><span id="usuarioLogueado"></span></div>
-                                        <div class="user-rol">
-                                            <?= $nombrePerfilSeguro ?>
-                                        </div>
+                                        <div class="user-rol"><?= $nombrePerfilSeguro ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -370,10 +385,10 @@ $menuAdmin = [
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item py-2" href="/SoftwareVet/app/logout.php"
-                            onclick="
-                                localStorage.removeItem('nombre');
-                                localStorage.removeItem('apellido');
-                            ">
+                               onclick="
+                                   localStorage.removeItem('nombre');
+                                   localStorage.removeItem('apellido');
+                               ">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-danger"></i>
                                 <span class="text-danger">Cerrar Sesión</span>
                             </a>
@@ -384,9 +399,7 @@ $menuAdmin = [
 
             <script>
                 /*
-                | Reloj y fecha en tiempo real
-                | Actualiza la hora y la fecha mostradas en la barra superior
-                | del sistema cada segundo.
+                | Reloj y fecha en tiempo real (cada segundo).
                 */
                 (function tickClock() {
                     var now   = new Date();
@@ -405,11 +418,7 @@ $menuAdmin = [
                 })();
 
                 /*
-                | Cambio de modo del menú lateral
-                | Permite alternar entre:
-                | - Menú completo
-                | - Solo íconos
-                | - Menú oculto
+                | Modo del menú lateral: full -> icons -> hidden.
                 | Guarda la preferencia en localStorage.
                 */
                 (function() {
@@ -418,13 +427,13 @@ $menuAdmin = [
                     var body   = document.body;
                     var btn    = document.getElementById('sidebarModeBtn');
 
-                    var currentMode = localStorage.getItem('sidebarMode') || 'full';
+                    var currentMode = localStorage.getItem('sidebarMode');
+                    if (MODES.indexOf(currentMode) === -1) currentMode = 'full';
                     applyMode(currentMode);
 
                     if (btn) {
                         btn.addEventListener('click', function() {
-                            var idx  = MODES.indexOf(currentMode);
-                            var next = MODES[(idx + 1) % MODES.length];
+                            var next = MODES[(MODES.indexOf(currentMode) + 1) % MODES.length];
                             applyMode(next);
                             localStorage.setItem('sidebarMode', next);
                         });
@@ -433,14 +442,12 @@ $menuAdmin = [
                     function applyMode(mode) {
                         currentMode = mode;
                         body.setAttribute('data-sidebar', mode);
-                        var idx = MODES.indexOf(mode);
-                        if (btn) btn.setAttribute('title', 'Modo actual: ' + LABELS[idx] + ' → click para cambiar');
+                        if (btn) btn.setAttribute('title', 'Modo actual: ' + LABELS[MODES.indexOf(mode)] + ' → click para cambiar');
                     }
                 })();
 
                 /*
-                | Menú responsive para dispositivos móviles
-                | Permite abrir y cerrar el sidebar en pantallas pequeñas.
+                | Menú responsive para móviles.
                 */
                 (function() {
                     var toggleTop = document.getElementById('sidebarToggleTop');
@@ -462,33 +469,26 @@ $menuAdmin = [
                 })();
 
                 /*
-                | Nombre del usuario logueado
-                | Recupera nombre y apellido desde localStorage o desde session.php
-                | y los muestra en la topbar y en el dropdown.
+                | Nombre del usuario logueado.
+                | Lo toma de localStorage o, si no está, de session.php.
                 */
                 document.addEventListener('DOMContentLoaded', function() {
-                    //Espera a que la página termine de cargar antes de ejecutar el código.
                     var nombreGuardado   = localStorage.getItem('nombre');
                     var apellidoGuardado = localStorage.getItem('apellido');
-                    //Busca en el localStorage si el navegador ya tiene guardados el nombre y el apellido del usuario.
+
                     if (nombreGuardado && apellidoGuardado) {
                         mostrarUsuario(nombreGuardado, apellidoGuardado);
-                        //Si esos datos ya existen, los muestra directamente sin hacer ninguna consulta al servidor.
                     } else {
                         fetch('/SoftwareVet/app/session.php')
-                        //Si el navegador todavía no tiene esos datos, hace una petición a session.php, 
-                        // que devuelve la información del usuario que está en la sesión de PHP.
                             .then(function(response) { return response.json(); })
                             .then(function(data) {
                                 localStorage.setItem('nombre',   data.nombre);
                                 localStorage.setItem('apellido', data.apellido);
                                 mostrarUsuario(data.nombre, data.apellido);
-                                //Guarda el nombre y el apellido en el navegador para reutilizarlos en las próximas páginas.
                             });
                     }
 
                     function mostrarUsuario(nombre, apellido) {
-                        //Muestra el nombre completo.
                         var nombreCompleto = nombre + ' ' + apellido;
                         var top  = document.getElementById('usuarioLogueadoTop');
                         var drop = document.getElementById('usuarioLogueado');

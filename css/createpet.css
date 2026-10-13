@@ -772,3 +772,54 @@ td.text-center {
     background-color: #ddddE3;
     color: #333;
 }
+.sexo-options {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.sexo-option {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    cursor: pointer;
+}
+
+.sexo-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sexo-option span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-width: 110px;
+    padding: 9px 16px;
+
+    background: #ffffff;
+    border: 1px solid #d8c2e8;
+    border-radius: 22px;
+
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: all .2s ease;
+}
+
+.sexo-macho input:checked + span {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.sexo-hembra input:checked + span {
+    background: #fce7f3;
+    border-color: #f9a8d4;
+    color: #be185d;
+}

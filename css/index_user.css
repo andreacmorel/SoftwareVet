@@ -102,70 +102,64 @@
 
 
 /* =========================================================
-   BOTÓN FILTRO - GRIS
+   BOTÓN BUSCAR
 ========================================================= */
 
-.btn-filtro {
-    height: 38px;
+.btn-filtro{
 
-    background: #6c757d !important;
-    color: #ffffff !important;
+    width:70px;
+    height:38px;
 
-    border: 1px solid #6c757d !important;
-    border-radius: 8px !important;
+    padding:0 !important;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    box-shadow: none !important;
+    background:#52266E !important;
+    color:#ffffff !important;
 
-    transition: all 0.2s ease;
+    border:1px solid #52266E !important;
+    border-radius:8px !important;
+
+    box-shadow:none !important;
+
+    transition:all .2s ease;
+
 }
 
+.btn-filtro i{
 
-/* Lupa */
+    color:#ffffff !important;
+    font-size:14px;
 
-.btn-filtro i {
-    font-size: 14px;
-
-    color: #ffffff !important;
 }
 
+.btn-filtro:hover{
 
-/* HOVER */
+    background:#3f1d55 !important;
+    border-color:#3f1d55 !important;
 
-.btn-filtro:hover {
-    background: #5c636a !important;
-    border-color: #5c636a !important;
-    color: #ffffff !important;
+    transform:translateY(-2px);
 
-    transform: translateY(-2px);
+    box-shadow:0 4px 10px rgba(82,38,110,.18) !important;
 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
 }
 
+.btn-filtro:active{
 
-/* CLICK */
+    background:#351946 !important;
+    border-color:#351946 !important;
 
-.btn-filtro:active {
-    background: #565e64 !important;
-    border-color: #565e64 !important;
+    transform:translateY(0);
 
-    transform: translateY(0);
-
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12) !important;
 }
 
+.btn-filtro:focus{
 
-/* FOCUS */
+    box-shadow:0 0 0 3px rgba(82,38,110,.18) !important;
 
-.btn-filtro:focus {
-    color: #ffffff !important;
-
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.18) !important;
 }
-
 
 /* =========================================================
    TARJETA TABLA
@@ -574,85 +568,115 @@ tbody tr:hover {
    BOTONES DE EXPORTACIÓN
 ========================================================= */
 
-.dt-buttons {
-    display: flex;
+.dt-buttons{
 
-    align-items: center;
+    display:flex;
+    align-items:center;
 
-    gap: 8px;
+    gap:8px;
 
-    margin: 0 !important;
+    margin:0 !important;
+
 }
 
-.dt-buttons .dt-button {
-    margin: 0 !important;
+.dt-buttons .dt-button{
 
-    padding: 8px 13px !important;
+    height:38px !important;
 
-    border: none !important;
+    padding:0 12px !important;
 
-    border-radius: 8px !important;
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
 
-    background-image: none !important;
+    border:none !important;
+    border-radius:8px !important;
 
-    font-size: 12px !important;
+    background-image:none !important;
 
-    font-weight: 700 !important;
+    font-size:12px !important;
+    font-weight:700 !important;
 
-    box-shadow: none !important;
+    white-space:nowrap;
 
-    transition: all .18s ease;
+    box-shadow:none !important;
+
+    transition:all .18s ease;
+
+    margin:0 !important;
+
 }
 
-.dt-buttons .dt-button:hover {
-    transform: translateY(-1px);
+.dt-buttons .dt-button i{
+
+    margin-right:5px;
+
 }
 
+.dt-buttons .dt-button:hover{
 
-/* EXCEL */
+    transform:translateY(-2px);
 
-.dt-buttons .buttons-excel {
-    background: #dcfce7 !important;
+    box-shadow:0 4px 10px rgba(0,0,0,.10) !important;
 
-    color: #15803d !important;
-}
-
-.dt-buttons .buttons-excel:hover {
-    background: #bbf7d0 !important;
-
-    color: #166534 !important;
-}
-
-
-/* PDF */
-
-.dt-buttons .buttons-pdf {
-    background: #fee2e2 !important;
-
-    color: #b91c1c !important;
-}
-
-.dt-buttons .buttons-pdf:hover {
-    background: #fecaca !important;
-
-    color: #991b1b !important;
 }
 
 
-/* IMPRIMIR */
+/* =========================================================
+   EXCEL
+========================================================= */
 
-.dt-buttons .buttons-print {
-    background: #dbeafe !important;
+.dt-buttons .buttons-excel{
 
-    color: #1d4ed8 !important;
+    background:#dcfce7 !important;
+    color:#15803d !important;
+
 }
 
-.dt-buttons .buttons-print:hover {
-    background: #bfdbfe !important;
+.dt-buttons .buttons-excel:hover{
 
-    color: #1e40af !important;
+    background:#bbf7d0 !important;
+    color:#166534 !important;
+
 }
 
+
+/* =========================================================
+   PDF
+========================================================= */
+
+.dt-buttons .buttons-pdf{
+
+    background:#fee2e2 !important;
+    color:#b91c1c !important;
+
+}
+
+.dt-buttons .buttons-pdf:hover{
+
+    background:#fecaca !important;
+    color:#991b1b !important;
+
+}
+
+
+/* =========================================================
+   IMPRIMIR
+========================================================= */
+
+.dt-buttons .buttons-print{
+
+    background:#dbeafe !important;
+    color:#1d4ed8 !important;
+
+}
+
+.dt-buttons .buttons-print:hover{
+
+    background:#bfdbfe !important;
+    color:#1e40af !important;
+
+}
 
 /* =========================================================
    ALERTAS DE ÉXITO
@@ -1157,5 +1181,86 @@ tbody tr:hover {
     .modal-estado .modal-footer .btn {
         width: 100%;
     }
+
+}
+
+/* =========================================================
+   TOOLTIPS
+========================================================= */
+
+.tooltip-action{
+
+    position:relative;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    margin:0 2px;
+
+}
+
+.tooltip-action-text{
+
+    position:absolute;
+
+    bottom:calc(100% + 8px);
+
+    left:50%;
+
+    transform:translateX(-50%) translateY(4px);
+
+    background:#1f2937;
+
+    color:#ffffff;
+
+    padding:7px 10px;
+
+    border-radius:7px;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:all .18s ease;
+
+    z-index:9999;
+
+    box-shadow:0 5px 14px rgba(0,0,0,.18);
+
+}
+
+.tooltip-action-text::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:100%;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:5px solid #1f2937;
+
+}
+
+.tooltip-action:hover .tooltip-action-text{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateX(-50%) translateY(0);
 
 }

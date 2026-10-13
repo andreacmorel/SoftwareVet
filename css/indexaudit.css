@@ -24,14 +24,16 @@
 
 
 /* =========================================================
-   FILTROS
+   TARJETA DE FILTROS
 ========================================================= */
 
 .filter-card {
     background: #ffffff;
     border-radius: 15px;
     padding: 18px 20px;
+
     box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+
     margin-top: 25px;
     margin-bottom: 25px;
 }
@@ -45,15 +47,20 @@
 
 .filter-card .form-control {
     height: 38px;
-    border-radius: 8px;
+
     border: 1px solid #d8c2e8;
+    border-radius: 8px;
+
     font-size: 14px;
+
     transition: all .2s ease;
 }
 
 .filter-card .form-control:focus {
     border-color: #52266E;
-    box-shadow: 0 0 0 3px rgba(82, 38, 110, .10);
+
+    box-shadow:
+        0 0 0 3px rgba(82, 38, 110, .10);
 }
 
 
@@ -61,58 +68,68 @@
    BOTÓN FILTRO
 ========================================================= */
 
-.btn-filtro {
-    width: 75px;
-    height: 38px;
+/* =========================================================
+   BOTÓN BUSCAR
+========================================================= */
 
-    background: #6c757d !important;
-    color: #ffffff !important;
+.btn-filtro{
 
-    border: 1px solid #6c757d !important;
-    border-radius: 8px !important;
+    width:70px;
+    height:38px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding:0 !important;
 
-    box-shadow: none !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    transition: all .2s ease;
+    background:#52266E !important;
+    color:#ffffff !important;
+
+    border:1px solid #52266E !important;
+    border-radius:8px !important;
+
+    box-shadow:none !important;
+
+    transition:all .2s ease;
+
 }
 
-.btn-filtro i {
-    color: #ffffff !important;
-    font-size: 14px;
+.btn-filtro i{
+
+    color:#ffffff !important;
+    font-size:14px;
+
 }
 
-.btn-filtro:hover {
-    background: #5c636a !important;
-    border-color: #5c636a !important;
-    color: #ffffff !important;
+.btn-filtro:hover{
 
-    transform: translateY(-2px);
+    background:#3f1d55 !important;
+    border-color:#3f1d55 !important;
 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .15) !important;
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(82,38,110,.18) !important;
+
 }
 
-.btn-filtro:active {
-    background: #565e64 !important;
-    border-color: #565e64 !important;
+.btn-filtro:active{
 
-    transform: translateY(0);
+    background:#351946 !important;
+    border-color:#351946 !important;
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .12) !important;
+    transform:translateY(0);
+
 }
 
-.btn-filtro:focus {
-    color: #ffffff !important;
+.btn-filtro:focus{
 
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, .18) !important;
+    box-shadow:0 0 0 3px rgba(82,38,110,.18) !important;
+
 }
-
 
 /* =========================================================
-   TARJETA DEL LISTADO
+   TARJETA DE TABLA
 ========================================================= */
 
 .table-card {
@@ -122,41 +139,43 @@
 
     border-radius: 15px;
 
-    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, .06);
 
-    overflow: hidden !important;
+    overflow: hidden;
 
     margin-bottom: 20px;
 }
 
+.table-card .table {
+    margin-bottom: 0;
+}
+
 
 /* =========================================================
-   TABLE RESPONSIVE
-   SOLO SCROLL HORIZONTAL
+   TABLA RESPONSIVE
 ========================================================= */
 
 .table-card .table-responsive {
     width: 100% !important;
 
     height: auto !important;
+
     max-height: none !important;
 
     overflow-x: auto !important;
+
     overflow-y: hidden !important;
 }
 
 
 /* =========================================================
-   TABLA AUDITORÍA
+   TABLA
 ========================================================= */
 
 #tablaAuditoria {
     width: 100% !important;
 
-    height: auto !important;
-    max-height: none !important;
-
-    margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
 
@@ -170,37 +189,56 @@
 
     color: #52266E !important;
 
-    padding: 13px 12px !important;
+    border-top: none !important;
+
+    border-bottom:
+        2px solid #eee1f6 !important;
+
+    padding-top: 13px !important;
+
+    padding-bottom: 13px !important;
+
+    padding-left: 12px !important;
+
+    padding-right: 12px !important;
 
     font-size: 12px;
+
     font-weight: 800;
 
     text-transform: uppercase;
 
     vertical-align: middle !important;
 
-    border-top: none !important;
-
-    border-bottom: 2px solid #eee1f6 !important;
-
     white-space: nowrap;
 }
 
 
 /* =========================================================
-   FILAS
+   CUERPO
 ========================================================= */
 
 #tablaAuditoria tbody td {
-    padding: 12px !important;
+    padding-top: 12px !important;
 
-    vertical-align: middle !important;
+    padding-bottom: 12px !important;
+
+    padding-left: 12px !important;
+
+    padding-right: 12px !important;
 
     color: #374151;
 
     font-size: 14px;
 
-    border-top: 1px solid #e5e7eb;
+    vertical-align: middle !important;
+
+    border-top:
+        1px solid #e5e7eb;
+}
+
+#tablaAuditoria tbody tr {
+    transition: background .15s ease;
 }
 
 #tablaAuditoria tbody tr:first-child td {
@@ -219,11 +257,13 @@
 .turno-icon {
     width: 34px;
     height: 34px;
+
     min-width: 34px;
 
     margin-right: 10px;
 
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
 
@@ -236,6 +276,7 @@
 
 .turno-icon i {
     color: #52266E !important;
+
     font-size: 14px;
 }
 
@@ -356,6 +397,7 @@
 #tablaAuditoria td:nth-child(6),
 #tablaAuditoria td:nth-child(7) {
     min-width: 180px;
+
     max-width: 300px;
 
     color: #6b7280 !important;
@@ -369,18 +411,14 @@
     word-break: break-word;
 }
 
-
-/* ANTES */
-
 #tablaAuditoria td:nth-child(6) {
-    background: rgba(254, 242, 242, .35);
+    background:
+        rgba(254, 242, 242, .35);
 }
 
-
-/* DESPUÉS */
-
 #tablaAuditoria td:nth-child(7) {
-    background: rgba(240, 253, 244, .35);
+    background:
+        rgba(240, 253, 244, .35);
 }
 
 
@@ -389,28 +427,32 @@
 ========================================================= */
 
 .dato-muted {
-    color: #6b7280;
+    color: #6b7280 !important;
 }
 
 
 /* =========================================================
-   DATATABLE
+   DATATABLES WRAPPER
 ========================================================= */
 
 #tablaAuditoria_wrapper {
     width: 100% !important;
 
     height: auto !important;
+
     max-height: none !important;
 
     padding: 0 !important;
+
     margin: 0 !important;
 
     overflow: visible !important;
 }
 
 
-/* Ocultamos búsqueda y selector propio de DataTables */
+/* =========================================================
+   OCULTAR BUSCADOR Y CANTIDAD
+========================================================= */
 
 #tablaAuditoria_wrapper .dataTables_filter,
 #tablaAuditoria_wrapper .dataTables_length {
@@ -439,62 +481,23 @@
 
 
 /* =========================================================
-   FOOTER DATATABLE
+   DATATABLES
 ========================================================= */
 
-#tablaAuditoria_wrapper > .row:last-child {
-    width: 100% !important;
-
-    margin: 0 !important;
-
-    padding: 12px 14px 16px !important;
-
-    display: flex !important;
-
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-
-    align-items: center !important;
-}
-
-
-/* INFORMACIÓN IZQUIERDA */
-
-#tablaAuditoria_wrapper > .row:last-child > div:first-child {
-    display: flex !important;
-
-    align-items: center !important;
-    justify-content: flex-start !important;
-
-    padding: 0 !important;
-}
-
-
-/* PAGINACIÓN DERECHA */
-
-#tablaAuditoria_wrapper > .row:last-child > div:last-child {
-    display: flex !important;
-
-    align-items: center !important;
-    justify-content: flex-end !important;
-
-    padding: 0 !important;
+.dataTables_wrapper {
+    padding-bottom: 14px;
 }
 
 
 /* =========================================================
-   "MOSTRANDO 1 A..."
+   INFORMACIÓN
 ========================================================= */
 
-#tablaAuditoria_wrapper .dataTables_info {
-    height: 32px;
+.dataTables_wrapper .dataTables_info {
 
-    padding: 0 !important;
-    margin: 0 !important;
+    padding-top: 15px !important;
 
-    display: flex !important;
-
-    align-items: center !important;
+    padding-left: 8px;
 
     color: #9ca3af !important;
 
@@ -502,107 +505,104 @@
 
     font-size: 12px !important;
 
-    font-weight: 500 !important;
-
-    line-height: 32px !important;
-
-    white-space: nowrap !important;
+    font-weight: 500;
 }
 
 
 /* =========================================================
-   PAGINACIÓN
+   PAGINACIÓN VETSYS
 ========================================================= */
 
-#tablaAuditoria_wrapper .dataTables_paginate {
-    height: 32px;
+.dataTables_wrapper .dataTables_paginate {
 
-    padding: 0 !important;
-    margin: 0 !important;
+    padding-top: 10px !important;
 
-    float: none !important;
+    padding-right: 8px !important;
 
     display: flex !important;
 
-    flex-direction: row !important;
-
     align-items: center !important;
-    justify-content: flex-end !important;
 
-    white-space: nowrap !important;
-
-    font-family: "Nunito", sans-serif !important;
+    gap: 3px !important;
 }
 
 
-/* CONTENEDOR */
+/* =========================================================
+   BOTONES GENERALES
+========================================================= */
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
 .dataTables_paginate
-.pagination {
+.paginate_button {
 
-    height: 32px;
+    min-width: 32px !important;
+
+    height: 32px !important;
+
+    margin: 0 1px !important;
 
     padding: 0 !important;
-    margin: 0 !important;
-
-    display: flex !important;
-
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-
-    align-items: center !important;
-    justify-content: flex-end !important;
-
-    gap: 4px !important;
-
-    list-style: none !important;
-}
-
-
-/* ITEM */
-
-#tablaAuditoria_wrapper
-.dataTables_paginate
-.page-item {
 
     display: inline-flex !important;
 
-    float: none !important;
+    align-items: center !important;
 
-    margin: 0 !important;
-    padding: 0 !important;
+    justify-content: center !important;
+
+    background: transparent !important;
+
+    background-image: none !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    color: #6b7280 !important;
+
+    font-family: "Nunito", sans-serif !important;
+
+    font-size: 12px !important;
+
+    font-weight: 600 !important;
+
+    box-shadow: none !important;
+
+    text-decoration: none !important;
 }
 
 
 /* =========================================================
-   LINKS PAGINACIÓN
+   LINK INTERNO
 ========================================================= */
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
 .dataTables_paginate
+.paginate_button
 .page-link {
 
     min-width: 32px !important;
 
     height: 32px !important;
 
-    padding: 0 9px !important;
-
     margin: 0 !important;
 
-    display: flex !important;
+    padding: 0 9px !important;
+
+    display: inline-flex !important;
 
     align-items: center !important;
+
     justify-content: center !important;
 
     background: transparent !important;
+
+    background-image: none !important;
 
     border: none !important;
 
     border-radius: 8px !important;
 
-    color: #52266E !important;
+    color: #6b7280 !important;
 
     font-family: "Nunito", sans-serif !important;
 
@@ -612,26 +612,36 @@
 
     line-height: 1 !important;
 
-    text-decoration: none !important;
-
     box-shadow: none !important;
 
-    white-space: nowrap !important;
+    text-decoration: none !important;
 
-    transition: all .18s ease;
+    transition: all .18s ease !important;
 }
 
 
-/* HOVER */
+/* =========================================================
+   HOVER
+========================================================= */
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
 .dataTables_paginate
-.page-item:not(.active):not(.disabled)
+.paginate_button:hover,
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button
 .page-link:hover {
 
     background: #f4ebf8 !important;
 
+    background-image: none !important;
+
+    border: none !important;
+
     color: #52266E !important;
+
+    box-shadow: none !important;
 }
 
 
@@ -639,7 +649,49 @@
    PÁGINA ACTIVA
 ========================================================= */
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.current,
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.current:hover {
+
+    min-width: 32px !important;
+
+    width: 32px !important;
+
+    height: 32px !important;
+
+    padding: 0 !important;
+
+    background: #52266E !important;
+
+    background-image: none !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    color: #ffffff !important;
+
+    box-shadow:
+        0 3px 8px rgba(82, 38, 110, .18) !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   LINK DE PÁGINA ACTIVA
+========================================================= */
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.current
+.page-link,
+
+.dataTables_wrapper
 .dataTables_paginate
 .page-item.active
 .page-link {
@@ -650,9 +702,19 @@
 
     height: 32px !important;
 
+    margin: 0 !important;
+
     padding: 0 !important;
 
+    display: inline-flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
     background: #52266E !important;
+
+    background-image: none !important;
 
     border: none !important;
 
@@ -666,7 +728,8 @@
 
     font-weight: 700 !important;
 
-    box-shadow: 0 3px 8px rgba(82, 38, 110, .20) !important;
+    box-shadow:
+        0 3px 8px rgba(82, 38, 110, .18) !important;
 }
 
 
@@ -674,31 +737,93 @@
    ANTERIOR / SIGUIENTE
 ========================================================= */
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
 .dataTables_paginate
-.page-item.previous
+.paginate_button.previous,
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.next {
+
+    min-width: auto !important;
+
+    width: auto !important;
+
+    height: 32px !important;
+
+    padding: 0 !important;
+
+    background: transparent !important;
+
+    color: #52266E !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+}
+
+
+/* LINK ANTERIOR / SIGUIENTE */
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.previous
 .page-link,
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
 .dataTables_paginate
-.page-item.next
+.paginate_button.next
 .page-link {
 
     width: auto !important;
 
     min-width: auto !important;
 
-    padding: 0 8px !important;
+    height: 32px !important;
+
+    padding: 0 10px !important;
 
     background: transparent !important;
 
+    background-image: none !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
     color: #52266E !important;
+
+    font-family: "Nunito", sans-serif !important;
 
     font-size: 12px !important;
 
     font-weight: 600 !important;
 
-    white-space: nowrap !important;
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   HOVER ANTERIOR / SIGUIENTE
+========================================================= */
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.previous:hover
+.page-link,
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.next:hover
+.page-link {
+
+    background: #f4ebf8 !important;
+
+    background-image: none !important;
+
+    color: #52266E !important;
+
+    border: none !important;
 }
 
 
@@ -706,156 +831,244 @@
    DESHABILITADO
 ========================================================= */
 
-#tablaAuditoria_wrapper
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.disabled,
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.disabled:hover {
+
+    background: transparent !important;
+
+    background-image: none !important;
+
+    color: #c4b8ca !important;
+
+    box-shadow: none !important;
+
+    transform: none !important;
+}
+
+
+/* LINK DESHABILITADO */
+
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.disabled
+.page-link,
+
+.dataTables_wrapper
 .dataTables_paginate
 .page-item.disabled
 .page-link {
 
     background: transparent !important;
 
+    background-image: none !important;
+
     border: none !important;
 
-    color: #c9b9cf !important;
-
-    opacity: 1 !important;
-
-    cursor: default !important;
+    color: #c4b8ca !important;
 
     box-shadow: none !important;
+
+    cursor: default !important;
 }
 
 
 /* =========================================================
-   COMPATIBILIDAD DATATABLES
+   FOCUS
 ========================================================= */
 
-#tablaAuditoria_wrapper .paginate_button {
-    border: none !important;
+.dataTables_wrapper
+.dataTables_paginate
+.page-link:focus {
+
+    outline: none !important;
 
     background: transparent !important;
 
-    padding: 0 !important;
-
-    margin: 0 !important;
+    border: none !important;
 
     box-shadow: none !important;
+}
 
-    font-family: "Nunito", sans-serif !important;
+.dataTables_wrapper
+.dataTables_paginate
+.paginate_button.current
+.page-link:focus {
 
-    font-size: 12px !important;
+    background: #52266E !important;
+
+    color: #ffffff !important;
+
+    box-shadow:
+        0 3px 8px rgba(82, 38, 110, .18) !important;
 }
 
 
 /* =========================================================
-   BOTONES EXPORTACIÓN
+   FOOTER DATATABLE
 ========================================================= */
 
-#botonesExportacion {
-    display: flex;
+#tablaAuditoria_wrapper > .row:last-child {
 
-    align-items: center;
-    justify-content: flex-end;
+    width: 100% !important;
 
     margin: 0 !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
 }
 
-#botonesExportacion .dt-buttons {
-    display: flex;
 
-    align-items: center;
+/* =========================================================
+   COLUMNA INFORMACIÓN
+========================================================= */
 
-    gap: 8px;
+#tablaAuditoria_wrapper
+> .row:last-child
+> div:first-child {
 
-    margin: 0 !important;
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: flex-start !important;
+
+    padding: 0 !important;
 }
 
-#botonesExportacion .dt-button {
-    margin: 0 !important;
 
-    padding: 8px 13px !important;
+/* =========================================================
+   COLUMNA PAGINACIÓN
+========================================================= */
 
-    border: none !important;
+#tablaAuditoria_wrapper
+> .row:last-child
+> div:last-child {
 
-    border-radius: 8px !important;
+    display: flex !important;
 
-    background-image: none !important;
+    align-items: center !important;
 
-    font-family: "Nunito", sans-serif !important;
+    justify-content: flex-end !important;
 
-    font-size: 12px !important;
-
-    font-weight: 700 !important;
-
-    box-shadow: none !important;
-
-    transition: all .18s ease;
+    padding: 0 !important;
 }
 
-#botonesExportacion .dt-button:hover {
-    transform: translateY(-1px);
+
+/* =========================================================
+   EXPORTACIÓN
+========================================================= */
+
+/* =========================================================
+   BOTONES DE EXPORTACIÓN
+========================================================= */
+
+.dt-buttons{
+
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    margin:0 !important;
+
 }
 
+.dt-buttons .dt-button{
+
+    height:38px !important;
+
+    padding:0 12px !important;
+
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+
+    border:none !important;
+    border-radius:8px !important;
+
+    background-image:none !important;
+
+    font-size:12px !important;
+    font-weight:700 !important;
+
+    white-space:nowrap;
+
+    box-shadow:none !important;
+
+    transition:all .18s ease;
+
+    margin:0 !important;
+
+}
+
+.dt-buttons .dt-button i{
+
+    margin-right:5px;
+
+}
+
+.dt-buttons .dt-button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(0,0,0,.10) !important;
+
+}
 
 /* EXCEL */
 
-#botonesExportacion .buttons-excel {
-    background: #dcfce7 !important;
+.dt-buttons .buttons-excel{
 
-    color: #15803d !important;
+    background:#dcfce7 !important;
+    color:#15803d !important;
+
 }
 
-#botonesExportacion .buttons-excel:hover {
-    background: #bbf7d0 !important;
+.dt-buttons .buttons-excel:hover{
 
-    color: #166534 !important;
+    background:#bbf7d0 !important;
+    color:#166534 !important;
+
 }
-
 
 /* PDF */
 
-#botonesExportacion .buttons-pdf {
-    background: #fee2e2 !important;
+.dt-buttons .buttons-pdf{
 
-    color: #b91c1c !important;
+    background:#fee2e2 !important;
+    color:#b91c1c !important;
+
 }
 
-#botonesExportacion .buttons-pdf:hover {
-    background: #fecaca !important;
+.dt-buttons .buttons-pdf:hover{
 
-    color: #991b1b !important;
+    background:#fecaca !important;
+    color:#991b1b !important;
+
 }
-
 
 /* IMPRIMIR */
 
-#botonesExportacion .buttons-print {
-    background: #dbeafe !important;
+.dt-buttons .buttons-print{
 
-    color: #1d4ed8 !important;
+    background:#dbeafe !important;
+    color:#1d4ed8 !important;
+
 }
 
-#botonesExportacion .buttons-print:hover {
-    background: #bfdbfe !important;
+.dt-buttons .buttons-print:hover{
 
-    color: #1e40af !important;
-}
+    background:#bfdbfe !important;
+    color:#1e40af !important;
 
-
-/* =========================================================
-   FLECHITAS ORDENAMIENTO DATATABLE
-========================================================= */
-
-#tablaAuditoria thead .sorting:before,
-#tablaAuditoria thead .sorting_asc:before,
-#tablaAuditoria thead .sorting_desc:before,
-
-#tablaAuditoria thead .sorting:after,
-#tablaAuditoria thead .sorting_asc:after,
-#tablaAuditoria thead .sorting_desc:after {
-
-    color: #bca8c9 !important;
-
-    opacity: .55 !important;
 }
 
 
@@ -877,56 +1090,100 @@
         padding: 15px;
     }
 
-    #botonesExportacion {
-        width: 100%;
 
-        margin-top: 15px !important;
+    #tablaAuditoria_wrapper
+    .dataTables_info {
 
-        justify-content: flex-start;
+        padding:
+            12px 0 6px 0 !important;
+
+        text-align:
+            center !important;
     }
 
-    #botonesExportacion .dt-buttons {
-        flex-wrap: wrap;
+
+    #tablaAuditoria_wrapper
+    .dataTables_paginate {
+
+        padding:
+            5px 0 10px 0 !important;
+
+        justify-content:
+            center !important;
     }
 
-    #tablaAuditoria_wrapper > .row:last-child {
+
+    #tablaAuditoria_wrapper
+    > .row:last-child {
+
         display: block !important;
 
-        padding: 12px 10px 14px !important;
+        padding:
+            10px 10px 14px !important;
     }
 
-    #tablaAuditoria_wrapper > .row:last-child > div {
+
+    #tablaAuditoria_wrapper
+    > .row:last-child
+    > div {
+
         width: 100% !important;
 
         max-width: 100% !important;
 
         flex: 0 0 100% !important;
 
-        justify-content: center !important;
+        justify-content:
+            center !important;
     }
 
-    #tablaAuditoria_wrapper .dataTables_info {
-        justify-content: center !important;
 
-        margin-bottom: 6px !important;
+    #tablaAuditoria_wrapper
+    .dataTables_info {
 
-        text-align: center !important;
+        justify-content:
+            center !important;
+
+        text-align:
+            center !important;
+
+        margin-bottom:
+            6px !important;
     }
 
-    #tablaAuditoria_wrapper .dataTables_paginate {
-        width: 100%;
 
-        justify-content: center !important;
+    #tablaAuditoria_wrapper
+    .dataTables_paginate {
+
+        width: 100% !important;
+
+        justify-content:
+            center !important;
     }
+
+
+    #botonesExportacion .dt-buttons {
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+}
+
+
+@media (max-width: 480px) {
 
     #tablaAuditoria_wrapper
     .dataTables_paginate
-    .pagination {
+    .paginate_button.previous
+    .page-link,
 
-        justify-content: center !important;
+    #tablaAuditoria_wrapper
+    .dataTables_paginate
+    .paginate_button.next
+    .page-link {
 
-        flex-direction: row !important;
-
-        flex-wrap: nowrap !important;
+        padding:
+            0 7px !important;
     }
 }

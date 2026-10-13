@@ -94,12 +94,10 @@ if(isset($_GET['success'])) { ?>
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h3 page-title">
-            <i class="fas fa-dna mr-2"></i> Especies
+            <i class="fas fa-cat"></i> Especies
         </h1>
         <div class="page-subtitle">Gestión de especies y razas</div>
     </div>
-
-    <div id="botonesExportacion" class="mb-3"></div>
 
     <div class="d-flex">
         <a href="create.php" class="btn btn-purple">
@@ -111,7 +109,7 @@ if(isset($_GET['success'])) { ?>
 <form method="GET" class="filter-card">
     <div class="row align-items-end">
 
-        <div class="col-md-10">
+        <div class="col-md-8">
             <label>Buscar</label>
             <input type="text" name="buscar" class="form-control" placeholder="Buscar por especie o raza" 
             value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
@@ -121,6 +119,10 @@ if(isset($_GET['success'])) { ?>
             <button type="submit" class="btn btn-purple btn-block btn-filtro" title="Buscar">
                 <i class="fas fa-search"></i>
             </button>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <div id="botonesExportacion" class="w-100"></div>
         </div>
 
     </div>
@@ -147,7 +149,7 @@ if ($especies->num_rows > 0) {
             <td>
                 <div class="d-flex align-items-center">
                     <span class="especie-icon">
-                        <i class="fas fa-dna"></i>
+                        <i class="fas fa-cat"></i>
                     </span>
                     <div class="especie-name">
                         <?= htmlspecialchars($row->nombre_especie) ?>
@@ -158,13 +160,22 @@ if ($especies->num_rows > 0) {
             <td class="dato-muted">
                 <?= htmlspecialchars($row->raza) ?>
             </td>
-
+            
+            
             <td class="text-center">
-
+                <div class="tooltip-action">
                 <a href="edit.php?id=<?= $row->id_especie ?>"
                 class="btn-action btn-edit">
                     <i class="fas fa-pen"></i>
                 </a>
+
+                 <span class="tooltip-action-text">
+                    Editar 
+                </span>
+
+            </div>
+
+            <div class="tooltip-action">
 
                 <button class="btn-action btn-delete"
                         data-toggle="modal"
@@ -174,6 +185,10 @@ if ($especies->num_rows > 0) {
                     <i class="fas fa-trash"></i>
                 </button>
 
+                <span class="tooltip-action-text">
+                    Eliminar 
+                </span>
+            </div>
             </td>
 
         </tr>

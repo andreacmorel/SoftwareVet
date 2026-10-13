@@ -112,32 +112,48 @@ if(isset($_GET['success'])) { ?>
             <div class="page-subtitle">Gestión de perfiles y permisos del sistema</div>
         </div>
 
-        <div id="botonesExportacion" class="mb-3"></div>
 
         <a href="create.php" class="btn btn-purple">
             <i class="fas fa-plus"></i> Nuevo Perfil
         </a>
     </div>
 
-    <form method="GET" class="filter-card">
-        <div class="row align-items-end">
+<form method="GET" class="filter-card">
 
-            <div class="col-md-10">
-                <label>Buscar</label>
-                <input type="text" name="buscar" class="form-control" placeholder="Buscar por nombre de perfil"
-                    value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
-            </div>
+    <div class="row align-items-end">
 
-            <div class="col-md-2">
+        <div class="col-md-8">
+
+            <label>Buscar</label>
+
+            <input type="text"
+                   name="buscar"
+                   class="form-control"
+                   placeholder="Buscar por nombre de perfil"
+                   value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
+
+        </div>
+
+        <div class="col-md-1 px-1">
+
             <button type="submit"
-                    class="btn btn-filtro"
-                    title="Buscar">
+                    class="btn btn-filtro btn-block">
+
                 <i class="fas fa-search"></i>
+
             </button>
-        </div>
 
         </div>
-    </form>
+
+        <div class="col-md-3 pl-2">
+
+            <div id="botonesExportacion"></div>
+
+        </div>
+
+    </div>
+
+</form>
 
     <div class="table-card">
         <div class="table-responsive">
@@ -172,26 +188,56 @@ if(isset($_GET['success'])) { ?>
                                 </td>
 
                                 <td class="text-center">
+
+                                <div class="tooltip-action">
+
                                     <a href="assign_modules.php?id=<?= $row->id_perfil ?>"
-                                    class="btn-action btn-modulos"
-                                    title="Asignar módulos">
+                                    class="btn-action btn-modulos">
+
                                         <i class="fas fa-lock"></i>
+
                                     </a>
+
+                                    <span class="tooltip-action-text">
+                                        Asignar módulos
+                                    </span>
+
+                                </div>
+
+                                <div class="tooltip-action">
 
                                     <a href="edit.php?id=<?= $row->id_perfil ?>"
-                                    class="btn-action btn-edit"
-                                    title="Modificar">
+                                    class="btn-action btn-edit">
+
                                         <i class="fas fa-pen"></i>
+
                                     </a>
 
+                                    <span class="tooltip-action-text">
+                                        Editar
+                                    </span>
+
+                                </div>
+
+                                <div class="tooltip-action">
+
                                     <button class="btn-action btn-delete"
-                                        data-toggle="modal"
-                                        data-target="#modalEliminarPerfil"
-                                        data-id="<?= $row->id_perfil ?>"
-                                        data-nombre="<?= htmlspecialchars($row->nombre_perfil) ?>">
+                                            data-toggle="modal"
+                                            data-target="#modalEliminarPerfil"
+                                            data-id="<?= $row->id_perfil ?>"
+                                            data-nombre="<?= htmlspecialchars($row->nombre_perfil) ?>">
+
                                         <i class="fas fa-trash"></i>
+
                                     </button>
-                                </td>
+
+                                    <span class="tooltip-action-text">
+                                        Eliminar
+                                    </span>
+
+                                </div>
+
+                            </td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>

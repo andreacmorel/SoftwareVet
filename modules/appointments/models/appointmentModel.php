@@ -19,6 +19,9 @@ class AppointmentModel{
             motivo,
             id_profesional,
             id_mascota,
+            detalle_atencion,
+            tratamiento,
+            monto_total,
             estado
         FROM turnos
         WHERE id_turno = $id_turno
@@ -427,6 +430,162 @@ class AppointmentModel{
 
     //return $resultado;
     //}
+
+    public function completeAppointment(
+    $id_turno,
+    $detalle_atencion,
+    $tratamiento,
+    $monto_total,
+    $id_usuario
+){
+
+    $id_turno = (int)$id_turno;
+    $id_usuario = (int)$id_usuario;
+    $monto_total = (float)$monto_total;
+
+
+    /* =====================================================
+       OBTENER DATOS ANTES DE FINALIZAR
+    ===================================================== */
+
+    $stmtAntes = $this->conexion->prepare("
+        SELECT
+            estado,
+            detalle_atencion,
+            tratamiento,
+            monto_total
+        FROM turnos
+        WHERE id_turno = ?
+        LIMIT 1
+    ");
+
+    $stmtAntes->bind_param("i", $id_turno);
+
+    $stmtAntes->execute();
+
+    $resultadoAntes = $stmtAntes->get_result();
+
+    $datosAntes = $resultadoAntes->fetch_assoc();
+
+    $stmtAntes->close();
+
+
+    /* Si el turno no existe */
+
+    if (!$datosAntes) {
+        return false;
+    }
+
+
+    /* =====================================================
+       FINALIZAR CONSULTA
+    ===================================================== */
+
+    $stmt = $this->conexion->prepare("
+        UPDATE turnos
+        SET
+            detalle_atencion = ?,
+            tratamiento = ?,
+            monto_total = ?,
+            estado = 'completado'
+        WHERE id_turno = ?
+        AND estado NOT IN ('completado', 'cancelado')
+    ");
+
+
+    $stmt->bind_param(
+        "ssdi",
+        $detalle_atencion,
+        $tratamiento,
+        $monto_total,
+        $id_turno
+    );
+
+
+    $resultado = $stmt->execute();
+
+    $filasAfectadas = $stmt->affected_rows;
+
+    $stmt->close();
+
+
+    /* =====================================================
+       AUDITORÍA
+    ===================================================== */
+
+    if ($resultado && $filasAfectadas > 0) {
+
+        /* Datos anteriores */
+
+        $textoAntes =
+            "Estado: " . $datosAntes['estado'];
+
+
+        /* Datos nuevos */
+
+        $textoDespues =
+            "Estado: Completado" .
+            " | Detalle de atención: " . $detalle_atencion .
+            " | Tratamiento: " . $tratamiento .
+            " | Monto total: $" . number_format(
+                $monto_total,
+                2,
+                ',',
+                '.'
+            );
+
+
+        /* Escapar textos */
+
+        $antesSeguro =
+            $this->conexion->real_escape_string(
+                $textoAntes
+            );
+
+        $despuesSeguro =
+            $this->conexion->real_escape_string(
+                $textoDespues
+            );
+
+
+        /* =================================================
+           GUARDAR AUDITORÍA
+        ================================================= */
+
+        $sqlAuditoria = "
+            INSERT INTO auditoria
+            (
+                id_usuario,
+                modulo,
+                accion,
+                id_registro,
+                datos_anteriores,
+                datos_nuevos
+            )
+            VALUES
+            (
+                $id_usuario,
+                'Turnos',
+                'Finalización de consulta',
+                $id_turno,
+                '$antesSeguro',
+                '$despuesSeguro'
+            )
+        ";
+
+
+        mysqli_query(
+            $this->conexion,
+            $sqlAuditoria
+        );
+
+
+        return true;
+    }
+
+
+    return false;
+}
     
     public function professionalIsValidForEdit($id_profesional, $id_profesional_actual){
 
@@ -571,23 +730,7 @@ class AppointmentModel{
     return $resultado;
     }
 
-    public function getAllForExcel(){
-
-    return $this->conexion->query("
-        SELECT
-            t.id_turno,
-            t.fecha,
-            t.hora,
-            t.motivo,
-            CONCAT(per.nombre_persona, ' ', per.apellido_persona) AS profesional,
-            m.nombre_mascota AS mascota
-        FROM turnos t
-        INNER JOIN profesional p ON t.id_profesional = p.id_profesional
-        INNER JOIN persona per ON p.id_persona = per.id_persona
-        INNER JOIN mascota m ON t.id_mascota = m.id_mascota
-        ORDER BY t.fecha DESC, t.hora DESC
-    ");
-    }
+    
 
     public function delete($id){
 

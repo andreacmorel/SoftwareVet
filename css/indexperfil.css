@@ -88,55 +88,65 @@
    BOTÓN FILTRO
 ========================================================= */
 
-.btn-filtro {
-    height: 38px;
-    width: 75px;
+/* =========================================================
+   BOTÓN BUSCAR
+========================================================= */
 
-    background: #6c757d !important;
-    color: #ffffff !important;
+.btn-filtro{
 
-    border: 1px solid #6c757d !important;
-    border-radius: 8px !important;
+    width:70px;
+    height:38px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding:0 !important;
 
-    box-shadow: none !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    transition: all .2s ease;
+    background:#52266E !important;
+    color:#ffffff !important;
+
+    border:1px solid #52266E !important;
+    border-radius:8px !important;
+
+    box-shadow:none !important;
+
+    transition:all .2s ease;
+
 }
 
-.btn-filtro i {
-    color: #ffffff !important;
-    font-size: 14px;
+.btn-filtro i{
+
+    color:#ffffff !important;
+    font-size:14px;
+
 }
 
-.btn-filtro:hover {
-    background: #5c636a !important;
-    border-color: #5c636a !important;
-    color: #ffffff !important;
+.btn-filtro:hover{
 
-    transform: translateY(-2px);
+    background:#3f1d55 !important;
+    border-color:#3f1d55 !important;
 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .15) !important;
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(82,38,110,.18) !important;
+
 }
 
-.btn-filtro:active {
-    background: #565e64 !important;
-    border-color: #565e64 !important;
+.btn-filtro:active{
 
-    transform: translateY(0);
+    background:#351946 !important;
+    border-color:#351946 !important;
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .12) !important;
+    transform:translateY(0);
+
 }
 
-.btn-filtro:focus {
-    color: #ffffff !important;
+.btn-filtro:focus{
 
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, .18) !important;
+    box-shadow:0 0 0 3px rgba(82,38,110,.18) !important;
+
 }
-
 
 /* =========================================================
    TARJETA DE LA TABLA
@@ -362,62 +372,27 @@
 #tablaPerfiles_wrapper {
     width: 100%;
 
-    padding: 0 !important;
+    padding: 0 0 14px !important;
     margin: 0 !important;
-}
-
-
-/* =========================================================
-   FOOTER DATATABLE
-========================================================= */
-
-#tablaPerfiles_wrapper > .row:last-child {
-    width: 100%;
-
-    margin: 0 !important;
-
-    padding: 14px 14px 16px !important;
-
-    display: flex !important;
-    align-items: center !important;
-}
-
-#tablaPerfiles_wrapper > .row:last-child > div {
-    padding: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-}
-
-#tablaPerfiles_wrapper > .row:last-child > div:first-child {
-    justify-content: flex-start !important;
-}
-
-#tablaPerfiles_wrapper > .row:last-child > div:last-child {
-    justify-content: flex-end !important;
 }
 
 
 /* =========================================================
    INFORMACIÓN DATATABLE
+   "Mostrando 1 a 3 de 3 registros"
 ========================================================= */
 
 #tablaPerfiles_wrapper .dataTables_info {
-    height: 32px;
+    padding-top: 15px !important;
+    padding-left: 8px !important;
 
-    padding: 0 !important;
     margin: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
 
     color: #9ca3af !important;
 
     font-size: 12px !important;
 
     font-weight: 500 !important;
-
-    line-height: 32px !important;
 }
 
 
@@ -426,12 +401,10 @@
 ========================================================= */
 
 #tablaPerfiles_wrapper .dataTables_paginate {
-    height: 32px;
+    padding-top: 10px !important;
+    padding-right: 8px !important;
 
-    padding: 0 !important;
     margin: 0 !important;
-
-    float: none !important;
 
     display: flex !important;
 
@@ -440,8 +413,6 @@
 }
 
 #tablaPerfiles_wrapper .dataTables_paginate .pagination {
-    height: 32px;
-
     padding: 0 !important;
     margin: 0 !important;
 
@@ -450,7 +421,7 @@
     align-items: center !important;
     justify-content: flex-end !important;
 
-    gap: 4px !important;
+    gap: 8px !important;
 }
 
 #tablaPerfiles_wrapper .dataTables_paginate .paginate_button {
@@ -549,19 +520,39 @@
 
     height: 32px !important;
 
-    padding: 0 8px !important;
+    padding: 0 12px !important;
 
     background: transparent !important;
 
     border: none !important;
 
-    color: #52266E !important;
+    color: #4b5563 !important;
 
     font-size: 12px !important;
 
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 
     box-shadow: none !important;
+}
+
+
+/* =========================================================
+   HOVER ANTERIOR / SIGUIENTE
+========================================================= */
+
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.previous:not(.disabled)
+.page-link:hover,
+
+#tablaPerfiles_wrapper
+.dataTables_paginate
+.paginate_button.next:not(.disabled)
+.page-link:hover {
+
+    background: #f4ebf8 !important;
+
+    color: #52266E !important;
 }
 
 
@@ -593,7 +584,7 @@
 
     border-radius: 8px !important;
 
-    color: #ffffff !important;
+    color: #d8c6e6 !important;
 
     font-size: 12px !important;
 
@@ -609,7 +600,7 @@
 
     background: #52266E !important;
 
-    color: #ffffff !important;
+    color: #d8c6e6 !important;
 }
 
 
@@ -626,7 +617,7 @@
 
     border: none !important;
 
-    color: #c9b9cf !important;
+    color: #4b5563 !important;
 
     opacity: 1 !important;
 
@@ -650,92 +641,109 @@
 
 
 /* =========================================================
-   BOTONES EXPORTACIÓN
+   BOTONES DE EXPORTACIÓN
 ========================================================= */
 
-#botonesExportacion {
-    display: flex;
+.dt-buttons{
 
-    align-items: center;
+    display:flex;
+    align-items:center;
 
-    justify-content: center;
+    gap:8px;
 
-    margin: 0 !important;
+    margin:0 !important;
+
 }
 
-#botonesExportacion .dt-buttons {
-    display: flex;
+.dt-buttons .dt-button{
 
-    align-items: center;
+    height:38px !important;
 
-    gap: 8px;
+    padding:0 12px !important;
 
-    margin: 0 !important;
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+
+    border:none !important;
+    border-radius:8px !important;
+
+    background-image:none !important;
+
+    font-size:12px !important;
+    font-weight:700 !important;
+
+    white-space:nowrap;
+
+    box-shadow:none !important;
+
+    transition:all .18s ease;
+
+    margin:0 !important;
+
 }
 
-#botonesExportacion .dt-button {
-    margin: 0 !important;
+.dt-buttons .dt-button i{
 
-    padding: 8px 13px !important;
+    margin-right:5px;
 
-    border: none !important;
-
-    border-radius: 8px !important;
-
-    background-image: none !important;
-
-    font-size: 12px !important;
-
-    font-weight: 700 !important;
-
-    box-shadow: none !important;
-
-    transition: all .18s ease;
 }
 
-#botonesExportacion .dt-button:hover {
-    transform: translateY(-1px);
-}
+.dt-buttons .dt-button:hover{
 
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(0,0,0,.10) !important;
+
+}
 
 /* EXCEL */
 
-#botonesExportacion .buttons-excel {
-    background: #dcfce7 !important;
-    color: #15803d !important;
+.dt-buttons .buttons-excel{
+
+    background:#dcfce7 !important;
+    color:#15803d !important;
+
 }
 
-#botonesExportacion .buttons-excel:hover {
-    background: #bbf7d0 !important;
-    color: #166534 !important;
-}
+.dt-buttons .buttons-excel:hover{
 
+    background:#bbf7d0 !important;
+    color:#166534 !important;
+
+}
 
 /* PDF */
 
-#botonesExportacion .buttons-pdf {
-    background: #fee2e2 !important;
-    color: #b91c1c !important;
+.dt-buttons .buttons-pdf{
+
+    background:#fee2e2 !important;
+    color:#b91c1c !important;
+
 }
 
-#botonesExportacion .buttons-pdf:hover {
-    background: #fecaca !important;
-    color: #991b1b !important;
-}
+.dt-buttons .buttons-pdf:hover{
 
+    background:#fecaca !important;
+    color:#991b1b !important;
+
+}
 
 /* IMPRIMIR */
 
-#botonesExportacion .buttons-print {
-    background: #dbeafe !important;
-    color: #1d4ed8 !important;
+.dt-buttons .buttons-print{
+
+    background:#dbeafe !important;
+    color:#1d4ed8 !important;
+
 }
 
-#botonesExportacion .buttons-print:hover {
-    background: #bfdbfe !important;
-    color: #1e40af !important;
-}
+.dt-buttons .buttons-print:hover{
 
+    background:#bfdbfe !important;
+    color:#1e40af !important;
+
+}
 
 /* =========================================================
    ALERTA ÉXITO
@@ -1185,7 +1193,7 @@
     #tablaPerfiles_wrapper > .row:last-child {
         display: block !important;
 
-        padding: 12px 10px 14px !important;
+        padding: 14px 14px 16px !important;
     }
 
     #tablaPerfiles_wrapper > .row:last-child > div {
@@ -1237,4 +1245,86 @@
     .modal-eliminar-perfil .modal-footer .btn {
         width: 100%;
     }
+}
+
+/* =========================================================
+   TOOLTIPS
+========================================================= */
+
+.tooltip-action{
+
+    position:relative;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    margin:0 2px;
+
+}
+
+.tooltip-action-text{
+
+    position:absolute;
+
+    bottom:calc(100% + 8px);
+
+    left:50%;
+
+    transform:translateX(-50%) translateY(4px);
+
+    background:#1f2937;
+
+    color:#ffffff;
+
+    padding:7px 10px;
+
+    border-radius:7px;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:all .18s ease;
+
+    z-index:9999;
+
+    box-shadow:0 5px 14px rgba(0,0,0,.18);
+
+}
+
+.tooltip-action-text::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:100%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:5px solid #1f2937;
+
+}
+
+.tooltip-action:hover .tooltip-action-text{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateX(-50%) translateY(0);
+
 }

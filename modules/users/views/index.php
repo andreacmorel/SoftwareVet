@@ -34,7 +34,6 @@ require_once '../../app/menu.php';
 <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
 <link href="../../css/index_user.css" rel="stylesheet">
-<!-- DataTables clásico (igual que Mascotas) -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
@@ -68,8 +67,6 @@ require_once '../../app/menu.php';
         </h1>
         <div class="page-subtitle">Gestión de usuarios del sistema</div>
     </div>
-
-        <div id="botonesExportacion" class="mb-3"></div>
 
     <a href="create.php" class="btn btn-purple">
         <i class="fas fa-plus"></i> Nuevo Usuario
@@ -116,21 +113,40 @@ require_once '../../app/menu.php';
 <?php } ?>
 
 <form method="GET" class="filter-card">
+
     <div class="row align-items-end">
 
-        <div class="col-md-11">
+        <div class="col-md-8">
+
             <label>Buscar</label>
-            <input type="text" name="buscar" class="form-control" placeholder="Buscar por usuario, email o perfil"
-            value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
+
+            <input type="text"
+                   name="buscar"
+                   class="form-control"
+                   placeholder="Buscar por usuario, email o perfil"
+                   value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
+
         </div>
 
-        <div class="col-md-1">
-            <button type="submit" class="btn btn-purple btn-block btn-filtro" title="Buscar">
+        <div class="col-md-1 px-1">
+
+            <button type="submit"
+                    class="btn btn-filtro btn-block">
+
                 <i class="fas fa-search"></i>
+
             </button>
+
+        </div>
+
+        <div class="col-md-3 pl-2">
+
+            <div id="botonesExportacion"></div>
+
         </div>
 
     </div>
+
 </form>
 
 <div class="table-card">
@@ -209,26 +225,45 @@ require_once '../../app/menu.php';
 </td>
 
 <td class="acciones-td">
+
     <div class="acciones-wrap">
-    <!-- Botón para activar o desactivar usuario -->
-    <button class="btn-action <?= $user->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
-    data-toggle="modal"
-    data-target="#modalEstadoUsuario"
-    data-id="<?= $user->id_usuario ?>"
-    data-usuario="<?= htmlspecialchars($user->usuario) ?>"
-    data-estado="<?= $user->estado ?>">
 
-    <i class="<?= $user->estado == 1 ? 'fas fa-user-lock' : 'fas fa-user-check' ?>"></i>
+        <div class="tooltip-action">
 
-</button>
-    <!-- Botón para modificar usuario -->
-        <a href="edit.php?id=<?= $user->id_usuario ?>" 
-        class="btn-action btn-edit"
-        title="Modificar">
-            <i class="fas fa-pen"></i>
-        </a>
+            <button class="btn-action <?= $user->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
+                    data-toggle="modal"
+                    data-target="#modalEstadoUsuario"
+                    data-id="<?= $user->id_usuario ?>"
+                    data-usuario="<?= htmlspecialchars($user->usuario) ?>"
+                    data-estado="<?= $user->estado ?>">
+
+                <i class="<?= $user->estado == 1 ? 'fas fa-user-lock' : 'fas fa-user-check' ?>"></i>
+
+            </button>
+
+            <span class="tooltip-action-text">
+                <?= $user->estado == 1 ? 'Desactivar' : 'Activar' ?>
+            </span>
+
+        </div>
+
+        <div class="tooltip-action">
+
+            <a href="edit.php?id=<?= $user->id_usuario ?>"
+               class="btn-action btn-edit">
+
+                <i class="fas fa-pen"></i>
+
+            </a>
+
+            <span class="tooltip-action-text">
+                Editar
+            </span>
+
+        </div>
 
     </div>
+
 </td>
 
 </tr>

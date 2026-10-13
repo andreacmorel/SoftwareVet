@@ -78,50 +78,54 @@ $resultado = mysqli_query($conexion, $sql);
             </div>
         </div>
 
-        <div id="botonesExportacion"></div>
-
     </div>
+<form method="GET" class="filter-card">
 
-    <form method="GET" class="filter-card">
+    <div class="row align-items-end">
 
-        <div class="row align-items-end">
+        <div class="col-md-8">
 
-            <div class="col-md-4">
+            <label>Módulo</label>
 
-                <label>Módulo</label>
+            <select name="modulo" class="form-control">
 
-                <select name="modulo" class="form-control">
+                <option value="">Todos</option>
 
-                    <option value="">Todos</option>
+                <option value="Mascotas"
+                    <?= ($modulo == 'Mascotas') ? 'selected' : '' ?>>
+                    Mascotas
+                </option>
 
-                    <option value="Mascotas"
-                        <?= ($modulo == 'Mascotas') ? 'selected' : '' ?>>
-                        Mascotas
-                    </option>
+                <option value="Turnos"
+                    <?= ($modulo == 'Turnos') ? 'selected' : '' ?>>
+                    Turnos
+                </option>
 
-                    <option value="Turnos"
-                        <?= ($modulo == 'Turnos') ? 'selected' : '' ?>>
-                        Turnos
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="col-md-2">
-
-                <button type="submit"
-                        class="btn btn-filtro"
-                        title="Buscar">
-                    <i class="fas fa-search"></i>
-                </button>
-
-            </div>
+            </select>
 
         </div>
 
-    </form>
+        <div class="col-md-1 px-1">
+
+            <button
+                type="submit"
+                class="btn btn-filtro btn-block">
+
+                <i class="fas fa-search"></i>
+
+            </button>
+
+        </div>
+
+        <div class="col-md-3 pl-2">
+
+            <div id="botonesExportacion"></div>
+
+        </div>
+
+    </div>
+
+</form>
 
     <div class="table-card">
 

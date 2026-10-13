@@ -42,8 +42,6 @@ require_once '../../app/menu.php';
             </h1>
             <div class="page-subtitle">Gestión de módulos del sistema</div>
         </div>
-
-        <div id="botonesExportacion" class="mb-3"></div>
         
         <a href="create.php" class="btn btn-purple">
             <i class="fas fa-plus"></i> Nuevo Módulo
@@ -99,25 +97,43 @@ require_once '../../app/menu.php';
     <?php } ?>
 
     <form method="GET" class="filter-card">
-        <div class="row align-items-end">
-            <div class="col-md-10">
-                <label>Buscar</label>
-                <input 
-                    type="text"
-                    name="buscar"
-                    class="form-control"
-                    placeholder="Buscar por nombre o ruta"
-                    value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
-            </div>
 
-             <div class="col-md-2">
+    <div class="row align-items-end">
 
-                <button type="submit" class="btn btn-filtro" title="Buscar">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+        <div class="col-md-8">
+
+            <label>Buscar</label>
+
+            <input
+                type="text"
+                name="buscar"
+                class="form-control"
+                placeholder="Buscar por nombre o ruta"
+                value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
+
         </div>
-    </form>
+
+        <div class="col-md-1 px-1">
+
+            <button
+                type="submit"
+                class="btn btn-filtro btn-block">
+
+                <i class="fas fa-search"></i>
+
+            </button>
+
+        </div>
+
+        <div class="col-md-3 pl-2">
+
+            <div id="botonesExportacion"></div>
+
+        </div>
+
+    </div>
+
+</form>
 
     <div class="table-card">
         <div class="table-responsive">
@@ -153,7 +169,7 @@ require_once '../../app/menu.php';
                         <span class="modulo-icon">
 
                             <!-- Si existe un ícono lo muestra,caso contrario utiliza uno por defecto -->
-                            <i class="<?= !empty($row->icono) ? htmlspecialchars($row->icono) : 'fas fa-th-large' ?>"></i>
+                            <i class="fas fa-th-large"></i>
 
                         </span>
 
@@ -191,7 +207,7 @@ require_once '../../app/menu.php';
                     <?php if (!empty($row->icono)) { ?>
 
                         <!-- Muestra el ícono y su nombre -->
-                        <i class="<?= htmlspecialchars($row->icono) ?> mr-1"></i>
+                        <i class="fas <?= htmlspecialchars($row->icono) ?> mr-1"></i>
                         <?= htmlspecialchars($row->icono) ?>
 
                     <?php } else { ?>
@@ -222,37 +238,51 @@ require_once '../../app/menu.php';
                 </td>
 
                 <!-- Columna de acciones -->
-                <td class="acciones-td">
+     <td class="acciones-td">
 
-                    <div class="acciones-wrap">
+    <div class="acciones-wrap">
 
-                        <!-- Botón para activar o desactivar el módulo -->
-                        <button
-                            class="btn-action <?= $row->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
-                            data-toggle="modal"
-                            data-target="#modalEstadoModulo"
-                            data-id="<?= $row->id_modulo ?>"
-                            data-nombre="<?= htmlspecialchars($row->nombre_modulo) ?>"
-                            data-estado="<?= $row->estado ?>"
-                            title="<?= $row->estado == 1 ? 'Desactivar módulo' : 'Activar módulo' ?>">
+        <div class="tooltip-action">
 
-                            <!-- Cambia el ícono según el estado actual -->
-                            <i class="<?= $row->estado == 1 ? 'fas fa-lock' : 'fas fa-check' ?>"></i>
+            <button
+                class="btn-action <?= $row->estado == 1 ? 'btn-desactivar' : 'btn-activar' ?>"
+                data-toggle="modal"
+                data-target="#modalEstadoModulo"
+                data-id="<?= $row->id_modulo ?>"
+                data-nombre="<?= htmlspecialchars($row->nombre_modulo) ?>"
+                data-estado="<?= $row->estado ?>">
 
-                        </button>
+                <i class="<?= $row->estado == 1 ? 'fas fa-lock' : 'fas fa-check' ?>"></i>
 
-                        <!-- Botón para modificar el módulo -->
-                        <a href="edit.php?id=<?= $row->id_modulo ?>"
-                        class="btn-action btn-edit"
-                        title="Modificar">
+            </button>
 
-                            <i class="fas fa-pen"></i>
+            <span class="tooltip-action-text">
 
-                        </a>
+                <?= $row->estado == 1 ? 'Desactivar módulo' : 'Activar módulo' ?>
 
-                    </div>
+            </span>
 
-                </td>
+        </div>
+
+        <div class="tooltip-action">
+
+            <a
+                href="edit.php?id=<?= $row->id_modulo ?>"
+                class="btn-action btn-edit">
+
+                <i class="fas fa-pen"></i>
+
+            </a>
+
+            <span class="tooltip-action-text">
+                Editar
+            </span>
+
+        </div>
+
+    </div>
+
+</td>
 
             </tr>
 

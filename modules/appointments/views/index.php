@@ -132,10 +132,6 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
             <div class="page-subtitle">Gestión del registro de turnos</div>
         </div>
 
-        <div class="d-flex justify-content-end mb-3">
-            <div id="botonesExportacion"></div>
-        </div>
-
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nuevo Turno
@@ -143,64 +139,81 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
             
         </div>
     </div>
+<form method="GET" class="filter-card">
 
-    <form method="GET" class="filter-card">
-        <div class="row align-items-end">
+    <div class="row align-items-end">
 
-            <div class="col-md-3">
-                <label>Profesional</label>
-                <select name="profesional" class="form-control">
-                    <option value="">Todos</option>
+        <!-- PROFESIONAL -->
+        <div class="col-md-3">
+            <label>Profesional</label>
+            <select name="profesional" class="form-control">
+                <option value="">Todos</option>
 
-                    <?php while ($pf = $resProfiltro->fetch_assoc()) { ?>
-                        <option value="<?= $pf['id_profesional'] ?>"
-                            <?= ($filtro_profesional == $pf['id_profesional']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($pf['nombre']) ?>
-                        </option>
-                    <?php } ?>
-                </select>
-            </div>
+                <?php while ($pf = $resProfiltro->fetch_assoc()) { ?>
+                    <option value="<?= $pf['id_profesional'] ?>"
+                        <?= ($filtro_profesional == $pf['id_profesional']) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($pf['nombre']) ?>
+                    </option>
+                <?php } ?>
 
-            <div class="col-md-2">
-                <label>Estado</label>
-                <select name="estado" class="form-control">
-                    <option value="">Todos</option>
-                    <option value="pendiente" <?= $filtro_estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
-                    <option value="confirmado" <?= $filtro_estado === 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
-                    <option value="en_atencion" <?= $filtro_estado === 'en_atencion' ? 'selected' : '' ?>>En atenciÃ³n</option>
-                    <option value="completado" <?= $filtro_estado === 'completado' ? 'selected' : '' ?>>Completado</option>
-                    <option value="cancelado" <?= $filtro_estado === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
-                </select>
-            </div>
+            </select>
+        </div>
 
-            <div class="col-md-2">
-                <label>Desde</label>
-                <input 
-                    type="date" 
-                    name="fecha_desde" 
-                    class="form-control"
-                    value="<?= htmlspecialchars($filtro_fecha_desde) ?>"
-                >
-            </div>
+        <!-- ESTADO -->
+        <div class="col-md-2">
+            <label>Estado</label>
 
-            <div class="col-md-2">
-                <label>Hasta</label>
-                <input 
-                    type="date" 
-                    name="fecha_hasta" 
-                    class="form-control"
-                    value="<?= htmlspecialchars($filtro_fecha_hasta) ?>"
-                >
-            </div>
+            <select name="estado" class="form-control">
+                <option value="">Todos</option>
+                <option value="pendiente" <?= $filtro_estado === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                <option value="confirmado" <?= $filtro_estado === 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
+                <option value="en_atencion" <?= $filtro_estado === 'en_atencion' ? 'selected' : '' ?>>En atención</option>
+                <option value="completado" <?= $filtro_estado === 'completado' ? 'selected' : '' ?>>Completado</option>
+                <option value="cancelado" <?= $filtro_estado === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
+            </select>
+        </div>
 
-            <div class="col-md-3 d-flex">
-                <button type="submit"  class="btn btn-filtro" title="Buscar">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+        <!-- DESDE -->
+        <div class="col-md-2">
+            <label>Desde</label>
+
+            <input
+                type="date"
+                name="fecha_desde"
+                class="form-control"
+                value="<?= htmlspecialchars($filtro_fecha_desde) ?>">
+        </div>
+
+        <!-- HASTA -->
+        <div class="col-md-2">
+            <label>Hasta</label>
+
+            <input
+                type="date"
+                name="fecha_hasta"
+                class="form-control"
+                value="<?= htmlspecialchars($filtro_fecha_hasta) ?>">
+        </div>
+
+        <!-- BUSCAR + EXPORTACIONES -->
+        <div class="col-md-3 d-flex align-items-end">
+
+            <button
+                type="submit"
+                class="btn btn-filtro mr-2"
+                title="Buscar">
+
+                <i class="fas fa-search"></i>
+
+            </button>
+
+            <div id="botonesExportacion"></div>
 
         </div>
-    </form>
+
+    </div>
+
+</form>
 
     <div class="table-card">
         <div class="table-responsive">
@@ -257,19 +270,44 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
                             <td class="text-center">
 
-                            <?php
+                         <?php
                                 $estadosTexto = [
-                                    'pendiente' => 'Pendiente',
-                                    'confirmado' => 'Confirmado',
+                                    'pendiente'   => 'Pendiente',
+                                    'confirmado'  => 'Confirmado',
                                     'en_atencion' => 'En atención',
-                                    'completado' => 'Completado',
-                                    'cancelado' => 'Cancelado'
+                                    'completado'  => 'Completado',
+                                    'cancelado'   => 'Cancelado'
                                 ];
 
                                 $estadoActual = $t->estado;
+
+                                /* Flujo permitido de estados */
+                                $transiciones = [
+
+                                    'pendiente' => [
+                                        'confirmado',
+                                        'cancelado'
+                                    ],
+
+                                    'confirmado' => [
+                                        'en_atencion',
+                                        'cancelado'
+                                    ],
+
+                                    'en_atencion' => [],
+
+                                    'completado' => [],
+
+                                    'cancelado' => []
+
+                                ];
                             ?>
 
-                            <?php if ($estadoActual === 'completado' || $estadoActual === 'cancelado') { ?>
+                            <?php if (
+                                $estadoActual === 'en_atencion' ||
+                                $estadoActual === 'completado' ||
+                                $estadoActual === 'cancelado'
+                            ) { ?>
 
                                 <span class="estado-pill estado-<?= htmlspecialchars($estadoActual) ?>">
                                     <?= $estadosTexto[$estadoActual] ?>
@@ -277,40 +315,50 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
 
                             <?php } else { ?>
 
-                        <div class="estado-dropdown">
+                                <div class="estado-dropdown">
 
-                            <button
-                                type="button"
-                                class="estado-pill estado-<?= htmlspecialchars($estadoActual) ?>"
-                                onclick="toggleEstadoMenu(this)">
-                                <?= $estadosTexto[$estadoActual] ?>
+                                    <button
+                                        type="button"
+                                        class="estado-pill estado-<?= htmlspecialchars($estadoActual) ?>"
+                                        onclick="toggleEstadoMenu(this)">
 
-                                <i class="fas fa-chevron-down ml-1"></i>
-                            </button>
+                                        <?= $estadosTexto[$estadoActual] ?>
 
-                            <div class="estado-menu">
+                                        <i class="fas fa-chevron-down ml-1"></i>
 
-                                <?php foreach ($estadosTexto as $valor => $texto) { ?>
+                                    </button>
 
-                                    <form action="change_status.php" method="POST" class="m-0">
+                                    <div class="estado-menu">
 
-                                        <input type="hidden" name="id_turno" value="<?= $t->id_turno ?>">
-                                        <input type="hidden" name="estado" value="<?= $valor ?>">
+                                        <?php foreach ($transiciones[$estadoActual] as $valor) { ?>
 
-                                        <button
-                                            type="submit"
-                                            class="estado-option estado-<?= $valor ?>"
-                                        >
-                                            <?= $texto ?>
-                                        </button>
+                                            <form action="change_status.php" method="POST" class="m-0">
 
-                                    </form>
+                                                <input
+                                                    type="hidden"
+                                                    name="id_turno"
+                                                    value="<?= $t->id_turno ?>">
 
-                                <?php } ?>
+                                                <input
+                                                    type="hidden"
+                                                    name="estado"
+                                                    value="<?= $valor ?>">
 
-                            </div>
+                                                <button
+                                                    type="submit"
+                                                    class="estado-option estado-<?= $valor ?>">
 
-                        </div>
+                                                    <?= $estadosTexto[$valor] ?>
+
+                                                </button>
+
+                                            </form>
+
+                                        <?php } ?>
+
+                                    </div>
+
+                                </div>
 
                             <?php } ?>
 
@@ -334,7 +382,7 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
                                 ============================================== -->
 
                                 <?php if ($estadoAccion === 'en_atencion') { ?>
-
+                                    <div class="tooltip-action">
                                     <button
                                         type="button"
                                         class="btn-action btn-atender"
@@ -374,27 +422,36 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
                                             'UTF-8'
                                         ) ?>"
 
-                                        title="Registrar atención"
+                                    
                                     >
 
                                         <i class="fas fa-stethoscope"></i>
+                                        <span class="tooltip-action-text">
+                                        Registrar atención médica
+                                    </span>
 
                                     </button>
-
+</div>
                                 <?php } ?>
                                 <?php if (!$turnoCerrado) { ?>
 
                                     <!-- EDITAR -->
+                                      <div class="tooltip-action">
                                     <a 
                                         href="edit.php?id=<?= $t->id_turno ?>"
                                         class="btn-action btn-edit" 
-                                        title="Modificar / Reprogramar"
+                                        
                                     >
                                         <i class="fas fa-pen"></i>
+                                        <span class="tooltip-action-text">
+                                            Editar 
+                                        </span>
                                     </a>
+                                    </div>
 
 
                                     <!-- ELIMINAR -->
+                                     <div class="tooltip-action">
                                     <button 
                                         type="button"
                                         class="btn-action btn-delete"
@@ -408,13 +465,15 @@ if(isset($_GET['error']) && $_GET['error'] == 'estado') { ?>
                                             ENT_QUOTES,
                                             'UTF-8'
                                         ) ?>"
-                                        title="Eliminar"
                                     >
                                         <i class="fas fa-trash"></i>
+                                        <span class="tooltip-action-text">
+                                            Eliminar 
+                                        </span>
                                     </button>
 
                                 <?php } ?>
-
+                            </div>
                             </td>
                             </tr>
                         <?php } ?>

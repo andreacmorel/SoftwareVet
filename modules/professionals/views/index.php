@@ -100,10 +100,6 @@ if(isset($_GET['deleted'])) { ?>
             <div class="page-subtitle">Gestión del registro de profesionales</div>
         </div>
 
-        <div class="d-flex justify-content-end mb-3">
-            <div id="botonesExportacion"></div>
-        </div>
-
         <div class="d-flex align-items-center">
             <a href="create.php" class="btn btn-purple">
                 <i class="fas fa-plus"></i> Nuevo Profesional
@@ -115,23 +111,39 @@ if(isset($_GET['deleted'])) { ?>
     </div>
 
 <form method="GET" class="filter-card">
-        <div class="row align-items-end">
 
-            <div class="col-md-10">
-                <label>Buscar</label>
-                <input type="text" name="buscar" class="form-control"
-                    placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
-                    value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
-            </div>
+    <div class="row align-items-end">
 
-            <div class="col-md-2 ">
-                <button type="submit"  class="btn btn-filtro" title="Buscar">
-                <i class="fas fa-search"></i>
-            </button>
-            </div>
+        <div class="col-md-8">
+
+            <label>Buscar</label>
+
+            <input type="text"
+                   name="buscar"
+                   class="form-control"
+                   placeholder="Buscar por nombre, apellido, teléfono, email o barrio"
+                   value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
 
         </div>
-    </form>
+
+        <div class="col-md-1 px-1">
+
+            <button type="submit"
+                    class="btn btn-filtro btn-block">
+
+                <i class="fas fa-search"></i>
+
+            </button>
+
+        </div>
+
+        <div class="col-md-3 pl-2">
+
+            <div id="botonesExportacion"></div>
+
+        </div>
+    </div>
+</form>
 
     <div class="table-card">
         <div class="table-responsive">

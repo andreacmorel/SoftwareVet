@@ -474,103 +474,134 @@ tbody tr:hover {
    BOTONES DE EXPORTACIÓN - DATATABLES
 ========================================================= */
 
-.dt-buttons {
-    margin-bottom: 12px;
-
-    display: flex;
-
-    gap: 8px;
+.dt-buttons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:0 !important;
 }
 
 
-/* BASE */
+/* =========================================================
+   BASE
+========================================================= */
 
 .dt-buttons .dt-button.buttons-excel,
 .dt-buttons .dt-button.buttons-pdf,
-.dt-buttons .dt-button.buttons-print {
-    margin: 0 !important;
+.dt-buttons .dt-button.buttons-print{
 
-    padding: 8px 14px !important;
+    height:38px !important;
 
-    background-image: none !important;
+    padding:0 12px !important;
 
-    border: none !important;
-    border-radius: 8px !important;
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
 
-    font-size: 12px !important;
-    font-weight: 700 !important;
+    background-image:none !important;
 
-    box-shadow: none !important;
+    border:none !important;
+    border-radius:8px !important;
 
-    opacity: 1 !important;
+    font-size:12px !important;
+    font-weight:700 !important;
 
-    transition: all .2s ease;
+    box-shadow:none !important;
+
+    opacity:1 !important;
+
+    transition:all .2s ease;
+
+    white-space:nowrap;
+
+    margin:0 !important;
 }
 
-.dt-buttons .dt-button i {
-    margin-right: 5px;
+.dt-buttons .dt-button i{
+    margin-right:5px;
 }
 
-.dt-buttons .dt-button:hover {
-    transform: translateY(-2px);
+.dt-buttons .dt-button:hover{
 
-    box-shadow:
-        0 4px 9px rgba(0, 0, 0, .10) !important;
-}
-.btn-filtro {
-    width: 77px;
-    height: 38px;
+    transform:translateY(-2px);
 
-    padding: 0 !important;
-
-    background: #6c757d !important;
-    color: #ffffff !important;
-
-    border: 1px solid #6c757d !important;
-    border-radius: 8px !important;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow: none !important;
-
-    transition: all .2s ease;
+    box-shadow:0 4px 9px rgba(0,0,0,.10) !important;
 }
 
-.btn-filtro i {
-    color: #ffffff !important;
-    font-size: 14px;
+
+/* =========================================================
+   BOTÓN BUSCAR
+========================================================= */
+
+.btn-filtro{
+
+    width:70px;
+    height:38px;
+
+    padding:0 !important;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#52266E !important;
+    color:#ffffff !important;
+
+    border:1px solid #52266E !important;
+    border-radius:8px !important;
+
+    box-shadow:none !important;
+
+    transition:all .2s ease;
+
 }
 
-.btn-filtro:hover {
-    background: #5c636a !important;
-    border-color: #5c636a !important;
-    color: #ffffff !important;
+.btn-filtro i{
 
-    transform: translateY(-2px);
+    color:#ffffff !important;
+    font-size:14px;
 
-    box-shadow:
-        0 4px 10px rgba(0, 0, 0, .15) !important;
 }
 
-.btn-filtro:active {
-    transform: translateY(0);
+.btn-filtro:hover{
+
+    background:#3f1d55 !important;
+    border-color:#3f1d55 !important;
+
+    color:#ffffff !important;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(82,38,110,.18) !important;
+
 }
+
+.btn-filtro:active{
+
+    background:#351946 !important;
+    border-color:#351946 !important;
+
+    transform:translateY(0);
+
+}
+
+
 /* =========================================================
    EXCEL
 ========================================================= */
 
-.dt-buttons .dt-button.buttons-excel {
-    background: #dcfce7 !important;
+.dt-buttons .dt-button.buttons-excel{
 
-    color: #15803d !important;
+    background:#dcfce7 !important;
+    color:#15803d !important;
+
 }
 
-.dt-buttons .dt-button.buttons-excel:hover {
-    background: #bbf7d0 !important;
+.dt-buttons .dt-button.buttons-excel:hover{
 
-    color: #166534 !important;
+    background:#bbf7d0 !important;
+    color:#166534 !important;
+
 }
 
 
@@ -578,16 +609,18 @@ tbody tr:hover {
    PDF
 ========================================================= */
 
-.dt-buttons .dt-button.buttons-pdf {
-    background: #fee2e2 !important;
+.dt-buttons .dt-button.buttons-pdf{
 
-    color: #b91c1c !important;
+    background:#fee2e2 !important;
+    color:#b91c1c !important;
+
 }
 
-.dt-buttons .dt-button.buttons-pdf:hover {
-    background: #fecaca !important;
+.dt-buttons .dt-button.buttons-pdf:hover{
 
-    color: #991b1b !important;
+    background:#fecaca !important;
+    color:#991b1b !important;
+
 }
 
 
@@ -595,19 +628,19 @@ tbody tr:hover {
    IMPRIMIR
 ========================================================= */
 
-.dt-buttons .dt-button.buttons-print {
-    background: #dbeafe !important;
+.dt-buttons .dt-button.buttons-print{
 
-    color: #1d4ed8 !important;
+    background:#dbeafe !important;
+    color:#1d4ed8 !important;
+
 }
 
-.dt-buttons .dt-button.buttons-print:hover {
-    background: #bfdbfe !important;
+.dt-buttons .dt-button.buttons-print:hover{
 
-    color: #1e40af !important;
+    background:#bfdbfe !important;
+    color:#1e40af !important;
+
 }
-
-
 /* =========================================================
    DATATABLES
 ========================================================= */
@@ -1187,5 +1220,87 @@ tbody tr:hover {
 
         width: 100%;
     }
+
+}
+
+#botonesExportacion{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+#botonesExportacion .dt-buttons{
+    margin: 0 !important;
+}
+
+/* =========================================================
+   TOOLTIPS
+========================================================= */
+
+.tooltip-action{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    margin:0 2px;
+}
+
+.tooltip-action-text{
+
+    position:absolute;
+
+    bottom:calc(100% + 8px);
+    left:50%;
+
+    transform:translateX(-50%) translateY(4px);
+
+    background:#1f2937;
+    color:#ffffff;
+
+    padding:7px 10px;
+
+    border-radius:7px;
+
+    font-size:11px;
+    font-weight:600;
+
+    white-space:nowrap;
+
+    opacity:0;
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:all .18s ease;
+
+    z-index:9999;
+
+    box-shadow:0 5px 14px rgba(0,0,0,.18);
+
+}
+
+.tooltip-action-text::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:100%;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:5px solid #1f2937;
+
+}
+
+.tooltip-action:hover .tooltip-action-text{
+
+    opacity:1;
+    visibility:visible;
+
+    transform:translateX(-50%) translateY(0);
 
 }

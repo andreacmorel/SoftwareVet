@@ -62,39 +62,39 @@ if ($user) {
         $mail->isSMTP();
 
         // Servidor SMTP de Gmail.
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host = $_ENV['MAIL_HOST'];
 
         // Activa autenticación SMTP.
-        $mail->SMTPAuth   = true;
+        $mail->SMTPAuth = true;
 
         // Cuenta de Gmail utilizada para enviar el correo.
-        $mail->Username   = 'vetsys.softwareveterinario@gmail.com';
+        $mail->Username = $_ENV['MAIL_USERNAME'];
 
         // Contraseña de aplicación de Gmail.
-        $mail->Password   = 'fvzv elnl znyf herr';
+        $mail->Password = $_ENV['MAIL_PASSWORD'];
 
         // Tipo de seguridad del envío.
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
         // Puerto usado por Gmail para STARTTLS.
-        $mail->Port       = 587;
+        $mail->Port = (int) $_ENV['MAIL_PORT'];
 
-        // Define la codificación para permitir acentos y caracteres especiales.
+        // Codificación.
         $mail->CharSet = 'UTF-8';
 
-        // Define el remitente del correo.
+        // Remitente.
         $mail->setFrom(
-            'vetsys.softwareveterinario@gmail.com',
-            'Software Veterinario'
+            $_ENV['MAIL_FROM_ADDRESS'],
+            $_ENV['MAIL_FROM_NAME']
         );
 
-        // Agrega como destinatario el email ingresado por el usuario.
+        // Destinatario.
         $mail->addAddress($email);
 
-        // Indica que el contenido del correo será HTML.
+        // Contenido HTML.
         $mail->isHTML(true);
 
-        // Asunto del correo.
+        // Asunto.
         $mail->Subject = 'Recuperar contraseña - VetSys';
 
         // Cuerpo del correo con diseño HTML.

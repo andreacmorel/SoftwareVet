@@ -239,24 +239,139 @@ class AppointmentController{
     exit;
     }
 
-    public function exportExcel(){
-    $filename = "listado_turnos_" . date('Ymd') . ".xls";
+    public function complete(){
 
-    header("Content-Type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=\"$filename\"");
-    header("Pragma: no-cache");
-    header("Expires: 0");
+    /* =====================================================
+       VALIDAR MÉTODO
+    ===================================================== */
 
-    $turnos = $this->model->getAllForExcel();
-
-    echo "ID\tFecha\tHora\tMotivo\tProfesional\tMascota\n";
-
-    while ($datos = $turnos->fetch_object()) {
-        echo "{$datos->id_turno}\t{$datos->fecha}\t{$datos->hora}\t{$datos->motivo}\t{$datos->profesional}\t{$datos->mascota}\n";
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        header("Location: index.php");
+        exit;
     }
+
+
+    /* =====================================================
+       RECIBIR DATOS
+    ===================================================== */
+
+    $id_turno = (int)($_POST['id_turno'] ?? 0);
+
+    $detalle_atencion = trim(
+        $_POST['detalle_atencion'] ?? ''
+    );
+
+    $tratamiento = trim(
+        $_POST['tratamiento'] ?? ''
+    );
+
+    $monto_total = trim(
+        $_POST['monto_total'] ?? ''
+    );
+
+
+    /* =====================================================
+       VALIDACIONES
+    ===================================================== */
+
+    if ($id_turno <= 0) {
+        header("Location: index.php?error=turno");
+        exit;
+    }
+
+
+    if (empty($detalle_atencion)) {
+        header("Location: index.php?error=detalle");
+        exit;
+    }
+
+
+    if (strlen($detalle_atencion) < 3) {
+        header("Location: index.php?error=detalle");
+        exit;
+    }
+
+
+    if (empty($tratamiento)) {
+        header("Location: index.php?error=tratamiento");
+        exit;
+    }
+
+
+    if ($monto_total === '' || !is_numeric($monto_total)) {
+        header("Location: index.php?error=monto");
+        exit;
+    }
+
+
+    $monto_total = (float)$monto_total;
+
+
+    if ($monto_total < 0) {
+        header("Location: index.php?error=monto");
+        exit;
+    }
+
+
+    /* =====================================================
+       BUSCAR TURNO
+    ===================================================== */
+
+    $turno = $this->model->getById($id_turno);
+
+
+    if (!$turno) {
+        header("Location: index.php?error=noexiste");
+        exit;
+    }
+
+
+    /* =====================================================
+       NO PERMITIR FINALIZAR TURNOS YA CERRADOS
+    ===================================================== */
+
+    if (
+        $turno->estado === 'completado' ||
+        $turno->estado === 'cancelado'
+    ) {
+        header("Location: index.php?error=estado");
+        exit;
+    }
+
+
+    /* =====================================================
+       FINALIZAR CONSULTA
+    ===================================================== */
+
+    $resultado = $this->model->completeAppointment(
+        $id_turno,
+        $detalle_atencion,
+        $tratamiento,
+        $monto_total,
+        $_SESSION['id_usuario']
+    );
+
+
+    /* =====================================================
+       REDIRECCIÓN
+    ===================================================== */
+
+    if ($resultado) {
+
+        header(
+            "Location: index.php?completed=1"
+        );
+
+        exit;
+    }
+
+
+    header(
+        "Location: index.php?error=complete"
+    );
 
     exit;
-    }
+}
 
     public function delete($id){
 
