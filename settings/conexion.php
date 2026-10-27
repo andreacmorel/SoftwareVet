@@ -17,13 +17,7 @@ $db = $_ENV['DB_DATABASE'];
 $user = $_ENV['DB_USERNAME'];
 $pass = $_ENV['DB_PASSWORD'];
 
-$conexion = mysqli_connect(
-    $host,
-    $user,
-    $pass,
-    $db,
-    $puerto
-);
+$conexion = mysqli_connect($host,$user,$pass,$db,$puerto);
 
 if (!$conexion) {
     die("Conexión fallida: " . mysqli_connect_error());

@@ -823,3 +823,86 @@ td.text-center {
     border-color: #f9a8d4;
     color: #be185d;
 }
+
+/* =========================================
+   CALENDARIO VETSYS - VIOLETA PASTEL
+========================================= */
+
+/* Contenedor del calendario */
+.flatpickr-calendar {
+    border: 1px solid #e9ddf8 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 8px 25px rgba(130, 90, 170, 0.15) !important;
+    padding: 8px;
+    font-family: inherit;
+}
+
+/* Mes y año */
+.flatpickr-months {
+    padding: 5px 0;
+}
+
+.flatpickr-current-month,
+.flatpickr-current-month input.cur-year {
+    color: #7952a5 !important;
+    font-weight: 600;
+}
+
+/* Flechas para cambiar de mes */
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+    fill: #9470bd !important;
+}
+
+/* Días de la semana */
+.flatpickr-weekday {
+    color: #9273b0 !important;
+    font-weight: 600 !important;
+}
+
+/* Día seleccionado */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus {
+    background: #a987d4 !important;
+    border-color: #a987d4 !important;
+    color: white !important;
+}
+
+/* Efecto al pasar el mouse */
+.flatpickr-day:not(.selected):not(.flatpickr-disabled):hover {
+    background: #f1e8fb !important;
+    border-color: #f1e8fb !important;
+    color: #7952a5 !important;
+}
+
+/* Día de hoy */
+.flatpickr-day.today:not(.selected) {
+    border-color: #b99adb !important;
+}
+
+/* Campo de fecha */
+.calendario-vetsys {
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.calendario-vetsys:focus {
+    border-color: #b99adb;
+    box-shadow: 0 0 0 0.2rem rgba(169, 135, 212, 0.15);
+}
+
+.vet-qr-section { border-top: 1px solid #eee1f6; padding-top: 22px; }
+.vet-qr-conditions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 22px; margin-bottom: 18px; }
+.vet-qr-check, .vet-qr-toggle { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; margin: 0; }
+.vet-qr-check span, .vet-qr-toggle span { color: #52266E; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.vet-qr-check input, .vet-qr-toggle input { margin-top: 1px; accent-color: #52266E; flex-shrink: 0; }
+.vet-qr-other { margin-top: 10px; }
+.vet-qr-other[hidden] { display: none !important; }
+.vet-qr-textarea-footer { display: flex; justify-content: space-between; gap: 8px; }
+.vet-qr-textarea-footer .help-text { margin: 0; }
+.vet-qr-public-options { background: #f5eff9; border-left: none; border-radius: 7px; padding: 16px; display: grid; gap: 13px; }
+.vet-qr-public-options .help-text { margin: 0; }
+.vet-qr-toggle input:disabled + span { opacity: .55; }
+@media (max-width: 720px) { .vet-qr-conditions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 450px) { .vet-qr-conditions { grid-template-columns: 1fr; } }

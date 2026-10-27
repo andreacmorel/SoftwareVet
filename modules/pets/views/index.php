@@ -165,7 +165,7 @@ if(isset($_GET['updated'])) { ?>
                                             <i class="fas fa-dog"></i>
                                         </span>
                                         <div>
-                                            <div class="pet-name"><?= htmlspecialchars($row->nombre_mascota) ?></div>
+                                            <div class="pet-name"><?= htmlspecialchars($row->nombre_mascota ) ?></div>
                                             <div class="pet-id">#<?= $row->id_mascota ?></div>
                                         </div>
                                     </div>
@@ -204,12 +204,35 @@ if(isset($_GET['updated'])) { ?>
                                     <?php } ?>
 
                                 </td>
-                                <td>
-                                    <?= !empty($row->peso) ? htmlspecialchars($row->peso) . ' <small class="text-muted">kg</small>' : 'â€”' ?>
-                                </td>
+                                
+                                    <td>
+                                        <?php if ($row->peso !== null && $row->peso !== '') { ?>
+
+                                            <?php
+                                            // Convertimos el peso a número.
+                                            $peso = (float) $row->peso;
+
+                                            // Mostramos hasta dos decimales,
+                                            // eliminando los ceros innecesarios.
+                                            $pesoFormateado = rtrim(
+                                                rtrim(number_format($peso, 2, ',', ''), '0'),
+                                                ','
+                                            );
+                                            ?>
+
+                                            <?= htmlspecialchars($pesoFormateado) ?>
+                                            <small class="text-muted">kg</small>
+
+                                        <?php } else { ?>
+
+                                            <span class="data-empty">Sin registrar</span>
+
+                                        <?php } ?>
+                                    </td>
+
 
                                 <td>
-                                    <?php if (!empty($row->edad)) { ?>
+                                    <?php if ($row->edad !== null && $row->edad !== '') { ?>
 
                                         <?php
                                         // Unidad de edad guardada en la base de datos
@@ -267,6 +290,16 @@ if(isset($_GET['updated'])) { ?>
                                             <i class="fas fa-file-medical"></i>
                                         </a>
                                         <span class="tooltip-action-text">Ver ficha</span>
+                                    </div>
+
+
+                                    <div class="tooltip-action">
+                                        <a href="qr.php?id=<?= $row->id_mascota ?>"
+                                        target="_blank"
+                                        class="btn-action btn-qr">
+                                            <i class="fas fa-qrcode"></i>
+                                        </a>
+                                        <span class="tooltip-action-text">QR</span>
                                     </div>
 
                                     <!-- Editar -->

@@ -1011,3 +1011,14 @@ tbody tr:hover {
 .text-capitalize {
     text-transform: capitalize;
 }
+/* BOTÓN QR - VIOLETA */
+
+.btn-qr {
+    background: #F3E8FF;
+    color: #7E22CE;
+}
+
+.btn-qr:hover {
+    background: #E9D5FF;
+    color: #6B21A8;
+}

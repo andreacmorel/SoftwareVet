@@ -1,0 +1,237 @@
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #f7f4fa 0%, #f2edf7 100%);
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .qr-wrapper {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .qr-card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 10px 35px rgba(82, 38, 110, 0.10);
+            overflow: hidden;
+            border: 1px solid #eee6f4;
+        }
+
+        .qr-header {
+            background: linear-gradient(135deg, #52266E 0%, #6f3f8f 100%);
+            color: #fff;
+            text-align: center;
+            padding: 28px 20px 24px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: .3px;
+            margin: 0;
+        }
+
+        .brand-subtitle {
+            margin: 0;
+            font-size: 13px;
+            opacity: .92;
+        }
+
+        .qr-body {
+            padding: 28px 24px 26px;
+            text-align: center;
+        }
+
+        .pet-summary {
+            background: #fbf7ff;
+            border: 1px solid #efe4f6;
+            border-radius: 16px;
+            padding: 18px 16px;
+            margin-bottom: 24px;
+        }
+
+        .pet-name {
+            margin: 0 0 6px;
+            color: #52266E;
+            font-size: 25px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .pet-meta {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: #e9f8ef;
+            color: #187a3b;
+        }
+
+        .status-inactive {
+            background: #fff4db;
+            color: #9a6500;
+        }
+
+        .qr-box {
+            background: #fff;
+            border: 1px solid #ece8f1;
+            border-radius: 20px;
+            padding: 18px;
+            width: fit-content;
+            margin: 0 auto;
+            box-shadow: 0 6px 18px rgba(0,0,0,.04);
+        }
+
+        .qr-image {
+            display: block;
+            width: 240px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .qr-text {
+            margin: 20px 0 0;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.7;
+        }
+
+        .qr-footer {
+            margin-top: 24px;
+        }
+
+        .btn-print {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            background: #52266E;
+            color: #fff;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .btn-print:hover {
+            background: #421c59;
+        }
+
+        .btn-print i {
+            margin-right: 8px;
+        }
+
+        .print-note {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #8a8a8a;
+        }
+
+        @media (max-width: 480px) {
+            .qr-header {
+                padding: 24px 16px 20px;
+            }
+
+            .brand-name {
+                font-size: 25px;
+            }
+
+            .qr-body {
+                padding: 22px 18px 22px;
+            }
+
+            .pet-name {
+                font-size: 22px;
+            }
+
+            .qr-image {
+                width: 210px;
+            }
+        }
+
+        @media print {
+            @page {
+                margin: 12mm;
+            }
+
+            body {
+                background: #fff;
+                padding: 0;
+                min-height: auto;
+                display: block;
+            }
+
+            .qr-wrapper {
+                max-width: 100%;
+            }
+
+            .qr-card {
+                box-shadow: none;
+                border: none;
+                border-radius: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .qr-header {
+                background: #52266E !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .pet-summary {
+                background: #fbf7ff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .status-active,
+            .status-inactive {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }

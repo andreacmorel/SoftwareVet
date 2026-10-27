@@ -323,8 +323,8 @@ public function getPetAppointments($id_mascota){
             ON pr.id_persona = p.id_persona
 
         WHERE t.id_mascota = ?
-
         AND t.estado = 'completado'
+        AND t.activo = 1
 
         ORDER BY
             t.fecha DESC,

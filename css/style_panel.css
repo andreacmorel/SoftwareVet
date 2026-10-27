@@ -49,13 +49,16 @@
         box-shadow: 0 12px 28px rgba(0,0,0,.14);
     }
 
-    .stat-card .card-body {
-        min-height: 145px;
-        position: relative;
-        z-index: 2;
-        padding: 22px;
-    }
+   .stat-card .card-body {
+    min-height: 155px;
+    padding: 22px;
+    position: relative;
+    z-index: 2;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
     /* MASCOTAS */
     .stat-purple {
@@ -311,3 +314,42 @@
     }
 
 
+
+    /* BOTONES DE EXPORTACIÓN DEL DASHBOARD */
+
+.btn-exportar {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.btn-exportar-pdf {
+    background: #fff0f0;
+    color: #d93030;
+    border-color: #f5d0d0;
+}
+
+.btn-exportar-pdf:hover {
+    background: #ffe0e0;
+}
+
+.btn-exportar-excel {
+    background: #eaf8ef;
+    color: #16834a;
+    border-color: #c7ecd4;
+}
+
+.btn-exportar-excel:hover {
+    background: #d7f2e1;
+}
+
+.btn-exportar + .btn-exportar {
+    margin-left: 8px;
+}

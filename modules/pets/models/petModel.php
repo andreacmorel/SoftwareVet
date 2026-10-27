@@ -4,8 +4,7 @@ class PetModel{
 
     private $conexion;
 
-    public function __construct($conexion)
-    {
+    public function __construct($conexion){
         $this->conexion = $conexion;
     }
 
@@ -32,7 +31,7 @@ class PetModel{
     }
 
     return $where;
-}
+    }
 
     public function countAll($where){
 
@@ -118,7 +117,7 @@ class PetModel{
     return $resExiste && mysqli_num_rows($resExiste) > 0;
     }
 
-    public function create($nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente){
+    public function create($nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente, $datosQr = []){
     $nombreSeguro = $this->conexion->real_escape_string($nombre);
     $sexoSeguro = $this->conexion->real_escape_string($sexo);
     $colorSeguro = $this->conexion->real_escape_string($color);
@@ -128,7 +127,10 @@ class PetModel{
         ? "NULL"
         : "'" . $this->conexion->real_escape_string($fecha_nacimiento) . "'";
 
-    $edadSQL = empty($edad)
+    
+    // Si la edad está vacía, guardamos NULL.
+    // Si es 0, conservamos el valor porque es una edad válida.
+    $edadSQL = ($edad === '')
         ? "NULL"
         : "'" . $this->conexion->real_escape_string($edad) . "'";
 
@@ -136,8 +138,23 @@ class PetModel{
         ? "NULL"
         : "'$unidadSeguro'";
 
+    // Únicamente preparar los campos agregados para la ficha QR.
+    $condicionesSQL = isset($datosQr['condicion_especial'])
+        ? "'" . $this->conexion->real_escape_string($datosQr['condicion_especial']) . "'" : 'NULL';
+    $otraSQL = isset($datosQr['condicion_otra'])
+        ? "'" . $this->conexion->real_escape_string($datosQr['condicion_otra']) . "'" : 'NULL';
+    $cuidadosSQL = isset($datosQr['cuidados_especiales'])
+        ? "'" . $this->conexion->real_escape_string($datosQr['cuidados_especiales']) . "'" : 'NULL';
+    $publica = (int)($datosQr['ficha_publica'] ?? 0);
+    $consentimiento = (int)($datosQr['consentimiento_qr'] ?? 0);
+    $telefono = (int)($datosQr['mostrar_telefono'] ?? 0);
+    $domicilio = (int)($datosQr['mostrar_domicilio'] ?? 0);
+
     $sqlInsert = "INSERT INTO mascota (nombre_mascota,fecha_nacimiento,sexo,
-            peso,color,edad,unidad_edad,id_especie,id_cliente)
+            peso,color,edad,unidad_edad,id_especie,id_cliente,
+            condicion_especial,condicion_otra,cuidados_especiales,
+            ficha_publica,consentimiento_qr,fecha_consentimiento_qr,
+            mostrar_telefono,mostrar_domicilio)
         VALUES (
             '$nombreSeguro',
             $fechaSQL,
@@ -147,7 +164,15 @@ class PetModel{
             $edadSQL,
             $unidadSQL,
             $id_especie,
-            $id_cliente
+            $id_cliente,
+            $condicionesSQL,
+            $otraSQL,
+            $cuidadosSQL,
+            $publica,
+            $consentimiento,
+            CASE WHEN $consentimiento = 1 THEN NOW() ELSE NULL END,
+            $telefono,
+            $domicilio
         )
     ";
 
@@ -179,7 +204,7 @@ class PetModel{
     }
 
     public function update($id,$nombre,$fecha_nacimiento,$sexo,$peso,$color,$edad,$unidad_edad,
-    $id_especie,$id_cliente,$id_usuario
+    $id_especie,$id_cliente,$id_usuario,$datosQr = []
     ){
 
     //Obtenemos como estaba la mascota ANTES de modificarla
@@ -213,14 +238,30 @@ class PetModel{
         ? "NULL"
         : "'" . $this->conexion->real_escape_string($fecha_nacimiento) . "'";
 
-    $edadSQL = empty($edad)
+    
+    // Si no se ingresó edad, guardamos NULL.
+    // Si se ingresó 0, lo conservamos porque es válido.
+    $edadSQL = ($edad === '')
         ? "NULL"
         : "'" . $this->conexion->real_escape_string($edad) . "'";
+
 
     $unidadSQL = empty($unidad_edad)
         ? "NULL"
         : "'$unidadSeguro'";
 
+
+    // Únicamente preparar los campos agregados para la ficha QR.
+    $condicionesSQL = isset($datosQr['condicion_especial'])
+        ? "'" . $this->conexion->real_escape_string($datosQr['condicion_especial']) . "'" : 'NULL';
+    $otraSQL = isset($datosQr['condicion_otra'])
+        ? "'" . $this->conexion->real_escape_string($datosQr['condicion_otra']) . "'" : 'NULL';
+    $cuidadosSQL = isset($datosQr['cuidados_especiales'])
+        ? "'" . $this->conexion->real_escape_string($datosQr['cuidados_especiales']) . "'" : 'NULL';
+    $publica = (int)($datosQr['ficha_publica'] ?? 0);
+    $consentimiento = (int)($datosQr['consentimiento_qr'] ?? 0);
+    $telefono = (int)($datosQr['mostrar_telefono'] ?? 0);
+    $domicilio = (int)($datosQr['mostrar_domicilio'] ?? 0);
 
     // Hacer el UPDATE normal
     $sqlUpdate = "UPDATE mascota SET 
@@ -232,7 +273,16 @@ class PetModel{
             edad = $edadSQL,
             unidad_edad = $unidadSQL,
             id_especie = $id_especie,
-            id_cliente = $id_cliente
+            id_cliente = $id_cliente,
+            condicion_especial = $condicionesSQL,
+            condicion_otra = $otraSQL,
+            cuidados_especiales = $cuidadosSQL,
+            ficha_publica = $publica,
+            consentimiento_qr = $consentimiento,
+            fecha_consentimiento_qr = CASE WHEN $consentimiento = 1
+                THEN COALESCE(fecha_consentimiento_qr, NOW()) ELSE NULL END,
+            mostrar_telefono = $telefono,
+            mostrar_domicilio = $domicilio
         WHERE id_mascota = $id
     ";
 
@@ -275,36 +325,6 @@ class PetModel{
 
     return $resultadoUpdate;
 }
-//    public function update($id, $nombre, $fecha_nacimiento, $sexo, $peso, $color, $edad, $unidad_edad, $id_especie, $id_cliente){
-
-//    $nombreSeguro = $this->conexion->real_escape_string($nombre);
-//    $sexoSeguro = $this->conexion->real_escape_string($sexo);
-//    $colorSeguro = $this->conexion->real_escape_string($color);
-//    $unidadSeguro = $this->conexion->real_escape_string($unidad_edad);
-
-//    $fechaSQL = empty($fecha_nacimiento)
-//        ? "NULL"
-//        : "'" . $this->conexion->real_escape_string($fecha_nacimiento) . "'";
-
-//    $edadSQL = empty($edad)
-//        ? "NULL"
-//        : "'" . $this->conexion->real_escape_string($edad) . "'";
-
-//    $unidadSQL = empty($unidad_edad)
-//        ? "NULL"
-//        : "'$unidadSeguro'";
-
-//    $sqlUpdate = "UPDATE mascota SET nombre_mascota = '$nombreSeguro',
-//            fecha_nacimiento = $fechaSQL,sexo = '$sexoSeguro',peso = '$peso',color = '$colorSeguro',
-//            edad = $edadSQL,
-//            unidad_edad = $unidadSQL,
-//            id_especie = $id_especie,
-//            id_cliente = $id_cliente
-//        WHERE id_mascota = $id
-//    ";
-
-//    return mysqli_query($this->conexion, $sqlUpdate);
-//}
 
     public function getPetRecord($id){
     $sql = "SELECT 
@@ -333,4 +353,140 @@ class PetModel{
 
         return mysqli_query($this->conexion, $sqlDelete);
     }
+
+    // =====================================================
+    // OBTENER FICHA PÚBLICA DE MASCOTA POR TOKEN QR
+    // =====================================================
+
+    public function getPublicPetByToken($token) {
+
+        $sql = "SELECT m.id_mascota,m.nombre_mascota,m.sexo,m.color,m.edad,m.unidad_edad,m.token_publico, m.foto,
+            m.mostrar_telefono,m.mostrar_domicilio,
+            m.condicion_especial,m.condicion_otra,m.cuidados_especiales,
+            e.nombre_especie,e.raza,
+            p.nombre_persona,p.apellido_persona,p.telefono,
+            d.barrio,d.calle,d.numero_calle,d.manzana
+        FROM mascota m
+        INNER JOIN especie e ON m.id_especie = e.id_especie
+        INNER JOIN cliente c ON m.id_cliente = c.id_cliente
+        INNER JOIN persona p ON c.id_persona = p.id_persona
+        LEFT JOIN domicilio d ON c.id_cliente = d.id_cliente AND d.activo = 1
+        WHERE m.token_publico = ?
+            AND m.activo = 1
+            AND c.activo = 1
+            AND m.ficha_publica = 1
+            AND m.consentimiento_qr = 1 LIMIT 1";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $mascota = $resultado->fetch_assoc();
+        $stmt->close();
+        return $mascota ?: null;
+
+        }
+
+        // =====================================================
+        // GENERAR TOKEN PÚBLICO PARA EL QR
+        // =====================================================
+
+        public function generatePublicToken($id) {
+
+            $id = (int) $id;
+
+            if ($id <= 0) {
+                return false;
+            }
+
+            // Buscar mascota activa
+            $sql = "SELECT token_publico FROM mascota
+                    WHERE id_mascota = ? AND activo = 1";
+
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+            $mascota = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+
+            if (!$mascota) {
+                return false;
+            }
+
+            // Si ya tiene token, reutilizarlo
+            if (!empty($mascota['token_publico'])) {
+                return $mascota['token_publico'];
+            }
+
+            // Generar token aleatorio seguro
+            $token = bin2hex(random_bytes(32));
+
+            // Guardarlo en la base de datos
+            $sql = "UPDATE mascota
+                    SET token_publico = ?
+                    WHERE id_mascota = ?
+                    AND activo = 1
+                    AND token_publico IS NULL";
+
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bind_param("si", $token, $id);
+
+            $guardado = $stmt->execute();
+            $stmt->close();
+
+            return $guardado ? $token : false;
+        }
+
+        
+    // =====================================================
+    // GUARDAR AUTORIZACIÓN PARA LA FICHA PÚBLICA QR
+    // =====================================================
+
+    public function updateQrConsent($id,$fichaPublica,$mostrarTelefono,$mostrarDomicilio) {
+       
+        $sql = "UPDATE mascota
+                SET ficha_publica = ?,consentimiento_qr = ?,fecha_consentimiento_qr =
+                        CASE WHEN ? = 1 THEN NOW() ELSE NULL END,
+                    mostrar_telefono = ?,
+                    mostrar_domicilio = ?
+                WHERE id_mascota = ?
+                AND activo = 1";
+
+        $stmt = $this->conexion->prepare($sql);
+
+        $stmt->bind_param("iiiiii",
+            $fichaPublica,$fichaPublica,$fichaPublica,
+            $mostrarTelefono,$mostrarDomicilio,
+            $id
+        );
+
+        $resultado = $stmt->execute();
+        $filas = $stmt->affected_rows;
+        $stmt->close();
+
+        return $resultado && $filas > 0;
+    }
+
+    public function updatePhoto($id, $foto) {
+    $sql = "UPDATE mascota
+            SET foto = ?
+            WHERE id_mascota = ?
+            AND activo = 1";
+
+    $stmt = $this->conexion->prepare($sql);
+
+    if (!$stmt) {
+        return false;
+    }
+
+    $id = (int) $id;
+    $stmt->bind_param("si", $foto, $id);
+
+    $resultado = $stmt->execute();
+    $stmt->close();
+
+    return $resultado;
+}
+
 }

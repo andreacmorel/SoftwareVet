@@ -1,4 +1,5 @@
-﻿<?php
+﻿
+<?php
 require_once '../../app/menu.php';
 ?>
 
@@ -7,28 +8,16 @@ require_once '../../app/menu.php';
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ficha Mascota</title>
+    <title>Ficha Mascota | VetSys</title>
 
-    <link
-        href="../../vendor/fontawesome-free/css/all.min.css"
-        rel="stylesheet"
-    >
-
-    <link
-        href="../../css/sb-admin-2.min.css"
-        rel="stylesheet"
-    >
-
-    <link
-        href="../../css/pet_record_style.css"
-        rel="stylesheet"
-    >
+    <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../css/pet_record_style.css" rel="stylesheet">
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
      BREADCRUMB
@@ -41,14 +30,11 @@ require_once '../../app/menu.php';
         <li class="breadcrumb-item">
 
             <a href="/SoftwareVet/app/inicio.php">
-
                 <i class="fas fa-home"></i>
                 Inicio
-
             </a>
 
         </li>
-
 
         <li class="breadcrumb-item">
 
@@ -57,7 +43,6 @@ require_once '../../app/menu.php';
             </a>
 
         </li>
-
 
         <li class="breadcrumb-item active">
             Ficha de mascota
@@ -68,9 +53,7 @@ require_once '../../app/menu.php';
 </div>
 
 
-
 <div class="container-fluid">
-
 
     <!-- =================================================
          CABECERA DE LA PÁGINA
@@ -83,25 +66,23 @@ require_once '../../app/menu.php';
             <h1 class="h3 titulo-pagina">
 
                 <i class="fas fa-paw mr-2"></i>
-
                 Ficha de Mascota
 
             </h1>
 
-
             <div class="subtitulo-pagina">
-
                 Información completa del paciente
                 y su propietario.
-
             </div>
 
         </div>
 
 
-        <!-- BOTONES -->
+        <!-- BOTONES SUPERIORES -->
 
         <div class="ficha-header-actions">
+
+            <!-- VOLVER -->
 
             <a
                 href="index.php"
@@ -109,20 +90,35 @@ require_once '../../app/menu.php';
             >
 
                 <i class="fas fa-arrow-left mr-1"></i>
-
                 Volver
 
             </a>
 
 
+            <!-- CÓDIGO QR -->
+
             <a
-                href="print_pet_record.php?id=<?= $id ?>"
+                href="qr.php?id=<?= (int)$id ?>"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-ficha-qr"
+            >
+
+                <i class="fas fa-qrcode mr-1"></i>
+                Código QR
+
+            </a>
+
+
+            <!-- IMPRIMIR -->
+
+            <a
+                href="print_pet_record.php?id=<?= (int)$id ?>"
                 target="_blank"
                 class="btn btn-purple"
             >
 
                 <i class="fas fa-print mr-1"></i>
-
                 Imprimir
 
             </a>
@@ -131,56 +127,102 @@ require_once '../../app/menu.php';
 
     </div>
 
+
+    <!-- =================================================
+         DOCUMENTO DE LA MASCOTA
+    ================================================== -->
+
     <div class="ficha-documento">
+
+
+        <!-- =================================================
+             CABECERA DEL PACIENTE
+        ================================================== -->
+
         <div class="ficha-paciente-header">
+
             <div class="paciente-principal">
+
+                <!-- FOTOGRAFÍA DE LA MASCOTA -->
 
                 <div class="paciente-icono">
 
-                    <i class="fas fa-dog"></i>
+                    <?php if (!empty($mascota['foto'])): ?>
+
+                        <img
+                            src="/SoftwareVet/<?= htmlspecialchars(
+                                ltrim($mascota['foto'], '/'),
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+                            alt="Fotografía de <?= htmlspecialchars(
+                                $mascota['nombre_mascota'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+                            class="paciente-foto"
+                        >
+
+                    <?php else: ?>
+
+                        <i class="fas fa-dog"></i>
+
+                    <?php endif; ?>
 
                 </div>
+
+
+                <!-- IDENTIFICACIÓN -->
 
                 <div class="paciente-identidad">
 
                     <h2>
 
                         <?= htmlspecialchars(
-                            $mascota['nombre_mascota']
+                            $mascota['nombre_mascota'],
+                            ENT_QUOTES,
+                            'UTF-8'
                         ) ?>
 
                     </h2>
 
 
                     <div class="paciente-badges">
+
+                        <!-- ESPECIE -->
+
                         <span class="badge-ficha badge-especie">
 
                             <?= htmlspecialchars(
-                                $mascota['nombre_especie']
+                                $mascota['nombre_especie'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             ) ?>
+
                         </span>
 
-                        <?php if ($mascota['sexo'] == 'M') { ?>
+
+                        <!-- SEXO -->
+
+                        <?php if ($mascota['sexo'] == 'M'): ?>
 
                             <span class="badge-ficha badge-macho">
 
                                 <i class="fas fa-mars"></i>
-
                                 Macho
 
                             </span>
 
-                        <?php } elseif ($mascota['sexo'] == 'H') { ?>
+                        <?php elseif ($mascota['sexo'] == 'H'): ?>
 
                             <span class="badge-ficha badge-hembra">
 
                                 <i class="fas fa-venus"></i>
-
                                 Hembra
 
                             </span>
 
-                        <?php } ?>
+                        <?php endif; ?>
 
                     </div>
 
@@ -189,12 +231,12 @@ require_once '../../app/menu.php';
             </div>
 
 
+            <!-- NÚMERO DE FICHA -->
+
             <div class="numero-ficha">
 
                 <span class="numero-label">
-
                     Ficha clínica
-
                 </span>
 
                 <strong>
@@ -213,18 +255,23 @@ require_once '../../app/menu.php';
         </div>
 
 
+        <!-- =================================================
+             DATOS DE LA MASCOTA
+        ================================================== -->
+
         <section class="seccion-ficha">
+
             <div class="titulo-seccion">
 
                 <i class="fas fa-paw"></i>
-
                 Datos de la mascota
 
             </div>
 
 
-
             <div class="tabla-datos mascota-datos">
+
+                <!-- ESPECIE -->
 
                 <div class="campo-ficha">
 
@@ -233,12 +280,17 @@ require_once '../../app/menu.php';
                     <strong>
 
                         <?= htmlspecialchars(
-                            $mascota['nombre_especie']
+                            $mascota['nombre_especie'],
+                            ENT_QUOTES,
+                            'UTF-8'
                         ) ?>
 
                     </strong>
 
                 </div>
+
+
+                <!-- RAZA -->
 
                 <div class="campo-ficha campo-raza">
 
@@ -247,13 +299,20 @@ require_once '../../app/menu.php';
                     <strong>
 
                         <?= !empty($mascota['raza'])
-                            ? htmlspecialchars($mascota['raza'])
+                            ? htmlspecialchars(
+                                $mascota['raza'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                              )
                             : 'Sin especificar'
                         ?>
 
                     </strong>
 
                 </div>
+
+
+                <!-- SEXO -->
 
                 <div class="campo-ficha">
 
@@ -274,6 +333,7 @@ require_once '../../app/menu.php';
                         } else {
 
                             echo 'Sin especificar';
+
                         }
 
                         ?>
@@ -281,6 +341,9 @@ require_once '../../app/menu.php';
                     </strong>
 
                 </div>
+
+
+                <!-- COLOR -->
 
                 <div class="campo-ficha">
 
@@ -292,19 +355,21 @@ require_once '../../app/menu.php';
 
                 </div>
 
+
+                <!-- FECHA DE NACIMIENTO -->
+
                 <div class="campo-ficha">
 
-                    <span>
-                        Fecha de nacimiento
-                    </span>
+                    <span>Fecha de nacimiento</span>
 
                     <strong>
-
                         <?= $fechaNacimiento ?>
-
                     </strong>
 
                 </div>
+
+
+                <!-- EDAD -->
 
                 <div class="campo-ficha">
 
@@ -314,54 +379,56 @@ require_once '../../app/menu.php';
 
                         <?php
 
-                        $edad =
-                            $mascota['edad'] ?? '';
+                        $edadMascota = $mascota['edad'] ?? '';
+                        $unidad = $mascota['unidad_edad'] ?? '';
 
-                        $unidad =
-                            $mascota['unidad_edad'] ?? '';
-
-
-                        if ($edad == 1) {
+                        if ($edadMascota == 1) {
 
                             if ($unidad == 'dias') {
-
                                 $unidad = 'día';
 
                             } elseif ($unidad == 'meses') {
-
                                 $unidad = 'mes';
 
                             } elseif ($unidad == 'años') {
-
                                 $unidad = 'año';
                             }
 
                         } else {
 
                             if ($unidad == 'dias') {
-
                                 $unidad = 'días';
                             }
                         }
 
                         ?>
 
+                        <?php if ($edadMascota !== '' && $edadMascota !== null): ?>
 
-                        <?php if (!empty($edad)) { ?>
+                            <?= htmlspecialchars(
+                                (string)$edadMascota,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
 
-                            <?= htmlspecialchars($edad) ?>
+                            <?= htmlspecialchars(
+                                $unidad,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
 
-                            <?= htmlspecialchars($unidad) ?>
-
-                        <?php } else { ?>
+                        <?php else: ?>
 
                             Sin especificar
 
-                        <?php } ?>
+                        <?php endif; ?>
 
                     </strong>
 
                 </div>
+
+
+                <!-- PESO -->
 
                 <div class="campo-ficha">
 
@@ -373,71 +440,74 @@ require_once '../../app/menu.php';
 
                 </div>
 
-
             </div>
 
         </section>
 
-        <section class="seccion-ficha">
 
+      
+
+        <!-- =================================================
+             DATOS DEL PROPIETARIO
+        ================================================== -->
+
+        <section class="seccion-ficha">
 
             <div class="titulo-seccion">
 
                 <i class="fas fa-user"></i>
-
                 Datos del propietario
 
             </div>
 
 
-
             <div class="tabla-datos propietario-datos">
+
+                <!-- NOMBRE COMPLETO -->
+
                 <div class="campo-ficha">
 
-                    <span>
-                        Nombre completo
-                    </span>
+                    <span>Nombre completo</span>
 
                     <strong>
 
                         <?= htmlspecialchars(
                             $mascota['nombre_persona']
                             . ' ' .
-                            $mascota['apellido_persona']
+                            $mascota['apellido_persona'],
+                            ENT_QUOTES,
+                            'UTF-8'
                         ) ?>
 
                     </strong>
 
                 </div>
 
+
+                <!-- TELÉFONO -->
+
                 <div class="campo-ficha">
 
-                    <span>
-                        Teléfono
-                    </span>
+                    <span>Teléfono</span>
 
                     <strong>
-
                         <?= $telefono ?>
-
                     </strong>
 
                 </div>
+
+
+                <!-- EMAIL -->
 
                 <div class="campo-ficha campo-email">
 
-                    <span>
-                        Email
-                    </span>
+                    <span>Email</span>
 
                     <strong>
-
                         <?= $email ?>
-
                     </strong>
 
                 </div>
-
 
             </div>
 
@@ -448,11 +518,13 @@ require_once '../../app/menu.php';
 </div>
 
 
+<!-- =====================================================
+     SCRIPTS ORIGINALES
+===================================================== -->
+
 <script src="../../vendor/jquery/jquery.min.js"></script>
 <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/sb-admin-2.min.js"></script>
 
-
 </body>
-
 </html>

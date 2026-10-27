@@ -7,47 +7,59 @@ require_once __DIR__ . '/../settings/conexion.php';
 require_once __DIR__ . '/menu.php';
 
 
-// DATOS REALES PARA LAS TARJETAS DEL DASHBOARD
 
-// TOTAL DE MASCOTAS
-$sqlMascotas = "SELECT COUNT(*) AS total FROM mascota";
+// =====================================================
+// DATOS DE LAS TARJETAS DEL DASHBOARD
+// =====================================================
+
+
+// TOTAL DE MASCOTAS ACTIVAS
+$sqlMascotas = "
+    SELECT COUNT(*) AS total
+    FROM mascota
+    WHERE activo = 1
+";
 
 $resultadoMascotas = mysqli_query($conexion, $sqlMascotas);
 $datosMascotas = mysqli_fetch_assoc($resultadoMascotas);
 $totalMascotas = $datosMascotas['total'];
 
 
-// TOTAL DE CLIENTES
-$sqlClientes = "SELECT COUNT(*) AS total FROM cliente";
+// TOTAL DE CLIENTES ACTIVOS
+$sqlClientes = "
+    SELECT COUNT(*) AS total
+    FROM cliente
+    WHERE activo = 1
+";
 
 $resultadoClientes = mysqli_query($conexion, $sqlClientes);
 $datosClientes = mysqli_fetch_assoc($resultadoClientes);
 $totalClientes = $datosClientes['total'];
 
 
-// TOTAL DE PROFESIONALES
-$sqlProfesionales = "SELECT COUNT(*) AS total FROM profesional";
+// TOTAL DE PROFESIONALES ACTIVOS
+$sqlProfesionales = "
+    SELECT COUNT(*) AS total
+    FROM profesional
+    WHERE activo = 1
+";
 
 $resultadoProfesionales = mysqli_query($conexion, $sqlProfesionales);
 $datosProfesionales = mysqli_fetch_assoc($resultadoProfesionales);
 $totalProfesionales = $datosProfesionales['total'];
 
 
-// TURNOS DE HOY
-$sqlTurnosHoy = "SELECT COUNT(*) AS total FROM turnos WHERE fecha = CURDATE()";
+// TURNOS POR ATENDER
+$sqlTurnosPorAtender = "
+    SELECT COUNT(*) AS total
+    FROM turnos
+    WHERE activo = 1
+    AND estado IN ('pendiente', 'confirmado', 'en_atencion')
+";
 
-$resultadoTurnosHoy = mysqli_query($conexion, $sqlTurnosHoy);
-$datosTurnosHoy = mysqli_fetch_assoc($resultadoTurnosHoy);
-$totalTurnosHoy = $datosTurnosHoy['total'];
-
-
-// TURNOS PENDIENTES DE HOY
-$sqlPendientesHoy = "SELECT COUNT(*) AS total FROM turnos
-    WHERE fecha = CURDATE() AND estado = 'pendiente'";
-
-$resultadoPendientesHoy = mysqli_query($conexion, $sqlPendientesHoy);
-$datosPendientesHoy = mysqli_fetch_assoc($resultadoPendientesHoy);
-$totalPendientesHoy = $datosPendientesHoy['total'];
+$resultadoTurnosPorAtender = mysqli_query($conexion, $sqlTurnosPorAtender);
+$datosTurnosPorAtender = mysqli_fetch_assoc($resultadoTurnosPorAtender);
+$totalTurnosPorAtender = $datosTurnosPorAtender['total'];
 
 // TURNOS POR ESTADO
 $sqlTurnosEstado = " SELECT estado, COUNT(*) AS cantidad FROM turnos GROUP BY estado";
@@ -134,8 +146,9 @@ $sqlHistoriasMes = "
         YEAR(fecha) AS anio,
         MONTH(fecha) AS mes,
         COUNT(*) AS cantidad
-    FROM historia_clinica
-    WHERE activo = 1
+    FROM turnos
+    WHERE estado = 'completado'
+    AND activo = 1
     GROUP BY YEAR(fecha), MONTH(fecha)
     ORDER BY YEAR(fecha), MONTH(fecha)
 ";
@@ -176,11 +189,12 @@ while ($filaHistoriaMes = mysqli_fetch_assoc($resultadoHistoriasMes)) {
 $sqlMascotasHistorias = "
     SELECT
         m.nombre_mascota,
-        COUNT(h.id_historia_clinica) AS cantidad
-    FROM historia_clinica h
+        COUNT(t.id_turno) AS cantidad
+    FROM turnos t
     INNER JOIN mascota m
-        ON h.id_mascota = m.id_mascota
-    WHERE h.activo = 1
+        ON t.id_mascota = m.id_mascota
+    WHERE t.estado = 'completado'
+    AND t.activo = 1
     GROUP BY m.id_mascota, m.nombre_mascota
     ORDER BY cantidad DESC
     LIMIT 5
@@ -289,7 +303,7 @@ while (
                         <div>
 
                             <div class="stat-label">
-                                Mascotas registradas
+                                Mascotas 
                             </div>
 
                             <div class="stat-number">
@@ -307,7 +321,7 @@ while (
 
                         <i class="fas fa-paw mr-1"></i>
 
-                        Total de mascotas
+                        Total de mascotas activas
 
                     </div>
 
@@ -343,7 +357,7 @@ while (
                         <div>
 
                             <div class="stat-label">
-                                Clientes registrados
+                                Clientes
                             </div>
 
                             <div class="stat-number">
@@ -361,7 +375,7 @@ while (
 
                         <i class="fas fa-user-check mr-1"></i>
 
-                        Total de clientes
+                        Total de clientes activos
 
                     </div>
 
@@ -397,7 +411,7 @@ while (
                         <div>
 
                             <div class="stat-label">
-                                Profesionales registrados
+                                Profesionales
                             </div>
 
                             <div class="stat-number">
@@ -415,7 +429,7 @@ while (
 
                         <i class="fas fa-stethoscope mr-1"></i>
 
-                        Total de profesionales
+                        Total de profesionales activos
 
                     </div>
 
@@ -428,7 +442,7 @@ while (
 
         </div>
 
-        <!-- TURNOS -->
+        <!-- TURNOS POR ATENDER -->
         <div class="col-xl-3 col-md-6 mb-4">
 
             <div class="card stat-card stat-pink h-100">
@@ -437,39 +451,26 @@ while (
 
                     <div class="d-flex align-items-center">
 
-
                         <div class="stat-icon-box mr-3">
-
                             <i class="fas fa-calendar-check"></i>
-
                         </div>
 
-
                         <div>
-
                             <div class="stat-label">
-                                Turnos de hoy
+                                Turnos por atender
                             </div>
 
                             <div class="stat-number">
-
-                                <?= $totalTurnosHoy ?>
-
+                                <?= $totalTurnosPorAtender ?>
                             </div>
-
                         </div>
 
                     </div>
 
-
                     <div class="stat-detail">
-
                         <i class="fas fa-clock mr-1"></i>
-
-                        <?= $totalPendientesHoy ?> pendientes
-
+                        Consultas por atender
                     </div>
-
 
                     <i class="fas fa-calendar-alt stat-decoration"></i>
 
@@ -512,14 +513,18 @@ while (
                     <!-- Botones -->
                     <div class="d-flex align-items-center">
 
-                        <button type="button" class="btn btn-sm btn-outline-danger mr-2"
+                        <button type="button"
+                            class="btn-exportar btn-exportar-pdf"
                             title="Exportar PDF"
+                            aria-label="Exportar PDF"
                             onclick="exportarTurnosEstadoPDF()">
                             <i class="fas fa-file-pdf"></i>
                         </button>
 
-                        <button type="button" class="btn btn-sm btn-outline-success"
+                        <button type="button"
+                            class="btn-exportar btn-exportar-excel"
                             title="Exportar Excel"
+                            aria-label="Exportar Excel"
                             onclick="exportarTurnosEstadoExcel()">
                             <i class="fas fa-file-excel"></i>
                         </button>
@@ -566,14 +571,18 @@ while (
                     <!-- Botones -->
                     <div class="d-flex align-items-center">
 
-                        <button type="button" class="btn btn-sm btn-outline-danger mr-2"
+                        <button type="button"
+                            class="btn-exportar btn-exportar-pdf"
                             title="Exportar PDF"
+                            aria-label="Exportar PDF"
                             onclick="exportarTurnosMesPDF()">
                             <i class="fas fa-file-pdf"></i>
                         </button>
 
-                        <button type="button" class="btn btn-sm btn-outline-success"
+                        <button type="button"
+                            class="btn-exportar btn-exportar-excel"
                             title="Exportar Excel"
+                            aria-label="Exportar Excel"
                             onclick="exportarTurnosMesExcel()">
                             <i class="fas fa-file-excel"></i>
                         </button>
@@ -620,25 +629,27 @@ while (
                     <!-- Título -->
                     <div>
                         <i class="fas fa-notes-medical mr-2"></i>
-                        Historias clínicas por mes
+                        Atenciones veterinarias por mes
                     </div>
 
                     <!-- Botones -->
                     <div class="d-flex align-items-center">
 
-                        <button type="button" class="btn btn-sm btn-outline-danger mr-2" title="Exportar PDF"
-                            onclick="exportarHistoriasMesPDF()">
+                    <button type="button"
+                        class="btn-exportar btn-exportar-pdf"
+                        title="Exportar PDF"
+                        aria-label="Exportar PDF"
+                        onclick="exportarHistoriasMesPDF()">
+                        <i class="fas fa-file-pdf"></i>
+                    </button>
 
-                            <i class="fas fa-file-pdf"></i>
-
-                        </button>
-
-                        <button type="button" class="btn btn-sm btn-outline-success" title="Exportar Excel"
-                            onclick="exportarHistoriasMesExcel()">
-
-                            <i class="fas fa-file-excel"></i>
-
-                        </button>
+                    <button type="button"
+                        class="btn-exportar btn-exportar-excel"
+                        title="Exportar Excel"
+                        aria-label="Exportar Excel"
+                        onclick="exportarHistoriasMesExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
 
                     </div>
 
@@ -663,7 +674,7 @@ while (
 
 
     <!-- =====================================================
-        MASCOTAS CON MÁS REGISTROS CLÍNICOS
+        MASCOTAS CON MÁS ATENCIONES 
     ====================================================== -->
 
     <div class="col-lg-6 mb-4">
@@ -677,24 +688,26 @@ while (
                     <!-- Título -->
                     <div>
                         <i class="fas fa-paw mr-2"></i>
-                        Mascotas con más registros clínicos
+                        Mascotas con más atenciones
                     </div>
 
                     <!-- Botones -->
                     <div class="d-flex align-items-center">
 
-                        <button type="button" class="btn btn-sm btn-outline-danger mr-2" title="Exportar PDF"
+                        <button type="button"
+                            class="btn-exportar btn-exportar-pdf"
+                            title="Exportar PDF"
+                            aria-label="Exportar PDF"
                             onclick="exportarMascotasHistoriasPDF()">
-
                             <i class="fas fa-file-pdf"></i>
-
                         </button>
 
-                        <button type="button" class="btn btn-sm btn-outline-success" title="Exportar Excel"
+                        <button type="button"
+                            class="btn-exportar btn-exportar-excel"
+                            title="Exportar Excel"
+                            aria-label="Exportar Excel"
                             onclick="exportarMascotasHistoriasExcel()">
-
                             <i class="fas fa-file-excel"></i>
-
                         </button>
 
                     </div>
@@ -740,6 +753,8 @@ while (
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <!-- Exportación Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <script>
     /*
@@ -787,4 +802,4 @@ while (
 <!-- Funciones para exportar PDF -->
 <script src="/SoftwareVet/js/dashboard/export_pdf.js"></script>
 <!-- Funciones para exportar Excel -->
-<script src="/SoftwareVet/js/dashboard/export_excel.js"></script>
+<script src="/SoftwareVet/js/dashboard/export_excel.js?v=6"></script>
