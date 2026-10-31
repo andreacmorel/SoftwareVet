@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/medicalRecordModel.php';
+require_once __DIR__ . '/../models/MedicalRecordModel.php';
 
 class MedicalRecordController{
     

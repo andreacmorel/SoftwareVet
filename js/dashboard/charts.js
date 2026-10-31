@@ -167,7 +167,7 @@ new Chart(ctxHistoriasMes, {
 
         datasets: [{
 
-            label: 'Historias clínicas',
+            label: 'Atenciones veterinarias',
 
             data: dashboardData.cantidadHistoriasMes,
 
@@ -232,7 +232,7 @@ new Chart(ctxHistoriasMes, {
 const ctxMascotasHistorias =
     document.getElementById('graficoMascotasHistorias');
 
-// Cantidades de registros clínicos de cada mascota
+// Cantidades de atenciones veterinarias de cada mascota
 const cantidadesMascotas =
     dashboardData.cantidadHistoriasMascotas;
 
@@ -247,7 +247,7 @@ new Chart(ctxMascotasHistorias, {
 
         datasets: [{
 
-            label: 'Registros clínicos',
+            label: 'Atenciones veterinarias',
 
             data: cantidadesMascotas,
 
@@ -289,10 +289,10 @@ new Chart(ctxMascotasHistorias, {
 
                         const cantidad = context.raw;
 
-                        return cantidad + 
+                        return cantidad +
                             (cantidad == 1
-                                ? ' registro clínico'
-                                : ' registros clínicos');
+                                ? ' atención'
+                                : ' atenciones');
                     }
 
                 }
@@ -334,8 +334,8 @@ new Chart(ctxMascotasHistorias, {
 
                         const textoCantidad =
                             cantidad == 1
-                                ? '1 registro'
-                                : cantidad + ' registros';
+                                ? '1 atención'
+                                : cantidad + ' atenciones';
 
                         return [
                             nombre,

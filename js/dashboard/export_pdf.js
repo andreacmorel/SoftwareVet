@@ -1338,3 +1338,201 @@ function exportarMascotasHistoriasPDF() {
     );
 
 }
+
+
+/* =========================================================
+    EXPORTAR TODOS LOS GRÁFICOS EN UN ÚNICO PDF
+========================================================= */
+
+function exportarTodosPDF(descargar = true) {
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    // INFORMACIÓN DE LOS CUATRO REPORTES
+    const reportes = [
+        {
+            titulo: 'Turnos por estado',
+            grafico: 'graficoTurnosEstado',
+            encabezados: ['Estado', 'Cantidad'],
+            datos: [
+                ['Pendiente', dashboardData.turnosEstado.pendientes],
+                ['Confirmado', dashboardData.turnosEstado.confirmados],
+                ['En atención', dashboardData.turnosEstado.enAtencion],
+                ['Completado', dashboardData.turnosEstado.completados],
+                ['Cancelado', dashboardData.turnosEstado.cancelados]
+            ]
+        },
+        {
+            titulo: 'Turnos por mes',
+            grafico: 'graficoTurnosMes',
+            encabezados: ['Mes', 'Cantidad'],
+            datos: dashboardData.mesesTurnos.map((mes, i) => [
+                mes,
+                dashboardData.cantidadTurnosMes[i]
+            ])
+        },
+        {
+            titulo: 'Atenciones veterinarias por mes',
+            grafico: 'graficoHistoriasMes',
+            encabezados: ['Mes', 'Cantidad'],
+            datos: dashboardData.mesesHistorias.map((mes, i) => [
+                mes,
+                dashboardData.cantidadHistoriasMes[i]
+            ])
+        },
+        {
+            titulo: 'Mascotas con más atenciones',
+            grafico: 'graficoMascotasHistorias',
+            encabezados: ['Mascota', 'Atenciones'],
+            datos: dashboardData.nombresMascotasHistorias.map((mascota, i) => [
+                mascota,
+                dashboardData.cantidadHistoriasMascotas[i]
+            ])
+        }
+    ];
+
+    // UNA PÁGINA POR REPORTE
+    reportes.forEach((reporte, indice) => {
+
+        if (indice > 0) {
+            pdf.addPage();
+        }
+
+        // ENCABEZADO VETSYS
+        pdf.setFillColor(82, 38, 110);
+        pdf.rect(0, 0, 210, 28, 'F');
+
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(18);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('VetSys', 15, 12);
+
+        pdf.setFontSize(9);
+        pdf.setFont(undefined, 'normal');
+        pdf.text('Software Veterinario', 15, 19);
+
+        pdf.setFontSize(10);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('REPORTE GENERAL', 195, 14, {
+            align: 'right'
+        });
+
+        // TÍTULO DEL REPORTE
+        pdf.setTextColor(82, 38, 110);
+        pdf.setFontSize(16);
+        pdf.setFont(undefined, 'bold');
+        pdf.text(reporte.titulo, 15, 42);
+
+        // FECHA
+        pdf.setTextColor(110, 110, 110);
+        pdf.setFontSize(9);
+        pdf.setFont(undefined, 'normal');
+
+        pdf.text(
+            'Generado: ' + new Date().toLocaleDateString('es-AR'),
+            195,
+            49,
+            { align: 'right' }
+        );
+
+        // OBTENER EL GRÁFICO
+        const canvas = document.getElementById(reporte.grafico);
+
+        if (!canvas) {
+            throw new Error('No se encontró el gráfico: ' + reporte.grafico);
+        }
+
+        // CONVERTIR EL GRÁFICO EN IMAGEN
+        const imagen = canvas.toDataURL('image/png');
+
+        // AGREGAR EL GRÁFICO AL PDF
+
+        if (reporte.grafico === 'graficoTurnosEstado') {
+
+            // GRÁFICO CIRCULAR
+            pdf.addImage(
+                imagen,
+                'PNG',
+                45,
+                60,
+                120,
+                70
+            );
+
+        } else {
+
+            // RESTO DE LOS GRÁFICOS
+            pdf.addImage(
+                imagen,
+                'PNG',
+                35,
+                60,
+                140,
+                75
+            );
+        }
+
+        // TABLA DE DATOS
+        pdf.autoTable({
+            startY: 150,
+
+            head: [reporte.encabezados],
+
+            body: reporte.datos,
+
+            theme: 'grid',
+
+            headStyles: {
+                fillColor: [82, 38, 110],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold'
+            },
+
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+                lineColor: [210, 210, 210],
+                lineWidth: 0.2
+            },
+
+            columnStyles: {
+                1: { halign: 'center' }
+            },
+
+            margin: {
+                left: 25,
+                right: 25,
+                bottom: 22
+            }
+        });
+
+        // PIE DE PÁGINA
+        const altoPagina = pdf.internal.pageSize.getHeight();
+
+        pdf.setDrawColor(220, 220, 220);
+        pdf.line(15, altoPagina - 17, 195, altoPagina - 17);
+
+        pdf.setTextColor(130, 130, 130);
+        pdf.setFontSize(8);
+        pdf.text(
+            'VetSys - Software Veterinario',
+            15,
+            altoPagina - 10
+        );
+
+        pdf.text(
+            'Página ' + (indice + 1),
+            195,
+            altoPagina - 10,
+            { align: 'right' }
+        );
+    });
+
+    // DESCARGAR ARCHIVO
+    if (descargar) {
+    pdf.save('VetSys_Reporte_General.pdf');
+    }
+
+    return pdf.output('blob');
+}

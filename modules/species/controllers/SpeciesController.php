@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/speciesModel.php';
+require_once __DIR__ . '/../models/SpeciesModel.php';
 
 class SpeciesController
 {

@@ -6,7 +6,14 @@ require_once __DIR__ . '/../settings/conexion.php';
 // MENÚ PRINCIPAL DEL SISTEMA
 require_once __DIR__ . '/menu.php';
 
+// TOKEN DE SEGURIDAD PARA ENVIAR REPORTES
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+if (empty($_SESSION['csrf_reportes'])) {
+    $_SESSION['csrf_reportes'] = bin2hex(random_bytes(32));
+}
 
 // =====================================================
 // DATOS DE LAS TARJETAS DEL DASHBOARD
@@ -483,6 +490,7 @@ while (
 
     </div>
 
+
 <!-- ====================================================== -->
 <!-- GRÁFICOS -->
 <!-- ====================================================== -->
@@ -733,6 +741,120 @@ while (
 
 </div>
 
+    <!-- ====================================================== -->
+<!-- REPORTES GENERALES -->
+<!-- ====================================================== -->
+
+<div class="row mb-4">
+    <div class="col-12">
+
+        <div class="card card-pro">
+
+            <div class="card-header d-flex align-items-center">
+                <span class="report-header-icon">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <div>
+                    <div class="report-header-title">Reportes generales de VetSys</div>
+                    <div class="report-header-sub">Descargá o enviá la información completa del sistema</div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="row">
+
+                    <!-- DESCARGA -->
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <div class="report-section-title">
+                            <i class="fas fa-download mr-2"></i>Descargar
+                        </div>
+                        <p class="report-section-desc">
+                            Exportá todos los registros en el formato que necesites.
+                        </p>
+
+                        <div class="d-flex flex-wrap" style="gap: 12px;">
+
+                            <button type="button"
+                                class="report-action report-action-pdf"
+                                onclick="exportarTodosPDF()">
+                                <span class="report-action-icon"><i class="fas fa-file-pdf"></i></span>
+                                <span class="report-action-text">
+                                    <strong>Exportar a PDF</strong>
+                                    <small>Todos los reportes</small>
+                                </span>
+                            </button>
+
+                            <button type="button"
+                                class="report-action report-action-excel"
+                                onclick="exportarTodosExcel()">
+                                <span class="report-action-icon"><i class="fas fa-file-excel"></i></span>
+                                <span class="report-action-text">
+                                    <strong>Exportar a Excel</strong>
+                                    <small>Todos los reportes</small>
+                                </span>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <!-- ENVÍO POR CORREO -->
+                    <div class="col-lg-6 report-divider">
+                        <form id="formEnviarReportes">
+                            <!-- TOKEN DE SEGURIDAD -->
+                        <input type="hidden"
+                            id="csrfReportes"
+                            value="<?= htmlspecialchars($_SESSION['csrf_reportes'], ENT_QUOTES, 'UTF-8') ?>">
+
+
+                            <div class="report-section-title">
+                                <i class="fas fa-envelope mr-2"></i>Enviar por correo
+                            </div>
+                            <p class="report-section-desc">
+                                Se adjuntarán el PDF y el Excel en un solo mensaje.
+                            </p>
+
+                            <div class="input-group report-mail-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-at"></i>
+                                    </span>
+                                </div>
+
+                                <input
+                                    type="email"
+                                    id="correoReportes"
+                                    class="form-control"
+                                    placeholder="correo@destinatario.com"
+                                    autocomplete="email"
+                                    required>
+
+                                <div class="input-group-append">
+                                    <button type="submit"
+                                        id="btnEnviarReportes"
+                                        class="btn btn-vet">
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        Enviar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="mensajeEnvioReportes"
+                                class="mt-3"
+                                role="status"
+                                aria-live="polite"></div>
+
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 <!-- ====================================================== -->
 <!-- SCRIPTS                                                -->
@@ -798,8 +920,10 @@ while (
 </script>
 
 <!-- Donde están los gráficos -->
-<script src="/SoftwareVet/js/dashboard/charts.js"></script>
+<script src="/SoftwareVet/js/dashboard/charts.js?v=2"></script>
 <!-- Funciones para exportar PDF -->
-<script src="/SoftwareVet/js/dashboard/export_pdf.js"></script>
+<script src="/SoftwareVet/js/dashboard/export_pdf.js?v=2"></script>
 <!-- Funciones para exportar Excel -->
-<script src="/SoftwareVet/js/dashboard/export_excel.js?v=6"></script>
+<script src="/SoftwareVet/js/dashboard/export_excel.js?v=8"></script>
+<!-- ENVÍO DE REPORTES POR CORREO -->
+<script src="/SoftwareVet/js/dashboard/send_mail.js?v=1"></script>

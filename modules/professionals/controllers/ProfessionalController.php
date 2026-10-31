@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/professionalModel.php';
+require_once __DIR__ . '/../models/ProfessionalModel.php';
 
 class ProfessionalController{
 

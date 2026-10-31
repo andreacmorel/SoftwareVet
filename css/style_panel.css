@@ -353,3 +353,179 @@
 .btn-exportar + .btn-exportar {
     margin-left: 8px;
 }
+
+/* ====== REPORTES GENERALES ====== */
+
+.report-header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--vet-primary-soft);
+    color: var(--vet-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.report-header-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--vet-primary);
+    line-height: 1.2;
+}
+
+.report-header-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--vet-muted);
+    margin-top: 2px;
+}
+
+.report-section-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--vet-dark);
+}
+
+.report-section-desc {
+    font-size: 13px;
+    color: var(--vet-muted);
+    margin: 4px 0 16px;
+}
+
+/* Separador vertical en desktop, horizontal en mobile */
+.report-divider {
+    border-left: 1px solid #eee;
+    padding-left: 28px;
+}
+
+@media (max-width: 991.98px) {
+    .report-divider {
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding-left: 15px;
+        padding-top: 24px;
+    }
+}
+
+/* Botones de acción tipo tarjeta */
+.report-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px 10px 10px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+}
+
+.report-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+.report-action:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(82,38,110,.2);
+}
+
+.report-action-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.report-action-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.report-action-text small {
+    display: block;
+    font-size: 12px;
+    opacity: .75;
+    margin-top: 2px;
+}
+
+.report-action-pdf {
+    background: #fff5f5;
+    border-color: #f5d0d0;
+    color: #b42525;
+}
+.report-action-pdf .report-action-icon { background: #d93030; }
+.report-action-pdf:hover { background: #ffecec; }
+
+.report-action-excel {
+    background: #f1faf4;
+    border-color: #c7ecd4;
+    color: #126b3c;
+}
+.report-action-excel .report-action-icon { background: #16834a; }
+.report-action-excel:hover { background: #e3f6ea; }
+
+/* Input + botón unidos */
+.report-mail-group .form-control,
+.report-mail-group .input-group-text,
+.report-mail-group .btn {
+    height: 46px;
+}
+
+.report-mail-group .input-group-text {
+    background: #fff;
+    color: var(--vet-muted);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+}
+
+.report-mail-group .form-control {
+    border-left: none;
+    font-size: 14px;
+}
+
+.report-mail-group .form-control:focus {
+    border-color: var(--vet-primary);
+    box-shadow: none;
+}
+
+.report-mail-group .form-control:focus ~ .input-group-append .btn,
+.report-mail-group:focus-within .input-group-text {
+    border-color: var(--vet-primary);
+}
+
+.btn-vet {
+    background: var(--vet-primary);
+    border: 1px solid var(--vet-primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 0 22px;
+    border-radius: 0 12px 12px 0;
+    transition: background .2s ease;
+}
+
+.btn-vet:hover,
+.btn-vet:focus {
+    background: #3e1c55;
+    border-color: #3e1c55;
+    color: #fff;
+    box-shadow: none;
+}
+
+.btn-vet:disabled {
+    opacity: .7;
+}
