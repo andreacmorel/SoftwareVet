@@ -1,7 +1,7 @@
 <?php
 
 require_once '../../settings/conexion.php';
-require_once 'models/clientModel.php';
+require_once 'models/ClientModel.php';
 
 $model = new ClientModel($conexion);
 

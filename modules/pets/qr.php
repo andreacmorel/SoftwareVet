@@ -2,7 +2,7 @@
 
 require_once '../../settings/conexion.php';
 require_once '../../app/validateRoute.php';
-require_once 'controllers/petController.php';
+require_once 'controllers/PetController.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 

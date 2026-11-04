@@ -2,7 +2,7 @@
 
 require_once '../../settings/conexion.php';
 require_once '../../app/validateRoute.php';
-require_once 'controllers/medicalRecordController.php';
+require_once 'controllers/MedicalRecordController.php';
 
 $controller = new MedicalRecordController($conexion);
 $controller->create();

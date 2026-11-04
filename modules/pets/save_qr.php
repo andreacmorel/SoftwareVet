@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../settings/conexion.php';
 require_once __DIR__ . '/../../app/validateRoute.php';
-require_once __DIR__ . '/controllers/petController.php';
+require_once __DIR__ . '/controllers/PetController.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
