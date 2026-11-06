@@ -592,10 +592,26 @@ public function publicRecord($token) {
             exit("No se pudo generar el token QR.");
         }
 
-        // URL pública de la mascota
-        $urlPublica = 'http://192.168.0.30/SoftwareVet/'
-            . 'modules/pets/public/pet.php?token='
-            . urlencode($token);
+       // Dirección para generar el QR según la instalación
+            $host = $_SERVER['HTTP_HOST'] ?? '';
+
+            // Configuración para tu Laragon
+            if ($host === 'localhost' || $host === '127.0.0.1') {
+                $baseUrl = 'http://192.168.0.30/SoftwareVet';
+            } else {
+                // Utilizar el dominio o IP del servidor actual
+                $https = !empty($_SERVER['HTTPS'])
+                    && $_SERVER['HTTPS'] !== 'off';
+
+                $protocolo = $https ? 'https' : 'http';
+
+                $baseUrl = $protocolo . '://' . $host . '/SoftwareVet';
+            }
+
+            // URL de la ficha pública
+            $urlPublica = $baseUrl
+                . '/modules/pets/public/pet.php?token='
+                . urlencode($token);
 
         // Generar la imagen QR utilizando Composer
         $imagenQR = (new \chillerlan\QRCode\QRCode())
