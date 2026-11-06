@@ -564,70 +564,67 @@ public function publicRecord($token) {
     // CÓDIGO QR DE MASCOTA
     // =====================================================
 
-    public function qr($id) {
+  public function qr($id) {
 
-        $id = (int) $id;
+    $id = (int) $id;
 
-        if ($id <= 0) {
-            http_response_code(404);
-            exit("Mascota no válida.");
-        }
-
-        // Obtener los datos de la mascota
-        $mascota = $this->model->getPetRecord($id);
-
-        if (!$mascota || (int)$mascota['activo'] !== 1) {
-            http_response_code(404);
-            exit("Mascota no encontrada.");
-        }
-
-        // El método debe ejecutarse desde una ruta
-        // administrativa con autenticación y permisos.
-
-        // Generar o recuperar su token público
-        $token = $this->model->generatePublicToken($id);
-
-        if (!$token) {
-            http_response_code(500);
-            exit("No se pudo generar el token QR.");
-        }
-
-       // Dirección para generar el QR según la instalación
-            $host = $_SERVER['HTTP_HOST'] ?? '';
-
-            // Configuración para tu Laragon
-            if ($host === 'localhost' || $host === '127.0.0.1') {
-                $baseUrl = 'http://192.168.0.30/SoftwareVet';
-            } else {
-                // Utilizar el dominio o IP del servidor actual
-                $https = !empty($_SERVER['HTTPS'])
-                    && $_SERVER['HTTPS'] !== 'off';
-
-                $protocolo = $https ? 'https' : 'http';
-
-                $baseUrl = $protocolo . '://' . $host . '/SoftwareVet';
-            }
-
-            // URL de la ficha pública
-            $urlPublica = $baseUrl
-                . '/modules/pets/public/pet.php?token='
-                . urlencode($token);
-
-        // Generar la imagen QR utilizando Composer
-        $imagenQR = (new \chillerlan\QRCode\QRCode())
-                    ->render($urlPublica);
-
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        if (empty($_SESSION['csrf_qr'])) {
-            $_SESSION['csrf_qr'] = bin2hex(random_bytes(32));
-        }
-
-        // Cargar vista de administración del QR
-        require __DIR__ . '/../views/qr.php';
+    if ($id <= 0) {
+        http_response_code(404);
+        exit("Mascota no válida.");
     }
 
+    // Obtener los datos de la mascota
+    $mascota = $this->model->getPetRecord($id);
+
+    if (!$mascota || (int)$mascota['activo'] !== 1) {
+        http_response_code(404);
+        exit("Mascota no encontrada.");
+    }
+
+    // El método debe ejecutarse desde una ruta
+    // administrativa con autenticación y permisos.
+
+    // Generar o recuperar su token público
+    $token = $this->model->generatePublicToken($id);
+
+    if (!$token) {
+        http_response_code(500);
+        exit("No se pudo generar el token QR.");
+    }
+
+    // URL base según el host desde el que se administra el sistema
+    $basesPermitidas = [
+        'vetsys.montenegroariel.com.ar' => 'http://vetsys.montenegroariel.com.ar/SoftwareVet',
+        'localhost'                     => 'http://192.168.0.30/SoftwareVet',
+        '127.0.0.1'                     => 'http://192.168.0.30/SoftwareVet',
+        '192.168.0.30'                  => 'http://192.168.0.30/SoftwareVet',
+    ];
+
+    // Quitar el puerto si lo hubiera (ej: localhost:8080)
+    $host = strtolower(explode(':', $_SERVER['HTTP_HOST'] ?? '')[0]);
+
+    // Si el host no está en la lista, usa el servidor del profesor
+    $baseUrl = $basesPermitidas[$host]
+        ?? 'http://vetsys.montenegroariel.com.ar/SoftwareVet';
+
+    // URL de la ficha pública
+    $urlPublica = rtrim($baseUrl, '/')
+        . '/modules/pets/public/pet.php?token='
+        . urlencode($token);
+
+    // Generar la imagen QR
+    $imagenQR = (new \chillerlan\QRCode\QRCode())->render($urlPublica);
+
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (empty($_SESSION['csrf_qr'])) {
+        $_SESSION['csrf_qr'] = bin2hex(random_bytes(32));
+    }
+
+    // Cargar vista de administración del QR
+    require __DIR__ . '/../views/qr.php';
+}
     
     // =====================================================
     // GUARDAR AUTORIZACIÓN DE FICHA PÚBLICA QR
