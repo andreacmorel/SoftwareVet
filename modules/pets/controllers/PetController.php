@@ -594,7 +594,7 @@ public function publicRecord($token) {
 
     // URL base según el host desde el que se administra el sistema
     $basesPermitidas = [
-        'vetsys.montenegroariel.com.ar' => 'http://vetsys.montenegroariel.com.ar/SoftwareVet',
+        'vetsys.montenegroariel.com.ar' => 'https://vetsys.montenegroariel.com.ar/SoftwareVet',
         'localhost'                     => 'http://192.168.0.30/SoftwareVet',
         '127.0.0.1'                     => 'http://192.168.0.30/SoftwareVet',
         '192.168.0.30'                  => 'http://192.168.0.30/SoftwareVet',
